@@ -10,14 +10,30 @@
   "library": {
     "title": "Biblioteca",
     "empty": "Tu biblioteca está vacía.",
-    "emptyHint": "Añade archivos CBZ o CBR guardados en tu dispositivo para empezar a leer."
+    "emptyHint": "Añade archivos CBZ o CBR guardados en tu dispositivo para empezar a leer.",
+    "openFile": "Abrir archivo"
   },
   "reader": {
     "title": "Lector",
-    "placeholder": "Aquí aparecerá el lector."
+    "loading": "Abriendo…",
+    "loadingPage": "Cargando página…",
+    "noFile": "No hay ningún cómic seleccionado.",
+    "pageCounter": "{{current}} / {{total}}",
+    "pageAlt": "Página {{current}} de {{total}}",
+    "pageSlider": "Ir a la página",
+    "pageError": "No se ha podido cargar esta página.",
+    "backToLibrary": "Volver a la biblioteca"
   },
   "settings": {
     "title": "Ajustes",
     "placeholder": "Aquí aparecerán los ajustes."
+  },
+  "errors": {
+    "archive": {
+      "corrupt": "El archivo está dañado o no es un cómic válido.",
+      "unsupported": "Este formato no es compatible. Usa archivos CBZ o CBR.",
+      "empty": "El archivo está vacío o no contiene imágenes."
+    },
+    "unknown": "Algo ha fallado al abrir el archivo."
   }
 }

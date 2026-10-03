@@ -10,14 +10,30 @@
   "library": {
     "title": "Library",
     "empty": "Your library is empty.",
-    "emptyHint": "Add CBZ or CBR files stored on your device to start reading."
+    "emptyHint": "Add CBZ or CBR files stored on your device to start reading.",
+    "openFile": "Open file"
   },
   "reader": {
     "title": "Reader",
-    "placeholder": "The reader will appear here."
+    "loading": "Opening…",
+    "loadingPage": "Loading page…",
+    "noFile": "No comic selected.",
+    "pageCounter": "{{current}} / {{total}}",
+    "pageAlt": "Page {{current}} of {{total}}",
+    "pageSlider": "Go to page",
+    "pageError": "This page could not be loaded.",
+    "backToLibrary": "Back to library"
   },
   "settings": {
     "title": "Settings",
     "placeholder": "Settings will appear here."
+  },
+  "errors": {
+    "archive": {
+      "corrupt": "The file is damaged or is not a valid comic archive.",
+      "unsupported": "This file format is not supported. Use CBZ or CBR files.",
+      "empty": "The file is empty or contains no images."
+    },
+    "unknown": "Something went wrong while opening the file."
   }
 }
