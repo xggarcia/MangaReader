@@ -32,6 +32,7 @@
 
 .inlineTitle {
   grid-column: 2;
+  grid-row: 1;
   max-width: 60vw;
   overflow: hidden;
   font: var(--text-headline);
@@ -49,9 +50,16 @@
   transform: none;
 }
 
+.leading {
+  display: flex;
+  grid-column: 1;
+  grid-row: 1;
+}
+
 .trailing {
   display: flex;
   grid-column: 3;
+  grid-row: 1;
   justify-content: flex-end;
   gap: var(--space-1);
 }

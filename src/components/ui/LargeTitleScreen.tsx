@@ -3,6 +3,8 @@ import styles from './LargeTitleScreen.module.css';
 
 interface LargeTitleScreenProps {
   title: string;
+  /** Back button or similar on the left of the navigation bar. */
+  leading?: ReactNode;
   /** Buttons on the right of the navigation bar. */
   trailing?: ReactNode;
   /** Content right under the large title (e.g. a search field), scrolls with it. */
@@ -18,6 +20,7 @@ interface LargeTitleScreenProps {
  */
 export function LargeTitleScreen({
   title,
+  leading,
   trailing,
   header,
   withTabBar = true,
@@ -41,6 +44,7 @@ export function LargeTitleScreen({
   return (
     <div className={`${styles.screen} ${withTabBar ? styles.withTabBar : ''}`}>
       <header className={styles.navBar} data-collapsed={collapsed}>
+        <div className={styles.leading}>{leading}</div>
         <span className={styles.inlineTitle} aria-hidden="true">
           {title}
         </span>

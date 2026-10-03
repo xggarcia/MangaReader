@@ -9,6 +9,9 @@
   --bg: #ffffff;
   --bg-elevated: #ffffff;
   --bg-elevated-2: #f2f2f7;
+  /* Sheets: grouped ground in light, elevated surface in dark so their edge stays visible. */
+  --bg-sheet: #f2f2f7;
+  --bg-sheet-card: #ffffff;
   --bg-reader: #000000;
 
   /* Labels */
@@ -117,6 +120,8 @@
     --bg: #000000;
     --bg-elevated: #1c1c1e;
     --bg-elevated-2: #2c2c2e;
+    --bg-sheet: #1c1c1e;
+    --bg-sheet-card: #2c2c2e;
     --label: #ffffff;
     --label-secondary: rgb(235 235 245 / 0.64);
     --label-tertiary: rgb(235 235 245 / 0.34);
@@ -146,6 +151,8 @@
   --bg: #000000;
   --bg-elevated: #1c1c1e;
   --bg-elevated-2: #2c2c2e;
+  --bg-sheet: #1c1c1e;
+  --bg-sheet-card: #2c2c2e;
   --label: #ffffff;
   --label-secondary: rgb(235 235 245 / 0.64);
   --label-tertiary: rgb(235 235 245 / 0.34);

@@ -22,7 +22,9 @@ export function TabBar({ tabs, label }: TabBarProps) {
   return (
     <nav className={styles.bar} aria-label={label}>
       {tabs.map(({ path, label: tabLabel, icon: Icon }) => {
-        const active = path === pathname;
+        // A tab stays selected on the screens pushed inside it (e.g. a collection's detail).
+        const atRoot = path === pathname;
+        const active = atRoot || (path !== '/' && pathname.startsWith(`${path}/`));
         return (
           <a
             key={path}
@@ -31,8 +33,13 @@ export function TabBar({ tabs, label }: TabBarProps) {
             aria-current={active ? 'page' : undefined}
             onClick={(event) => {
               event.preventDefault();
-              if (active) {
+              if (atRoot) {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+              }
+              if (active) {
+                // iOS: tapping the selected tab pops back to its root screen.
+                goTo(path, 'back', { replace: true });
                 return;
               }
               haptics.selection();

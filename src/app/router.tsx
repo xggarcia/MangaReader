@@ -1,4 +1,6 @@
 import { createHashRouter } from 'react-router';
+import { CollectionDetailScreen } from '../components/collections/CollectionDetailScreen';
+import { CollectionsScreen } from '../components/collections/CollectionsScreen';
 import { LibraryScreen } from '../components/library/LibraryScreen';
 import { ReaderScreen } from '../components/reader/ReaderScreen';
 import { SettingsScreen } from '../components/settings/SettingsScreen';
@@ -14,6 +16,8 @@ export const router = createHashRouter([
         element: <ShellLayout />,
         children: [
           { path: '/', element: <LibraryScreen /> },
+          { path: '/collections', element: <CollectionsScreen /> },
+          { path: '/collections/:collectionId', element: <CollectionDetailScreen /> },
           { path: '/settings', element: <SettingsScreen /> },
         ],
       },

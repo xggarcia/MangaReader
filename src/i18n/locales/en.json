@@ -117,6 +117,39 @@
   "tabs": {
     "label": "Sections",
     "library": "Library",
-    "settings": "Settings"
+    "settings": "Settings",
+    "collections": "Collections"
+  },
+  "collections": {
+    "title": "Collections",
+    "new": "New collection",
+    "create": "Create collection",
+    "newPlaceholder": "New collection",
+    "name": "Name",
+    "namePlaceholder": "Collection name",
+    "color": "Colour",
+    "save": "Save",
+    "addTo": "Add to collection",
+    "count_one": "{{count}} comic",
+    "count_other": "{{count}} comics",
+    "emptyTitle": "No collections yet",
+    "emptyText": "Group your comics by series, mood or anything you like. Long-press a cover to add it.",
+    "options": "Collection options",
+    "edit": "Edit collection",
+    "delete": "Delete collection",
+    "deleteConfirm": "Delete the collection “{{name}}”? Its comics stay in your library.",
+    "detailEmpty": "Long-press a cover in the library and choose “Add to collection”.",
+    "colors": {
+      "magenta": "Magenta",
+      "red": "Red",
+      "orange": "Orange",
+      "yellow": "Yellow",
+      "green": "Green",
+      "teal": "Teal",
+      "blue": "Blue",
+      "indigo": "Indigo",
+      "purple": "Purple",
+      "graphite": "Graphite"
+    }
   }
 }

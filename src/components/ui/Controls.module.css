@@ -224,7 +224,7 @@
   overflow: hidden;
   border: none;
   border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
-  background: var(--bg-grouped);
+  background: var(--bg-sheet);
   color: var(--label);
   box-shadow: 0 -2px 30px rgb(0 0 0 / 0.2);
   transform: translateY(0);

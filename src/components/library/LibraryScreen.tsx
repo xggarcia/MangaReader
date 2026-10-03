@@ -10,7 +10,7 @@ import controls from '../ui/Controls.module.css';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import { Menu } from '../ui/Menu';
 import { SearchField } from '../ui/SearchField';
-import { ComicCard } from './ComicCard';
+import { ComicGrid } from './ComicGrid';
 import { ContinueReadingCard } from './ContinueReadingCard';
 import { ImportStatus } from './ImportStatus';
 import styles from './Library.module.css';
@@ -23,15 +23,8 @@ export function LibraryScreen() {
   const sortOrder = useLibraryStore((state) => state.sortOrder);
   const importProgress = useLibraryStore((state) => state.importProgress);
   const importFailures = useLibraryStore((state) => state.importFailures);
-  const {
-    load,
-    importFiles,
-    remove,
-    setReadStatus,
-    setQuery,
-    setSortOrder,
-    dismissImportFailures,
-  } = useLibraryStore.getState();
+  const { load, importFiles, setQuery, setSortOrder, dismissImportFailures } =
+    useLibraryStore.getState();
 
   // Reload on every visit so progress saved by the reader is reflected.
   useEffect(() => {
@@ -125,16 +118,7 @@ export function LibraryScreen() {
             {visibleItems.length === 0 ? (
               <p className={styles.noResults}>{t('library.noResults', { query })}</p>
             ) : (
-              <ul className={styles.grid}>
-                {visibleItems.map((item) => (
-                  <ComicCard
-                    key={item.getComic().getId()}
-                    item={item}
-                    onSetReadStatus={setReadStatus}
-                    onRemove={remove}
-                  />
-                ))}
-              </ul>
+              <ComicGrid items={visibleItems} />
             )}
           </>
         )}

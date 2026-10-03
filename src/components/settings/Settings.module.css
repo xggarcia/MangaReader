@@ -28,7 +28,7 @@
   gap: var(--space-3);
   padding: 0 var(--space-3);
   border-radius: var(--radius);
-  background: var(--bg-elevated);
+  background: var(--bg-sheet-card);
 }
 
 .sheetSlider input {

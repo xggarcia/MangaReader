@@ -1,9 +1,10 @@
-import { BookCheck, BookOpen, BookX, Check, Ellipsis, Trash2 } from 'lucide-react';
+import { BookCheck, BookOpen, BookX, Check, Ellipsis, FolderPlus, Trash2 } from 'lucide-react';
 import { memo, useRef, useState, type PointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCoverUrl } from '../../hooks/useCoverUrl';
 import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
 import { haptics } from '../../shared/infrastructure/haptics';
+import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
 import { CoverContextMenu, type ContextAction } from './CoverContextMenu';
 import { openComic } from './openComic';
@@ -33,6 +34,7 @@ export const ComicCard = memo(function ComicCard({
   const suppressClick = useRef(false);
   const [menuAnchor, setMenuAnchor] = useState<DOMRect | null>(null);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
+  const [pickingCollection, setPickingCollection] = useState(false);
 
   const progress = item.getProgress();
   const percent = Math.round(item.getProgressRatio() * 100);
@@ -94,6 +96,12 @@ export const ComicCard = memo(function ComicCard({
           icon: BookCheck,
           onSelect: () => onSetReadStatus(comicId, true),
         },
+    {
+      id: 'collection',
+      label: t('collections.addTo'),
+      icon: FolderPlus,
+      onSelect: () => setPickingCollection(true),
+    },
     {
       id: 'remove',
       label: t('library.removeShort'),
@@ -178,6 +186,13 @@ export const ComicCard = memo(function ComicCard({
           actions={actions}
           dismissLabel={t('library.closeMenu')}
           onClose={() => setMenuAnchor(null)}
+        />
+      )}
+      {pickingCollection && (
+        <CollectionPickerSheet
+          comicId={comicId}
+          comicTitle={title}
+          onClose={() => setPickingCollection(false)}
         />
       )}
       {confirmingRemove && (

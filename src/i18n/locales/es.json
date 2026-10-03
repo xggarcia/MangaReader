@@ -117,6 +117,39 @@
   "tabs": {
     "label": "Secciones",
     "library": "Biblioteca",
-    "settings": "Ajustes"
+    "settings": "Ajustes",
+    "collections": "Colecciones"
+  },
+  "collections": {
+    "title": "Colecciones",
+    "new": "Nueva colección",
+    "create": "Crear colección",
+    "newPlaceholder": "Nueva colección",
+    "name": "Nombre",
+    "namePlaceholder": "Nombre de la colección",
+    "color": "Color",
+    "save": "Guardar",
+    "addTo": "Añadir a colección",
+    "count_one": "{{count}} cómic",
+    "count_other": "{{count}} cómics",
+    "emptyTitle": "Aún no hay colecciones",
+    "emptyText": "Agrupa tus cómics por serie, estado de ánimo o lo que quieras. Mantén pulsada una portada para añadirla.",
+    "options": "Opciones de la colección",
+    "edit": "Editar colección",
+    "delete": "Eliminar colección",
+    "deleteConfirm": "¿Eliminar la colección «{{name}}»? Sus cómics seguirán en tu biblioteca.",
+    "detailEmpty": "Mantén pulsada una portada en la biblioteca y elige «Añadir a colección».",
+    "colors": {
+      "magenta": "Magenta",
+      "red": "Rojo",
+      "orange": "Naranja",
+      "yellow": "Amarillo",
+      "green": "Verde",
+      "teal": "Turquesa",
+      "blue": "Azul",
+      "indigo": "Índigo",
+      "purple": "Morado",
+      "graphite": "Grafito"
+    }
   }
 }

@@ -1,0 +1,201 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-03T00:00:00Z",
+  "title": "Design System: MangaReader",
+  "extensions": {
+    "colorMeta": {
+      "accent": { "role": "primary", "displayName": "Magenta", "canonical": "#c2185b", "tonalRamp": ["oklch(20% 0.07 3)", "oklch(30% 0.11 3)", "oklch(40% 0.16 3)", "oklch(52% 0.2 3)", "oklch(62% 0.2 3)", "oklch(72% 0.15 3)", "oklch(84% 0.08 3)", "oklch(95% 0.025 3)"] },
+      "accent-pressed": { "role": "primary", "displayName": "Magenta Pressed", "canonical": "#a0124a" },
+      "accent-tint": { "role": "primary", "displayName": "Magenta Wash", "canonical": "rgb(194 24 91 / 0.12)" },
+      "accent-dark": { "role": "primary", "displayName": "Neon Magenta (dark scheme)", "canonical": "#ff4f8b", "tonalRamp": ["oklch(22% 0.08 2)", "oklch(34% 0.13 2)", "oklch(46% 0.18 2)", "oklch(58% 0.21 2)", "oklch(67% 0.21 2)", "oklch(76% 0.15 2)", "oklch(86% 0.08 2)", "oklch(95% 0.025 2)"] },
+      "accent-pressed-dark": { "role": "primary", "displayName": "Neon Magenta Pressed", "canonical": "#ff7aa6" },
+      "label-on-accent": { "role": "primary", "displayName": "On-Accent White", "canonical": "#ffffff" },
+      "label-on-accent-dark": { "role": "primary", "displayName": "On-Accent Ink (dark scheme)", "canonical": "#1a0010" },
+      "destructive": { "role": "secondary", "displayName": "Destructive Red", "canonical": "#d70015" },
+      "destructive-dark": { "role": "secondary", "displayName": "Destructive Red (dark)", "canonical": "#ff453a" },
+      "success": { "role": "secondary", "displayName": "Success Green", "canonical": "#248a3d" },
+      "success-dark": { "role": "secondary", "displayName": "Success Green (dark)", "canonical": "#30d158" },
+      "bg-grouped": { "role": "neutral", "displayName": "Grouped Grey", "canonical": "#f2f2f7", "tonalRamp": ["#000000", "#1c1c1e", "#2c2c2e", "#38383a", "#636366", "#c6c6c8", "#f2f2f7", "#ffffff"] },
+      "bg-elevated": { "role": "neutral", "displayName": "Elevated White", "canonical": "#ffffff" },
+      "bg-sheet": { "role": "neutral", "displayName": "Sheet Ground", "canonical": "#f2f2f7" },
+      "bg-sheet-card": { "role": "neutral", "displayName": "Sheet Card", "canonical": "#ffffff" },
+      "bg-grouped-dark": { "role": "neutral", "displayName": "Grouped Black", "canonical": "#000000" },
+      "bg-elevated-dark": { "role": "neutral", "displayName": "Elevated Graphite", "canonical": "#1c1c1e" },
+      "bg-elevated-2-dark": { "role": "neutral", "displayName": "Elevated Graphite 2", "canonical": "#2c2c2e" },
+      "bg-sheet-dark": { "role": "neutral", "displayName": "Sheet Ground (dark)", "canonical": "#1c1c1e" },
+      "bg-sheet-card-dark": { "role": "neutral", "displayName": "Sheet Card (dark)", "canonical": "#2c2c2e" },
+      "bg-reader": { "role": "neutral", "displayName": "Reader Black", "canonical": "#000000" },
+      "label": { "role": "neutral", "displayName": "Label", "canonical": "#000000" },
+      "label-secondary": { "role": "neutral", "displayName": "Secondary Label (AA-adjusted)", "canonical": "rgb(60 60 67 / 0.78)" },
+      "label-tertiary": { "role": "neutral", "displayName": "Tertiary Label", "canonical": "rgb(60 60 67 / 0.45)" },
+      "label-secondary-dark": { "role": "neutral", "displayName": "Secondary Label dark (AA-adjusted)", "canonical": "rgb(235 235 245 / 0.64)" },
+      "separator": { "role": "neutral", "displayName": "Hairline", "canonical": "rgb(60 60 67 / 0.29)" },
+      "material-bar": { "role": "neutral", "displayName": "Bar Material", "canonical": "rgb(249 249 249 / 0.8)" },
+      "material-thick": { "role": "neutral", "displayName": "Thick Material", "canonical": "rgb(255 255 255 / 0.86)" },
+      "material-reader": { "role": "neutral", "displayName": "Reader Material", "canonical": "rgb(28 28 30 / 0.72)" },
+      "dim": { "role": "neutral", "displayName": "Backdrop Dim", "canonical": "rgb(0 0 0 / 0.36)" }
+    },
+    "typographyMeta": {
+      "large-title": { "displayName": "Large Title", "purpose": "One per tab root; collapses to an inline Headline in the nav bar on scroll." },
+      "title1": { "displayName": "Title 1", "purpose": "Cover placeholder initial." },
+      "title2": { "displayName": "Title 2", "purpose": "Empty-state title." },
+      "title3": { "displayName": "Title 3", "purpose": "In-page section headings and sheet titles." },
+      "headline": { "displayName": "Headline", "purpose": "Inline nav and reader titles, filled buttons, sheet Done, card titles." },
+      "body": { "displayName": "Body", "purpose": "List rows, menu items, search input." },
+      "callout": { "displayName": "Callout", "purpose": "Available in the ramp; rarely used." },
+      "subhead": { "displayName": "Subhead", "purpose": "Capsule buttons, counts, HUD, menu header title." },
+      "footnote": { "displayName": "Footnote", "purpose": "Grouped section titles (uppercase), footers, meta, segmented labels, grid titles." },
+      "caption": { "displayName": "Caption", "purpose": "Grid subtitles, progress percent, reader page counter." },
+      "caption2": { "displayName": "Caption 2", "purpose": "Tab labels and the uppercase New badge." }
+    },
+    "shadows": [
+      { "name": "shadow-cover", "value": "0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px rgb(0 0 0 / 0.1)", "purpose": "Every cover at rest (dark: 0.5 / 0.4 alpha)." },
+      { "name": "shadow-lifted", "value": "0 8px 24px rgb(0 0 0 / 0.18), 0 24px 64px rgb(0 0 0 / 0.22)", "purpose": "Cover preview lifted by the long-press context menu." },
+      { "name": "shadow-menu", "value": "0 10px 40px rgb(0 0 0 / 0.18)", "purpose": "Pull-down menus, context-menu action list, import HUD." },
+      { "name": "shadow-sheet", "value": "0 -2px 30px rgb(0 0 0 / 0.2)", "purpose": "Bottom sheet top edge." },
+      { "name": "shadow-segmented-thumb", "value": "0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04)", "purpose": "Raised segmented-control thumb." },
+      { "name": "hairline-bar", "value": "0 0.5px 0 var(--separator)", "purpose": "Under a collapsed nav bar; negated above the tab bar." },
+      { "name": "material-blur", "value": "backdrop-filter: saturate(180%) blur(20px)", "purpose": "All translucent materials (bars, menus, action sheets, HUD, reader chrome)." }
+    ],
+    "motion": [
+      { "name": "ease-spring", "value": "linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50%, 1.015 55%, 1.017 63.9%, 1.001 85%, 1)", "purpose": "Critically damped spring approximation: presses, menu pop, segmented thumb, scrubber, HUD, cover lift." },
+      { "name": "ease-ios", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "iOS sheet curve: sheets, action sheets, reader bars, view transitions, cover un-lift." },
+      { "name": "ease-out", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Progress widths, inline title rise." },
+      { "name": "ease-pager-settle", "value": "cubic-bezier(0.2, 0.9, 0.24, 1)", "purpose": "Pager track settle, 180-420ms scaled by flick velocity." },
+      { "name": "duration-fast", "value": "180ms", "purpose": "Opacity and colour changes, tab cross-fade." },
+      { "name": "duration", "value": "320ms", "purpose": "Press feedback, fades." },
+      { "name": "duration-slow", "value": "480ms", "purpose": "Slides, sheets, push/pop view transitions." },
+      { "name": "vt-push", "value": "new: translateX(100%) -> 0; old: 0 -> translateX(-28%) brightness(0.82)", "purpose": "Forward navigation (data-nav=forward); back reverses with the old page on top." },
+      { "name": "cover-morph", "value": "view-transition-name: reader-cover", "purpose": "Tapped cover grows into the reader's loading cover." },
+      { "name": "context-lift", "value": "FLIP from grid rect, 520ms ease-spring; menu 420ms ease-spring +40ms; close 300ms ease-ios", "purpose": "Long-press cover context menu." },
+      { "name": "reduced-motion", "value": "durations 1ms; view transitions off; pager and context menu jump", "purpose": "prefers-reduced-motion: reduce." }
+    ],
+    "breakpoints": [
+      { "name": "grid-cell-min", "value": "104px" },
+      { "name": "action-sheet-max", "value": "560px" },
+      { "name": "sheet-max", "value": "600px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bar Button",
+      "kind": "button",
+      "refersTo": "button-bar",
+      "description": "Icon-only accent button for navigation bars; 44px target, spring press.",
+      "html": "<button class=\"ds-bar-btn\" aria-label=\"Import\"><svg width=\"26\" height=\"26\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg></button>",
+      "css": ".ds-bar-btn { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 0 8px; border: none; border-radius: 22px; background: transparent; color: var(--accent, #c2185b); cursor: pointer; transition: opacity 180ms ease-out, transform 320ms var(--ease-spring, ease-out); } .ds-bar-btn:active { opacity: 0.45; transform: scale(0.92); } .ds-bar-btn:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Filled Button",
+      "kind": "button",
+      "refersTo": "button-filled",
+      "description": "Primary action in empty and error states.",
+      "html": "<button class=\"ds-filled-btn\">Import comics</button>",
+      "css": ".ds-filled-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 50px; padding: 0 24px; border: none; border-radius: 14px; background: var(--accent, #c2185b); color: var(--label-on-accent, #fff); font: 600 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; cursor: pointer; transition: transform 320ms var(--ease-spring, ease-out), background-color 180ms ease-out; } .ds-filled-btn:active { background: var(--accent-pressed, #a0124a); transform: scale(0.97); } .ds-filled-btn:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Capsule Button",
+      "kind": "button",
+      "refersTo": "button-capsule",
+      "description": "Compact magenta pill, e.g. Continue on the continue-reading card.",
+      "html": "<button class=\"ds-capsule-btn\">Continue</button>",
+      "css": ".ds-capsule-btn { display: inline-flex; align-items: center; justify-content: center; min-height: 32px; padding: 0 16px; border: none; border-radius: 16px; background: var(--accent, #c2185b); color: var(--label-on-accent, #fff); font: 600 0.9375rem/1.33 'Inter Variable', system-ui, sans-serif; cursor: pointer; transition: transform 320ms var(--ease-spring, ease-out); } .ds-capsule-btn:active { transform: scale(0.94); } .ds-capsule-btn:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: 2px; }"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Filled iOS search capsule with magnifier; accent-tint halo on focus.",
+      "html": "<label class=\"ds-search\"><svg class=\"ds-search-icon\" width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input type=\"search\" placeholder=\"Title, series or author\" aria-label=\"Search\"></label>",
+      "css": ".ds-search { position: relative; display: flex; align-items: center; height: 38px; border-radius: 10px; background: var(--fill-tertiary, rgb(118 118 128 / 0.12)); } .ds-search-icon { position: absolute; left: 9px; color: var(--label-secondary, rgb(60 60 67 / 0.78)); } .ds-search input { width: 100%; height: 100%; padding: 0 34px; border: none; background: transparent; font: 400 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; color: var(--label, #000); outline: none; caret-color: var(--accent, #c2185b); } .ds-search input::placeholder { color: var(--label-secondary, rgb(60 60 67 / 0.78)); } .ds-search:focus-within { box-shadow: 0 0 0 2px var(--accent-tint, rgb(194 24 91 / 0.12)); }"
+    },
+    {
+      "name": "Tab Bar",
+      "kind": "nav",
+      "refersTo": "tab-bar",
+      "description": "Translucent bottom tab bar; accent tint and filled icon on the active tab.",
+      "html": "<nav class=\"ds-tabbar\" aria-label=\"Sections\"><a href=\"#\" class=\"ds-tab\" aria-current=\"page\"><svg width=\"25\" height=\"25\" viewBox=\"0 0 24 24\" fill=\"currentColor\" fill-opacity=\"0.22\" stroke=\"currentColor\" stroke-width=\"2.1\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 7v14\"/><path d=\"M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z\"/></svg><span>Library</span></a><a href=\"#\" class=\"ds-tab\"><svg width=\"25\" height=\"25\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><circle cx=\"12\" cy=\"12\" r=\"3\"/><circle cx=\"12\" cy=\"12\" r=\"9\"/></svg><span>Settings</span></a></nav>",
+      "css": ".ds-tabbar { display: flex; justify-content: space-around; background: var(--material-bar, rgb(249 249 249 / 0.8)); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); box-shadow: 0 -0.5px 0 var(--separator, rgb(60 60 67 / 0.29)); } .ds-tab { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 50px; padding-top: 6px; color: var(--label-secondary, rgb(60 60 67 / 0.78)); text-decoration: none; font: 500 0.6875rem/1.18 'Inter Variable', system-ui, sans-serif; letter-spacing: 0.01em; transition: color 180ms ease-out; } .ds-tab[aria-current='page'] { color: var(--accent, #c2185b); } .ds-tab svg { transition: transform 320ms var(--ease-spring, ease-out); } .ds-tab:active svg { transform: scale(0.88); } .ds-tab:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: -4px; border-radius: 6px; }"
+    },
+    {
+      "name": "Grouped List",
+      "kind": "custom",
+      "refersTo": "grouped-section",
+      "description": "Inset grouped section with uppercase footnote title, icon tile rows and inset hairlines.",
+      "html": "<section class=\"ds-group\"><h2 class=\"ds-group-title\">Appearance</h2><div class=\"ds-group-card\"><div class=\"ds-row\"><span class=\"ds-row-icon\" style=\"background:#5e5ce6\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z\"/></svg></span><span class=\"ds-row-label\">Theme</span><button class=\"ds-row-value\">System <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></button></div><div class=\"ds-row\"><span class=\"ds-row-icon\" style=\"background:#007aff\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"12\" cy=\"12\" r=\"10\"/><path d=\"M2 12h20\"/></svg></span><span class=\"ds-row-label\">Language</span><button class=\"ds-row-value\">English <svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m7 15 5 5 5-5\"/><path d=\"m7 9 5-5 5 5\"/></svg></button></div></div></section>",
+      "css": ".ds-group { margin-bottom: 32px; } .ds-group-title { margin: 0 16px 8px; color: var(--label-secondary, rgb(60 60 67 / 0.78)); font: 400 0.8125rem/1.38 'Inter Variable', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.02em; } .ds-group-card { overflow: hidden; border-radius: 10px; background: var(--bg-elevated, #fff); } .ds-row { position: relative; display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 4px 16px; } .ds-row + .ds-row::before { content: ''; position: absolute; top: 0; right: 0; left: 60px; height: 0.5px; background: var(--separator, rgb(60 60 67 / 0.29)); } .ds-row-icon { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 7px; color: #fff; } .ds-row-label { flex: 1; font: 400 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; color: var(--label, #000); } .ds-row-value { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding-left: 8px; border: none; background: none; color: var(--label-secondary, rgb(60 60 67 / 0.78)); font: 400 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; cursor: pointer; } .ds-row-value:active { opacity: 0.5; } .ds-row-value:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: 2px; border-radius: 6px; }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "chip",
+      "refersTo": "segmented-track",
+      "description": "Radio-backed segmented control with a raised thumb that springs to the selection.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\" aria-label=\"Reading mode\" style=\"--count:3;--index:0\"><span class=\"ds-seg-thumb\"></span><button class=\"ds-seg-opt\" role=\"radio\" aria-checked=\"true\">Single</button><button class=\"ds-seg-opt\" role=\"radio\" aria-checked=\"false\">Double</button><button class=\"ds-seg-opt\" role=\"radio\" aria-checked=\"false\">Webtoon</button></div>",
+      "css": ".ds-seg { position: relative; display: flex; padding: 2px; border-radius: 9px; background: var(--fill-tertiary, rgb(118 118 128 / 0.12)); } .ds-seg-thumb { position: absolute; top: 2px; bottom: 2px; left: 2px; width: calc((100% - 4px) / var(--count)); border-radius: 7px; background: var(--bg-elevated, #fff); box-shadow: 0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04); transform: translateX(calc(100% * var(--index))); transition: transform 480ms var(--ease-spring, ease-out); } .ds-seg-opt { position: relative; flex: 1; min-height: 40px; padding: 0 8px; border: none; background: transparent; color: var(--label, #000); font: 500 0.8125rem/1.38 'Inter Variable', system-ui, sans-serif; cursor: pointer; } .ds-seg-opt[aria-checked='true'] { font-weight: 600; } .ds-seg-opt:focus-visible { outline: 2px solid var(--focus, #c2185b); border-radius: 7px; }"
+    },
+    {
+      "name": "Comic Cover Cell",
+      "kind": "card",
+      "refersTo": "comic-cover",
+      "description": "2:3 cover with cover shadow, in-cover progress bar, title, subtitle and status row.",
+      "html": "<div class=\"ds-cell\"><button class=\"ds-cover\" aria-label=\"Open One Piece 1\"><span class=\"ds-cover-art\">O</span><span class=\"ds-cover-progress\"><span style=\"width:42%\"></span></span></button><h3 class=\"ds-cell-title\">One Piece 1</h3><p class=\"ds-cell-sub\">212 pages</p><span class=\"ds-status-new\">New</span></div>",
+      "css": ".ds-cell { display: flex; flex-direction: column; width: 112px; } .ds-cover { position: relative; display: block; width: 100%; aspect-ratio: 2 / 3; padding: 0; overflow: hidden; border: none; border-radius: 6px; background: var(--fill-secondary, rgb(120 120 128 / 0.16)); box-shadow: var(--shadow-cover, 0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px rgb(0 0 0 / 0.1)); cursor: pointer; transition: transform 320ms var(--ease-spring, ease-out); } .ds-cover:active { transform: scale(0.96); } .ds-cover:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: 2px; } .ds-cover-art { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--label-tertiary, rgb(60 60 67 / 0.45)); font: 700 1.75rem/1.2 'Inter Variable', system-ui, sans-serif; } .ds-cover-progress { position: absolute; right: 6px; bottom: 6px; left: 6px; height: 3px; overflow: hidden; border-radius: 2px; background: rgb(0 0 0 / 0.35); backdrop-filter: blur(6px); } .ds-cover-progress > span { display: block; height: 100%; background: #fff; } .ds-cell-title { margin: 8px 0 0; font: 600 0.8125rem/1.38 'Inter Variable', system-ui, sans-serif; color: var(--label, #000); } .ds-cell-sub { margin: 0 0 8px; color: var(--label-secondary, rgb(60 60 67 / 0.78)); font: 400 0.75rem/1.33 'Inter Variable', system-ui, sans-serif; } .ds-status-new { align-self: flex-start; padding: 1px 6px; border-radius: 4px; background: var(--accent-tint, rgb(194 24 91 / 0.12)); color: var(--accent, #c2185b); font: 500 0.6875rem/1.18 'Inter Variable', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 0.04em; }"
+    },
+    {
+      "name": "Pull-down Menu",
+      "kind": "custom",
+      "refersTo": "menu",
+      "description": "Thick-material menu with leading checkmarks, trailing icons and a destructive row.",
+      "html": "<div class=\"ds-menu\" role=\"menu\"><button class=\"ds-menu-item\" role=\"menuitemradio\" aria-checked=\"true\"><svg width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.4\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M20 6 9 17l-5-5\"/></svg><span>Recently read</span><span></span></button><button class=\"ds-menu-item\" role=\"menuitemradio\" aria-checked=\"false\"><span></span><span>Title</span><span></span></button><button class=\"ds-menu-item ds-destructive\" role=\"menuitem\"><span></span><span>Remove</span><svg width=\"19\" height=\"19\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.9\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 6h18\"/><path d=\"M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6\"/><path d=\"M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2\"/></svg></button></div>",
+      "css": ".ds-menu { width: 260px; overflow: hidden; border-radius: 14px; background: var(--material-thick, rgb(255 255 255 / 0.86)); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); box-shadow: 0 10px 40px rgb(0 0 0 / 0.18); } .ds-menu-item { display: grid; grid-template-columns: 24px 1fr auto; gap: 8px; align-items: center; width: 100%; min-height: 46px; padding: 0 16px 0 12px; border: none; background: transparent; color: var(--label, #000); font: 400 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; text-align: start; cursor: pointer; } .ds-menu-item + .ds-menu-item { box-shadow: inset 0 0.5px 0 var(--separator, rgb(60 60 67 / 0.29)); } .ds-menu-item:active { background: var(--fill-secondary, rgb(120 120 128 / 0.16)); } .ds-menu-item:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: -2px; } .ds-destructive { color: var(--destructive, #d70015); }"
+    },
+    {
+      "name": "Bottom Sheet Header",
+      "kind": "custom",
+      "refersTo": "sheet",
+      "description": "Sheet top: grabber, Title 3 title and accent Done; body cards on bg-sheet-card.",
+      "html": "<div class=\"ds-sheet\"><span class=\"ds-grabber\"></span><div class=\"ds-sheet-head\"><h2>Reading options</h2><button class=\"ds-sheet-done\">Done</button></div><div class=\"ds-sheet-card\">Brightness</div></div>",
+      "css": ".ds-sheet { width: 100%; max-width: 600px; padding: 8px 0 24px; border-radius: 14px 14px 0 0; background: var(--bg-sheet, #f2f2f7); color: var(--label, #000); box-shadow: 0 -2px 30px rgb(0 0 0 / 0.2); } .ds-grabber { display: block; width: 36px; height: 5px; margin: 0 auto; border-radius: 3px; background: var(--label-tertiary, rgb(60 60 67 / 0.45)); } .ds-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 8px 8px 8px 20px; } .ds-sheet-head h2 { margin: 0; font: 600 1.25rem/1.25 'Inter Variable', system-ui, sans-serif; } .ds-sheet-done { min-height: 44px; padding: 0 12px; border: none; background: none; color: var(--accent, #c2185b); font: 600 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; cursor: pointer; } .ds-sheet-done:active { opacity: 0.5; } .ds-sheet-done:focus-visible { outline: 2px solid var(--focus, #c2185b); outline-offset: 2px; border-radius: 6px; } .ds-sheet-card { margin: 8px 20px 0; padding: 14px 12px; border-radius: 10px; background: var(--bg-sheet-card, #fff); font: 400 1.0625rem/1.3 'Inter Variable', system-ui, sans-serif; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Glass Over Paper",
+    "overview": "The comic page is the paper; everything else is glass laid over it. Chrome is translucent material that blurs and saturates whatever sits underneath, and it gets out of the way when reading starts. The grammar is Apple's Human Interface Guidelines, rendered faithfully on an Android WebView: grouped system backgrounds, hairline separators, large titles that collapse into an inline bar title, inset grouped lists, segmented controls, sheets with grabbers, and context menus that lift a cover off the shelf. It deliberately rejects the Android default of a flat app bar plus floating action button, and the web-app card grid.\n\nDensity is calm. The library leads with covers at 2:3 and keeps text small and secondary; settings read as native iOS grouped lists. Motion carries the physicality: springs rather than fades, a page track that follows the finger and settles like thrown paper, a cover that grows into the reader. One accent, magenta, tuned separately for light and dark, carries every interactive affordance.\n\nBuilt from code in `src/styles/global.css` and `src/components/{ui,common,library,reader,settings}`. Where the direction contract and the build differ, this file follows the build.",
+    "keyCharacteristics": [
+      "Translucent material bars (`saturate(180%) blur(20px)`) over content; opaque only where content must not show through.",
+      "One accent (magenta) for every tappable tint, progress fill and selection; never decorative.",
+      "Hairline (0.5px) separators drawn with box-shadow or pseudo-elements, inset to the label.",
+      "Springs (`linear()` spring curve) for press feedback and arrivals; the iOS sheet curve for slides.",
+      "Reader is always black and always dark-scheme, independent of app theme.",
+      "Every icon is a Lucide line icon; every overlay lives on the popover top layer."
+    ],
+    "rules": [
+      { "name": "The One Voice Rule", "body": "Magenta means \"you can tap this\" or \"this is your progress\". It never decorates a surface, a heading or an illustration.", "section": "colors" },
+      { "name": "The Stronger Secondary Rule", "body": "Secondary labels are deliberately stronger than stock iOS (0.78 alpha light, 0.64 dark) so metadata clears WCAG AA on every ground. Never drop back to iOS's 0.6. Tertiary labels are for placeholders that are not required reading, disabled controls and the grabber only.", "section": "colors" },
+      { "name": "The Scoped Dark Rule", "body": "Dark tokens apply three ways: system dark with no `data-theme`, `data-theme=\"dark\"` on `<html>`, or `data-theme=\"dark\"` on any subtree. Anything floating over the reader (the reading options sheet) is wrapped in `<div data-theme=\"dark\" style=\"display: contents\">` so it is dark even in light app theme. Components that hardcode a dark variant (segmented thumb `#636366`) must honour both selectors.", "section": "colors" },
+      { "name": "The Tabular Numbers Rule", "body": "Every changing number (page x of y, percentages, counts, import progress) uses `font-variant-numeric: tabular-nums` so it does not jitter.", "section": "typography" },
+      { "name": "The Ramp-Only Rule", "body": "Set type with the `--text-*` shorthand tokens; weight overrides are allowed, ad-hoc font sizes are not (the action-sheet 20px button is the single exception, matching iOS).", "section": "typography" },
+      { "name": "The Material Not Shadow Rule", "body": "Bars are separated from content by blur plus a 0.5px hairline, never by a drop shadow. The large-title nav bar is fully transparent until the title scrolls behind it, then becomes `material-bar` with the hairline.", "section": "elevation" }
+    ],
+    "dos": [
+      "**Do** build new screens from `LargeTitleScreen`, `GroupedSection`/`Row`/`MenuRow`, `SegmentedControl`, `Sheet`, `ConfirmSheet`, `Menu`, `SearchField` and `BarButton` before writing new chrome.",
+      "**Do** use Lucide icons: 1.75 stroke at 24-25px (tab bar at rest), stepping up as size drops (1.9 at 19px menu icons, 2-2.2 at 15-18px, 2.4-3 for 12-13px checkmarks), and lighter (1.25-1.5) only for 48-56px empty and error illustrations.",
+      "**Do** put every sheet, menu and confirmation on the popover top layer (`popover=\"auto\"`, or `manual` with an `onToggle` close handler) so light dismiss and Android Back close it.",
+      "**Do** keep every touch target at least 44 x 44px, extending the hit area with negative margins when the glyph is smaller.",
+      "**Do** give icon-only buttons an `aria-label` through i18n, and expose state with ARIA (`aria-current`, `aria-checked`, `aria-haspopup`).",
+      "**Do** wrap anything shown over the reader in a `data-theme=\"dark\"` subtree.",
+      "**Do** use `--duration-*` tokens or a `prefers-reduced-motion` check for every animation, including Web Animations API calls.",
+      "**Do** use tabular numbers for any counter or percentage."
+    ],
+    "donts": [
+      "**Don't** use `window.alert`, `confirm` or `prompt`; confirmations are `ConfirmSheet` action sheets.",
+      "**Don't** use unicode glyphs or emoji as icons (no \"✕\", \"⋯\", \"›\"); use the Lucide component.",
+      "**Don't** add a flat Android app bar, a floating action button or Material ripples.",
+      "**Don't** separate bars from content with drop shadows; use material blur plus a 0.5px hairline.",
+      "**Don't** use magenta on headings, backgrounds or decoration.",
+      "**Don't** put tertiary label colour on text the user must read.",
+      "**Don't** hardcode colours in components when a token exists; add a token with light and dark values instead.",
+      "**Don't** let the reader inherit the light theme: its canvas is always `bg-reader` and its chrome always `material-reader`."
+    ]
+  }
+}

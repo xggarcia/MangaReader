@@ -5,7 +5,7 @@ import { useLocation } from 'react-router';
 import { goBack, goTo } from '../app/navigation';
 
 /** Tabs live side by side: Back from another tab returns to the library instead of popping. */
-const TAB_PATHS = new Set(['/settings']);
+const TAB_PATHS = new Set(['/collections', '/settings']);
 
 /**
  * Maps the Android hardware back button: closes an open sheet or menu first, then returns to

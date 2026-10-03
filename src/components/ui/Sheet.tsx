@@ -1,10 +1,14 @@
-import { useRef, type PointerEvent, type ReactNode } from 'react';
+import { useEffect, useRef, type PointerEvent, type ReactNode } from 'react';
 import styles from './Controls.module.css';
 
 interface SheetProps {
   id: string;
   title: string;
   closeLabel: string;
+  /** Opens as soon as it mounts (for sheets rendered on demand). */
+  autoOpen?: boolean;
+  /** Called whenever the sheet closes. */
+  onClose?: () => void;
   children: ReactNode;
 }
 
@@ -15,9 +19,13 @@ const DISMISS_VELOCITY = 0.6; // px per ms
  * iOS bottom sheet on the popover top layer: slides up with the sheet curve, dims the page,
  * and can be dragged down by its grabber or header to dismiss.
  */
-export function Sheet({ id, title, closeLabel, children }: SheetProps) {
+export function Sheet({ id, title, closeLabel, autoOpen = false, onClose, children }: SheetProps) {
   const sheet = useRef<HTMLDivElement>(null);
   const drag = useRef<{ y: number; time: number; id: number } | null>(null);
+
+  useEffect(() => {
+    if (autoOpen) sheet.current?.showPopover();
+  }, [autoOpen]);
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
     // Buttons in the header keep their click; capturing the pointer would swallow it.
@@ -57,6 +65,9 @@ export function Sheet({ id, title, closeLabel, children }: SheetProps) {
       role="dialog"
       aria-label={title}
       className={styles.sheet}
+      onToggle={(event) => {
+        if (event.newState === 'closed') onClose?.();
+      }}
     >
       <div
         className={styles.sheetHandleArea}
