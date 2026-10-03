@@ -21,7 +21,8 @@
     "android:sync": "npm run build && cap sync android",
     "android:run": "npm run build && cap run android",
     "android:open": "cap open android",
-    "assets": "node scripts/generate-app-assets.mjs && capacitor-assets generate --android --iconBackgroundColor \"#c2185b\" --iconBackgroundColorDark \"#c2185b\" --splashBackgroundColor \"#fafafa\" --splashBackgroundColorDark \"#121212\""
+    "assets": "node scripts/generate-app-assets.mjs && capacitor-assets generate --android --ios --iconBackgroundColor \"#c2185b\" --iconBackgroundColorDark \"#c2185b\" --splashBackgroundColor \"#fafafa\" --splashBackgroundColorDark \"#121212\"",
+    "ios:sync": "npm run build && cap sync ios"
   },
   "dependencies": {
     "@capacitor-community/keep-awake": "^8.0.1",
@@ -29,6 +30,8 @@
     "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.5.2",
     "@capacitor/haptics": "^8.0.2",
+    "@capacitor/ios": "^8.5.2",
+    "@capacitor/status-bar": "^8.0.4",
     "@fontsource-variable/inter": "^5.3.0",
     "@tanstack/react-virtual": "^3.14.13",
     "@zip.js/zip.js": "^2.23.0",

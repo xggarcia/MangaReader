@@ -13,16 +13,35 @@ function unwrap<T>(result: WorkerResult<T>): T {
   throw new Error(message);
 }
 
+const READY_TIMEOUT_MS = 8000;
+
 /** Main-thread ArchiveRepository that delegates all archive work to the archive Web Worker. */
 export class WorkerArchiveRepository implements ArchiveRepository {
-  private readonly worker: Comlink.Remote<ArchiveWorkerApi>;
+  private constructor(private readonly worker: Comlink.Remote<ArchiveWorkerApi>) {}
 
-  constructor() {
-    const worker = new Worker(new URL('./worker/archive.worker.ts', import.meta.url), {
-      type: 'module',
-      name: 'archive',
+  /**
+   * Starts the worker and waits until it answers. Resolves `null` when the platform cannot run
+   * it (e.g. a WebView that refuses module workers), so callers can fall back to the main thread.
+   */
+  static async connect(): Promise<WorkerArchiveRepository | null> {
+    let worker: Worker;
+    try {
+      worker = new Worker(new URL('./worker/archive.worker.ts', import.meta.url), {
+        type: 'module',
+        name: 'archive',
+      });
+    } catch {
+      return null;
+    }
+    const remote = Comlink.wrap<ArchiveWorkerApi>(worker);
+    const failed = new Promise<false>((resolve) => {
+      worker.addEventListener('error', () => resolve(false), { once: true });
+      setTimeout(() => resolve(false), READY_TIMEOUT_MS);
     });
-    this.worker = Comlink.wrap<ArchiveWorkerApi>(worker);
+    const ready = await Promise.race([remote.ping().catch(() => false), failed]);
+    if (ready) return new WorkerArchiveRepository(remote);
+    worker.terminate();
+    return null;
   }
 
   async open(file: Blob, format: ArchiveFormat): Promise<ArchiveSession> {

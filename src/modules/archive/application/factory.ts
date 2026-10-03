@@ -1,5 +1,5 @@
 import type { ArchiveRepository } from '../domain/ArchiveRepository';
-import { WorkerArchiveRepository } from '../infrastructure/WorkerArchiveRepository';
+import { ResilientArchiveRepository } from '../infrastructure/ResilientArchiveRepository';
 import { closeArchive } from './closeArchive';
 import { openArchive } from './openArchive';
 import { readComicInfo } from './readComicInfo';
@@ -20,8 +20,8 @@ export type ArchiveUseCases = ReturnType<typeof createArchiveUseCases>;
 
 let instance: ArchiveUseCases | null = null;
 
-/** App-wide archive use cases backed by a single archive worker (created lazily). */
+/** App-wide archive use cases backed by the archive worker (main-thread fallback if needed). */
 export function getArchiveUseCases(): ArchiveUseCases {
-  instance ??= createArchiveUseCases(new WorkerArchiveRepository());
+  instance ??= createArchiveUseCases(new ResilientArchiveRepository());
   return instance;
 }

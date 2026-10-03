@@ -11,6 +11,8 @@ export type WorkerResult<T> =
   { ok: true; value: T } | { ok: false; error: { code: ArchiveErrorCode | null; message: string } };
 
 export interface ArchiveWorkerApi {
+  /** Answers once the worker script has loaded (readiness check). */
+  ping(): Promise<boolean>;
   open(file: Blob, format: ArchiveFormatPrimitive): Promise<WorkerResult<ArchiveSessionPrimitive>>;
   readEntry(sessionId: string, entryPath: string, mimeType: string): Promise<WorkerResult<Blob>>;
   readEntryThumbnail(

@@ -1,18 +1,10 @@
 import * as Comlink from 'comlink';
 import { ArchiveError } from '../../domain/ArchiveError';
 import { ArchiveFormat, type ArchiveFormatPrimitive } from '../../domain/ArchiveFormat';
-import type { ArchiveRepository } from '../../domain/ArchiveRepository';
-import { UnrarArchiveRepository } from '../UnrarArchiveRepository';
-import { ZipJsArchiveRepository } from '../ZipJsArchiveRepository';
+import { DispatchingArchiveRepository } from '../DispatchingArchiveRepository';
 import type { ArchiveWorkerApi, WorkerResult } from './archiveWorkerApi';
 
-const zipRepository = new ZipJsArchiveRepository();
-const rarRepository = new UnrarArchiveRepository();
-const repositoryBySession = new Map<string, ArchiveRepository>();
-
-function repositoryFor(format: ArchiveFormat): ArchiveRepository {
-  return format.isZip() ? zipRepository : rarRepository;
-}
+const repository = new DispatchingArchiveRepository();
 
 async function toResult<T>(operation: () => Promise<T>): Promise<WorkerResult<T>> {
   try {
@@ -28,42 +20,27 @@ async function toResult<T>(operation: () => Promise<T>): Promise<WorkerResult<T>
   }
 }
 
-function sessionRepository(sessionId: string): ArchiveRepository {
-  const repository = repositoryBySession.get(sessionId);
-  if (!repository) throw new Error(`[archive.worker] Unknown session: ${sessionId}`);
-  return repository;
-}
-
 const api: ArchiveWorkerApi = {
+  ping: async () => true,
+
   open: (file: Blob, format: ArchiveFormatPrimitive) =>
-    toResult(async () => {
-      const archiveFormat = ArchiveFormat.fromPrimitive(format);
-      const repository = repositoryFor(archiveFormat);
-      const session = await repository.open(file, archiveFormat);
-      repositoryBySession.set(session.getId(), repository);
-      return session.toPrimitive();
-    }),
+    toResult(async () =>
+      (await repository.open(file, ArchiveFormat.fromPrimitive(format))).toPrimitive(),
+    ),
 
   readEntry: (sessionId: string, entryPath: string, mimeType: string) =>
-    toResult(() => sessionRepository(sessionId).readEntry(sessionId, entryPath, mimeType)),
+    toResult(() => repository.readEntry(sessionId, entryPath, mimeType)),
 
   readEntryThumbnail: (sessionId: string, entryPath: string, mimeType: string, maxWidth: number) =>
-    toResult(() =>
-      sessionRepository(sessionId).readEntryThumbnail(sessionId, entryPath, mimeType, maxWidth),
-    ),
+    toResult(() => repository.readEntryThumbnail(sessionId, entryPath, mimeType, maxWidth)),
 
   readComicInfo: (sessionId: string, entryPath: string) =>
     toResult(async () => {
-      const info = await sessionRepository(sessionId).readComicInfo(sessionId, entryPath);
+      const info = await repository.readComicInfo(sessionId, entryPath);
       return info?.toPrimitive() ?? null;
     }),
 
-  close: (sessionId: string) =>
-    toResult(async () => {
-      const repository = repositoryBySession.get(sessionId);
-      repositoryBySession.delete(sessionId);
-      await repository?.close(sessionId);
-    }),
+  close: (sessionId: string) => toResult(() => repository.close(sessionId)),
 };
 
 Comlink.expose(api);

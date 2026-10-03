@@ -1,6 +1,6 @@
 # MangaReader
 
-Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** via Capacitor. It is a reader only: no scrapers, no downloads, no backend, no accounts, no telemetry. Files never leave the device.
+Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** and an **iOS app** via Capacitor. It is a reader only: no scrapers, no downloads, no backend, no accounts, no telemetry. Files never leave the device.
 
 ## Stack
 
@@ -25,6 +25,9 @@ Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** via 
 | `npm run android:run`                     | Build, sync and run on a connected device/emulator     |
 | `npm run android:open`                    | Open `android/` in Android Studio                      |
 | `npm run assets`                          | Regenerate launcher icons and splash screens           |
+| `npm run ios:sync`                        | Build web + copy into `ios/` (Xcode project, SPM)      |
+
+iOS: the Xcode project lives in `ios/App` (Swift Package Manager, iOS 17+ because the UI relies on popover, `@starting-style` and `linear()`). It can only be compiled on macOS: CI builds an **unsigned .ipa** on `macos-latest` (artifact `manga-reader-ios-unsigned-ipa`), which the owner signs and installs with Sideloadly and a free Apple ID (re-sign every 7 days). Platform differences live behind `src/shared/infrastructure/nativeSystemUi.ts` (Android `SystemUi` plugin vs iOS `@capacitor/status-bar`) and `useEdgeSwipeBack` (iOS edge-swipe back on pushed screens). If WKWebView cannot start the archive worker, `ResilientArchiveRepository` decodes on the main thread.
 
 Android builds need **JDK 21** + Android SDK. Android Studio bundles a newer JBR (Java 25) that Gradle 8.14 rejects, so point `JAVA_HOME` (and Android Studio's Gradle JDK) to a JDK 21. CI (`.github/workflows/ci.yml`) runs lint, format check, typecheck, tests and build, then assembles a debug APK and uploads it as an artifact.
 
