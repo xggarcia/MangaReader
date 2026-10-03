@@ -1,0 +1,23 @@
+{
+  "app": {
+    "name": "MangaReader"
+  },
+  "nav": {
+    "back": "Atrás",
+    "settings": "Ajustes",
+    "library": "Biblioteca"
+  },
+  "library": {
+    "title": "Biblioteca",
+    "empty": "Tu biblioteca está vacía.",
+    "emptyHint": "Añade archivos CBZ o CBR guardados en tu dispositivo para empezar a leer."
+  },
+  "reader": {
+    "title": "Lector",
+    "placeholder": "Aquí aparecerá el lector."
+  },
+  "settings": {
+    "title": "Ajustes",
+    "placeholder": "Aquí aparecerán los ajustes."
+  }
+}
