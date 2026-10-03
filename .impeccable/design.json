@@ -4,71 +4,282 @@
   "title": "Design System: MangaReader",
   "extensions": {
     "colorMeta": {
-      "accent": { "role": "primary", "displayName": "Magenta", "canonical": "#c2185b", "tonalRamp": ["oklch(20% 0.07 3)", "oklch(30% 0.11 3)", "oklch(40% 0.16 3)", "oklch(52% 0.2 3)", "oklch(62% 0.2 3)", "oklch(72% 0.15 3)", "oklch(84% 0.08 3)", "oklch(95% 0.025 3)"] },
-      "accent-pressed": { "role": "primary", "displayName": "Magenta Pressed", "canonical": "#a0124a" },
-      "accent-tint": { "role": "primary", "displayName": "Magenta Wash", "canonical": "rgb(194 24 91 / 0.12)" },
-      "accent-dark": { "role": "primary", "displayName": "Neon Magenta (dark scheme)", "canonical": "#ff4f8b", "tonalRamp": ["oklch(22% 0.08 2)", "oklch(34% 0.13 2)", "oklch(46% 0.18 2)", "oklch(58% 0.21 2)", "oklch(67% 0.21 2)", "oklch(76% 0.15 2)", "oklch(86% 0.08 2)", "oklch(95% 0.025 2)"] },
-      "accent-pressed-dark": { "role": "primary", "displayName": "Neon Magenta Pressed", "canonical": "#ff7aa6" },
-      "label-on-accent": { "role": "primary", "displayName": "On-Accent White", "canonical": "#ffffff" },
-      "label-on-accent-dark": { "role": "primary", "displayName": "On-Accent Ink (dark scheme)", "canonical": "#1a0010" },
-      "destructive": { "role": "secondary", "displayName": "Destructive Red", "canonical": "#d70015" },
-      "destructive-dark": { "role": "secondary", "displayName": "Destructive Red (dark)", "canonical": "#ff453a" },
+      "accent": {
+        "role": "primary",
+        "displayName": "Magenta",
+        "canonical": "#c2185b",
+        "tonalRamp": [
+          "oklch(20% 0.07 3)",
+          "oklch(30% 0.11 3)",
+          "oklch(40% 0.16 3)",
+          "oklch(52% 0.2 3)",
+          "oklch(62% 0.2 3)",
+          "oklch(72% 0.15 3)",
+          "oklch(84% 0.08 3)",
+          "oklch(95% 0.025 3)"
+        ]
+      },
+      "accent-pressed": {
+        "role": "primary",
+        "displayName": "Magenta Pressed",
+        "canonical": "#a0124a"
+      },
+      "accent-tint": {
+        "role": "primary",
+        "displayName": "Magenta Wash",
+        "canonical": "rgb(194 24 91 / 0.12)"
+      },
+      "accent-dark": {
+        "role": "primary",
+        "displayName": "Neon Magenta (dark scheme)",
+        "canonical": "#ff4f8b",
+        "tonalRamp": [
+          "oklch(22% 0.08 2)",
+          "oklch(34% 0.13 2)",
+          "oklch(46% 0.18 2)",
+          "oklch(58% 0.21 2)",
+          "oklch(67% 0.21 2)",
+          "oklch(76% 0.15 2)",
+          "oklch(86% 0.08 2)",
+          "oklch(95% 0.025 2)"
+        ]
+      },
+      "accent-pressed-dark": {
+        "role": "primary",
+        "displayName": "Neon Magenta Pressed",
+        "canonical": "#ff7aa6"
+      },
+      "label-on-accent": {
+        "role": "primary",
+        "displayName": "On-Accent White",
+        "canonical": "#ffffff"
+      },
+      "label-on-accent-dark": {
+        "role": "primary",
+        "displayName": "On-Accent Ink (dark scheme)",
+        "canonical": "#1a0010"
+      },
+      "destructive": {
+        "role": "secondary",
+        "displayName": "Destructive Red",
+        "canonical": "#d70015"
+      },
+      "destructive-dark": {
+        "role": "secondary",
+        "displayName": "Destructive Red (dark)",
+        "canonical": "#ff453a"
+      },
       "success": { "role": "secondary", "displayName": "Success Green", "canonical": "#248a3d" },
-      "success-dark": { "role": "secondary", "displayName": "Success Green (dark)", "canonical": "#30d158" },
-      "bg-grouped": { "role": "neutral", "displayName": "Grouped Grey", "canonical": "#f2f2f7", "tonalRamp": ["#000000", "#1c1c1e", "#2c2c2e", "#38383a", "#636366", "#c6c6c8", "#f2f2f7", "#ffffff"] },
+      "success-dark": {
+        "role": "secondary",
+        "displayName": "Success Green (dark)",
+        "canonical": "#30d158"
+      },
+      "bg-grouped": {
+        "role": "neutral",
+        "displayName": "Grouped Grey",
+        "canonical": "#f2f2f7",
+        "tonalRamp": [
+          "#000000",
+          "#1c1c1e",
+          "#2c2c2e",
+          "#38383a",
+          "#636366",
+          "#c6c6c8",
+          "#f2f2f7",
+          "#ffffff"
+        ]
+      },
       "bg-elevated": { "role": "neutral", "displayName": "Elevated White", "canonical": "#ffffff" },
       "bg-sheet": { "role": "neutral", "displayName": "Sheet Ground", "canonical": "#f2f2f7" },
       "bg-sheet-card": { "role": "neutral", "displayName": "Sheet Card", "canonical": "#ffffff" },
-      "bg-grouped-dark": { "role": "neutral", "displayName": "Grouped Black", "canonical": "#000000" },
-      "bg-elevated-dark": { "role": "neutral", "displayName": "Elevated Graphite", "canonical": "#1c1c1e" },
-      "bg-elevated-2-dark": { "role": "neutral", "displayName": "Elevated Graphite 2", "canonical": "#2c2c2e" },
-      "bg-sheet-dark": { "role": "neutral", "displayName": "Sheet Ground (dark)", "canonical": "#1c1c1e" },
-      "bg-sheet-card-dark": { "role": "neutral", "displayName": "Sheet Card (dark)", "canonical": "#2c2c2e" },
+      "bg-grouped-dark": {
+        "role": "neutral",
+        "displayName": "Grouped Black",
+        "canonical": "#000000"
+      },
+      "bg-elevated-dark": {
+        "role": "neutral",
+        "displayName": "Elevated Graphite",
+        "canonical": "#1c1c1e"
+      },
+      "bg-elevated-2-dark": {
+        "role": "neutral",
+        "displayName": "Elevated Graphite 2",
+        "canonical": "#2c2c2e"
+      },
+      "bg-sheet-dark": {
+        "role": "neutral",
+        "displayName": "Sheet Ground (dark)",
+        "canonical": "#1c1c1e"
+      },
+      "bg-sheet-card-dark": {
+        "role": "neutral",
+        "displayName": "Sheet Card (dark)",
+        "canonical": "#2c2c2e"
+      },
       "bg-reader": { "role": "neutral", "displayName": "Reader Black", "canonical": "#000000" },
       "label": { "role": "neutral", "displayName": "Label", "canonical": "#000000" },
-      "label-secondary": { "role": "neutral", "displayName": "Secondary Label (AA-adjusted)", "canonical": "rgb(60 60 67 / 0.78)" },
-      "label-tertiary": { "role": "neutral", "displayName": "Tertiary Label", "canonical": "rgb(60 60 67 / 0.45)" },
-      "label-secondary-dark": { "role": "neutral", "displayName": "Secondary Label dark (AA-adjusted)", "canonical": "rgb(235 235 245 / 0.64)" },
-      "separator": { "role": "neutral", "displayName": "Hairline", "canonical": "rgb(60 60 67 / 0.29)" },
-      "material-bar": { "role": "neutral", "displayName": "Bar Material", "canonical": "rgb(249 249 249 / 0.8)" },
-      "material-thick": { "role": "neutral", "displayName": "Thick Material", "canonical": "rgb(255 255 255 / 0.86)" },
-      "material-reader": { "role": "neutral", "displayName": "Reader Material", "canonical": "rgb(28 28 30 / 0.72)" },
+      "label-secondary": {
+        "role": "neutral",
+        "displayName": "Secondary Label (AA-adjusted)",
+        "canonical": "rgb(60 60 67 / 0.78)"
+      },
+      "label-tertiary": {
+        "role": "neutral",
+        "displayName": "Tertiary Label",
+        "canonical": "rgb(60 60 67 / 0.45)"
+      },
+      "label-secondary-dark": {
+        "role": "neutral",
+        "displayName": "Secondary Label dark (AA-adjusted)",
+        "canonical": "rgb(235 235 245 / 0.64)"
+      },
+      "separator": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "rgb(60 60 67 / 0.29)"
+      },
+      "material-bar": {
+        "role": "neutral",
+        "displayName": "Bar Material",
+        "canonical": "rgb(249 249 249 / 0.8)"
+      },
+      "material-thick": {
+        "role": "neutral",
+        "displayName": "Thick Material",
+        "canonical": "rgb(255 255 255 / 0.86)"
+      },
+      "material-reader": {
+        "role": "neutral",
+        "displayName": "Reader Material",
+        "canonical": "rgb(28 28 30 / 0.72)"
+      },
       "dim": { "role": "neutral", "displayName": "Backdrop Dim", "canonical": "rgb(0 0 0 / 0.36)" }
     },
     "typographyMeta": {
-      "large-title": { "displayName": "Large Title", "purpose": "One per tab root; collapses to an inline Headline in the nav bar on scroll." },
+      "large-title": {
+        "displayName": "Large Title",
+        "purpose": "One per tab root; collapses to an inline Headline in the nav bar on scroll."
+      },
       "title1": { "displayName": "Title 1", "purpose": "Cover placeholder initial." },
       "title2": { "displayName": "Title 2", "purpose": "Empty-state title." },
-      "title3": { "displayName": "Title 3", "purpose": "In-page section headings and sheet titles." },
-      "headline": { "displayName": "Headline", "purpose": "Inline nav and reader titles, filled buttons, sheet Done, card titles." },
+      "title3": {
+        "displayName": "Title 3",
+        "purpose": "In-page section headings and sheet titles."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Inline nav and reader titles, filled buttons, sheet Done, card titles."
+      },
       "body": { "displayName": "Body", "purpose": "List rows, menu items, search input." },
       "callout": { "displayName": "Callout", "purpose": "Available in the ramp; rarely used." },
-      "subhead": { "displayName": "Subhead", "purpose": "Capsule buttons, counts, HUD, menu header title." },
-      "footnote": { "displayName": "Footnote", "purpose": "Grouped section titles (uppercase), footers, meta, segmented labels, grid titles." },
-      "caption": { "displayName": "Caption", "purpose": "Grid subtitles, progress percent, reader page counter." },
-      "caption2": { "displayName": "Caption 2", "purpose": "Tab labels and the uppercase New badge." }
+      "subhead": {
+        "displayName": "Subhead",
+        "purpose": "Capsule buttons, counts, HUD, menu header title."
+      },
+      "footnote": {
+        "displayName": "Footnote",
+        "purpose": "Grouped section titles (uppercase), footers, meta, segmented labels, grid titles."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Grid subtitles, progress percent, reader page counter."
+      },
+      "caption2": {
+        "displayName": "Caption 2",
+        "purpose": "Tab labels and the uppercase New badge."
+      }
     },
     "shadows": [
-      { "name": "shadow-cover", "value": "0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px rgb(0 0 0 / 0.1)", "purpose": "Every cover at rest (dark: 0.5 / 0.4 alpha)." },
-      { "name": "shadow-lifted", "value": "0 8px 24px rgb(0 0 0 / 0.18), 0 24px 64px rgb(0 0 0 / 0.22)", "purpose": "Cover preview lifted by the long-press context menu." },
-      { "name": "shadow-menu", "value": "0 10px 40px rgb(0 0 0 / 0.18)", "purpose": "Pull-down menus, context-menu action list, import HUD." },
-      { "name": "shadow-sheet", "value": "0 -2px 30px rgb(0 0 0 / 0.2)", "purpose": "Bottom sheet top edge." },
-      { "name": "shadow-segmented-thumb", "value": "0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04)", "purpose": "Raised segmented-control thumb." },
-      { "name": "hairline-bar", "value": "0 0.5px 0 var(--separator)", "purpose": "Under a collapsed nav bar; negated above the tab bar." },
-      { "name": "material-blur", "value": "backdrop-filter: saturate(180%) blur(20px)", "purpose": "All translucent materials (bars, menus, action sheets, HUD, reader chrome)." }
+      {
+        "name": "shadow-cover",
+        "value": "0 1px 2px rgb(0 0 0 / 0.12), 0 6px 16px rgb(0 0 0 / 0.1)",
+        "purpose": "Every cover at rest (dark: 0.5 / 0.4 alpha)."
+      },
+      {
+        "name": "shadow-lifted",
+        "value": "0 8px 24px rgb(0 0 0 / 0.18), 0 24px 64px rgb(0 0 0 / 0.22)",
+        "purpose": "Cover preview lifted by the long-press context menu."
+      },
+      {
+        "name": "shadow-menu",
+        "value": "0 10px 40px rgb(0 0 0 / 0.18)",
+        "purpose": "Pull-down menus, context-menu action list, import HUD."
+      },
+      {
+        "name": "shadow-sheet",
+        "value": "0 -2px 30px rgb(0 0 0 / 0.2)",
+        "purpose": "Bottom sheet top edge."
+      },
+      {
+        "name": "shadow-segmented-thumb",
+        "value": "0 3px 8px rgb(0 0 0 / 0.12), 0 3px 1px rgb(0 0 0 / 0.04)",
+        "purpose": "Raised segmented-control thumb."
+      },
+      {
+        "name": "hairline-bar",
+        "value": "0 0.5px 0 var(--separator)",
+        "purpose": "Under a collapsed nav bar; negated above the tab bar."
+      },
+      {
+        "name": "material-blur",
+        "value": "backdrop-filter: saturate(180%) blur(20px)",
+        "purpose": "All translucent materials (bars, menus, action sheets, HUD, reader chrome)."
+      }
     ],
     "motion": [
-      { "name": "ease-spring", "value": "linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50%, 1.015 55%, 1.017 63.9%, 1.001 85%, 1)", "purpose": "Critically damped spring approximation: presses, menu pop, segmented thumb, scrubber, HUD, cover lift." },
-      { "name": "ease-ios", "value": "cubic-bezier(0.32, 0.72, 0, 1)", "purpose": "iOS sheet curve: sheets, action sheets, reader bars, view transitions, cover un-lift." },
-      { "name": "ease-out", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Progress widths, inline title rise." },
-      { "name": "ease-pager-settle", "value": "cubic-bezier(0.2, 0.9, 0.24, 1)", "purpose": "Pager track settle, 180-420ms scaled by flick velocity." },
-      { "name": "duration-fast", "value": "180ms", "purpose": "Opacity and colour changes, tab cross-fade." },
+      {
+        "name": "ease-spring",
+        "value": "linear(0, 0.006, 0.025 2.8%, 0.101 6.1%, 0.539 18.9%, 0.721 25.3%, 0.849 31.5%, 0.937 38.1%, 0.968 41.8%, 0.991 45.7%, 1.006 50%, 1.015 55%, 1.017 63.9%, 1.001 85%, 1)",
+        "purpose": "Critically damped spring approximation: presses, menu pop, segmented thumb, scrubber, HUD, cover lift."
+      },
+      {
+        "name": "ease-ios",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "iOS sheet curve: sheets, action sheets, reader bars, view transitions, cover un-lift."
+      },
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Progress widths, inline title rise."
+      },
+      {
+        "name": "ease-pager-settle",
+        "value": "cubic-bezier(0.2, 0.9, 0.24, 1)",
+        "purpose": "Pager track settle, 180-420ms scaled by flick velocity."
+      },
+      {
+        "name": "duration-fast",
+        "value": "180ms",
+        "purpose": "Opacity and colour changes, tab cross-fade."
+      },
       { "name": "duration", "value": "320ms", "purpose": "Press feedback, fades." },
-      { "name": "duration-slow", "value": "480ms", "purpose": "Slides, sheets, push/pop view transitions." },
-      { "name": "vt-push", "value": "new: translateX(100%) -> 0; old: 0 -> translateX(-28%) brightness(0.82)", "purpose": "Forward navigation (data-nav=forward); back reverses with the old page on top." },
-      { "name": "cover-morph", "value": "view-transition-name: reader-cover", "purpose": "Tapped cover grows into the reader's loading cover." },
-      { "name": "context-lift", "value": "FLIP from grid rect, 520ms ease-spring; menu 420ms ease-spring +40ms; close 300ms ease-ios", "purpose": "Long-press cover context menu." },
-      { "name": "reduced-motion", "value": "durations 1ms; view transitions off; pager and context menu jump", "purpose": "prefers-reduced-motion: reduce." }
+      {
+        "name": "duration-slow",
+        "value": "480ms",
+        "purpose": "Slides, sheets, push/pop view transitions."
+      },
+      {
+        "name": "vt-push",
+        "value": "new: translateX(100%) -> 0; old: 0 -> translateX(-28%) brightness(0.82)",
+        "purpose": "Forward navigation (data-nav=forward); back reverses with the old page on top."
+      },
+      {
+        "name": "cover-morph",
+        "value": "view-transition-name: reader-cover",
+        "purpose": "Tapped cover grows into the reader's loading cover."
+      },
+      {
+        "name": "context-lift",
+        "value": "FLIP from grid rect, 520ms ease-spring; menu 420ms ease-spring +40ms; close 300ms ease-ios",
+        "purpose": "Long-press cover context menu."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "durations 1ms; view transitions off; pager and context menu jump",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
     ],
     "breakpoints": [
       { "name": "grid-cell-min", "value": "104px" },
@@ -170,12 +381,36 @@
       "Every icon is a Lucide line icon; every overlay lives on the popover top layer."
     ],
     "rules": [
-      { "name": "The One Voice Rule", "body": "Magenta means \"you can tap this\" or \"this is your progress\". It never decorates a surface, a heading or an illustration.", "section": "colors" },
-      { "name": "The Stronger Secondary Rule", "body": "Secondary labels are deliberately stronger than stock iOS (0.78 alpha light, 0.64 dark) so metadata clears WCAG AA on every ground. Never drop back to iOS's 0.6. Tertiary labels are for placeholders that are not required reading, disabled controls and the grabber only.", "section": "colors" },
-      { "name": "The Scoped Dark Rule", "body": "Dark tokens apply three ways: system dark with no `data-theme`, `data-theme=\"dark\"` on `<html>`, or `data-theme=\"dark\"` on any subtree. Anything floating over the reader (the reading options sheet) is wrapped in `<div data-theme=\"dark\" style=\"display: contents\">` so it is dark even in light app theme. Components that hardcode a dark variant (segmented thumb `#636366`) must honour both selectors.", "section": "colors" },
-      { "name": "The Tabular Numbers Rule", "body": "Every changing number (page x of y, percentages, counts, import progress) uses `font-variant-numeric: tabular-nums` so it does not jitter.", "section": "typography" },
-      { "name": "The Ramp-Only Rule", "body": "Set type with the `--text-*` shorthand tokens; weight overrides are allowed, ad-hoc font sizes are not (the action-sheet 20px button is the single exception, matching iOS).", "section": "typography" },
-      { "name": "The Material Not Shadow Rule", "body": "Bars are separated from content by blur plus a 0.5px hairline, never by a drop shadow. The large-title nav bar is fully transparent until the title scrolls behind it, then becomes `material-bar` with the hairline.", "section": "elevation" }
+      {
+        "name": "The One Voice Rule",
+        "body": "Magenta means \"you can tap this\" or \"this is your progress\". It never decorates a surface, a heading or an illustration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stronger Secondary Rule",
+        "body": "Secondary labels are deliberately stronger than stock iOS (0.78 alpha light, 0.64 dark) so metadata clears WCAG AA on every ground. Never drop back to iOS's 0.6. Tertiary labels are for placeholders that are not required reading, disabled controls and the grabber only.",
+        "section": "colors"
+      },
+      {
+        "name": "The Scoped Dark Rule",
+        "body": "Dark tokens apply three ways: system dark with no `data-theme`, `data-theme=\"dark\"` on `<html>`, or `data-theme=\"dark\"` on any subtree. Anything floating over the reader (the reading options sheet) is wrapped in `<div data-theme=\"dark\" style=\"display: contents\">` so it is dark even in light app theme. Components that hardcode a dark variant (segmented thumb `#636366`) must honour both selectors.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Every changing number (page x of y, percentages, counts, import progress) uses `font-variant-numeric: tabular-nums` so it does not jitter.",
+        "section": "typography"
+      },
+      {
+        "name": "The Ramp-Only Rule",
+        "body": "Set type with the `--text-*` shorthand tokens; weight overrides are allowed, ad-hoc font sizes are not (the action-sheet 20px button is the single exception, matching iOS).",
+        "section": "typography"
+      },
+      {
+        "name": "The Material Not Shadow Rule",
+        "body": "Bars are separated from content by blur plus a 0.5px hairline, never by a drop shadow. The large-title nav bar is fully transparent until the title scrolls behind it, then becomes `material-bar` with the hairline.",
+        "section": "elevation"
+      }
     ],
     "dos": [
       "**Do** build new screens from `LargeTitleScreen`, `GroupedSection`/`Row`/`MenuRow`, `SegmentedControl`, `Sheet`, `ConfirmSheet`, `Menu`, `SearchField` and `BarButton` before writing new chrome.",
