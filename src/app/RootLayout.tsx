@@ -2,15 +2,21 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { useAndroidBackButton } from '../hooks/useAndroidBackButton';
 import { useTheme } from '../hooks/useTheme';
+import i18n, { detectSystemLanguage } from '../i18n';
 import { useSettingsStore } from '../stores/settingsStore';
 
 export function RootLayout() {
   const theme = useSettingsStore((state) => state.settings.getTheme());
+  const language = useSettingsStore((state) => state.settings.getLanguage());
   const loaded = useSettingsStore((state) => state.loaded);
 
   useEffect(() => {
     void useSettingsStore.getState().load();
   }, []);
+
+  useEffect(() => {
+    void i18n.changeLanguage(language === 'system' ? detectSystemLanguage() : language);
+  }, [language]);
 
   useAndroidBackButton();
   useTheme(theme);

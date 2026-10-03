@@ -3,6 +3,7 @@ import { ArchiveError } from '../domain/ArchiveError';
 import type { ArchiveFormat } from '../domain/ArchiveFormat';
 import type { ArchiveRepository } from '../domain/ArchiveRepository';
 import { ArchiveSession } from '../domain/ArchiveSession';
+import { ComicInfo } from '../domain/ComicInfo';
 import type { ArchiveWorkerApi, WorkerResult } from './worker/archiveWorkerApi';
 
 function unwrap<T>(result: WorkerResult<T>): T {
@@ -39,6 +40,11 @@ export class WorkerArchiveRepository implements ArchiveRepository {
     maxWidth: number,
   ): Promise<Blob> {
     return unwrap(await this.worker.readEntryThumbnail(sessionId, entryPath, mimeType, maxWidth));
+  }
+
+  async readComicInfo(sessionId: string, entryPath: string): Promise<ComicInfo | null> {
+    const info = unwrap(await this.worker.readComicInfo(sessionId, entryPath));
+    return info ? ComicInfo.fromPrimitive(info) : null;
   }
 
   async close(sessionId: string): Promise<void> {

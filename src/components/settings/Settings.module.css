@@ -1,0 +1,24 @@
+.settings {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.sectionTitle {
+  margin: var(--space-4) 0 var(--space-3);
+  font-size: 1.125rem;
+}
+
+.rangeField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.rangeField input {
+  min-height: 44px;
+  accent-color: var(--color-accent);
+}

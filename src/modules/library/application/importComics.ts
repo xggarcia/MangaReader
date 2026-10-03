@@ -1,4 +1,5 @@
 import { ArchiveError, type ArchiveErrorCode } from '../../archive/domain/ArchiveError';
+import type { ComicInfo } from '../../archive/domain/ComicInfo';
 import type { OpenedComic } from '../../archive/domain/OpenedComic';
 import { Comic } from '../domain/Comic';
 import type { ComicFileRepository } from '../domain/ComicFileRepository';
@@ -23,6 +24,7 @@ interface ImportComicsProps {
   coverRepository: CoverRepository;
   openArchive: (file: Blob) => Promise<OpenedComic>;
   readCoverThumbnail: (comic: OpenedComic) => Promise<Blob>;
+  readComicInfo: (comic: OpenedComic) => Promise<ComicInfo | null>;
   closeArchive: (comic: OpenedComic) => Promise<void>;
   generateId?: () => string;
   now?: () => number;
@@ -43,6 +45,7 @@ export function importComics({
   coverRepository,
   openArchive,
   readCoverThumbnail,
+  readComicInfo,
   closeArchive,
   generateId = () => crypto.randomUUID(),
   now = Date.now,
@@ -54,18 +57,20 @@ export function importComics({
 
     const opened = await openArchive(file);
     let cover: Blob | null = null;
+    let info: ComicInfo | null = null;
     try {
       cover = await readCoverThumbnail(opened).catch(() => null);
+      info = await readComicInfo(opened);
     } finally {
       await closeArchive(opened);
     }
 
     const comic = Comic.create({
       id: generateId(),
-      title: Comic.titleFromFileName(file.name),
-      series: null,
-      number: null,
-      author: null,
+      title: info?.getTitle() ?? Comic.titleFromFileName(file.name),
+      series: info?.getSeries() ?? null,
+      number: info?.getNumber() ?? null,
+      author: info?.getWriter() ?? null,
       fileName: file.name,
       fileSize: file.size,
       format: opened.getFormat().toPrimitive(),

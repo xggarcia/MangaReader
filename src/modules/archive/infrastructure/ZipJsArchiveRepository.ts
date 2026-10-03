@@ -1,9 +1,8 @@
 import { BlobReader, BlobWriter, ZipReader, configure, type FileEntry } from '@zip.js/zip.js';
 import { ArchiveError } from '../domain/ArchiveError';
 import type { ArchiveFormat } from '../domain/ArchiveFormat';
-import type { ArchiveRepository } from '../domain/ArchiveRepository';
 import { ArchiveSession } from '../domain/ArchiveSession';
-import { createThumbnail } from './createThumbnail';
+import { InThreadArchiveRepository } from './InThreadArchiveRepository';
 
 // This repository already runs inside the archive worker: no nested workers needed.
 // Native DecompressionStream handles inflate when available.
@@ -15,7 +14,7 @@ interface ZipSession {
 }
 
 /** CBZ reader backed by zip.js. Reads entries lazily from the Blob (random access). */
-export class ZipJsArchiveRepository implements ArchiveRepository {
+export class ZipJsArchiveRepository extends InThreadArchiveRepository {
   private readonly sessions = new Map<string, ZipSession>();
 
   async open(file: Blob, format: ArchiveFormat): Promise<ArchiveSession> {
@@ -56,15 +55,6 @@ export class ZipJsArchiveRepository implements ArchiveRepository {
     } catch (error) {
       throw new ArchiveError('corrupt', `[ZipJsArchiveRepository] ${String(error)}`);
     }
-  }
-
-  async readEntryThumbnail(
-    sessionId: string,
-    entryPath: string,
-    mimeType: string,
-    maxWidth: number,
-  ): Promise<Blob> {
-    return createThumbnail(await this.readEntry(sessionId, entryPath, mimeType), maxWidth);
   }
 
   async close(sessionId: string): Promise<void> {

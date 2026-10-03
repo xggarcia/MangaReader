@@ -1,5 +1,6 @@
 import type { ArchiveFormat } from './ArchiveFormat';
 import type { ArchiveSession } from './ArchiveSession';
+import type { ComicInfo } from './ComicInfo';
 
 /**
  * Reads comic archives. Implementations keep the opened archive in memory until `close`
@@ -16,5 +17,7 @@ export interface ArchiveRepository {
     mimeType: string,
     maxWidth: number,
   ): Promise<Blob>;
+  /** Parses a ComicInfo.xml entry; `null` when it has no usable metadata. */
+  readComicInfo(sessionId: string, entryPath: string): Promise<ComicInfo | null>;
   close(sessionId: string): Promise<void>;
 }

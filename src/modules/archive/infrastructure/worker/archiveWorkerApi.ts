@@ -1,6 +1,7 @@
 import type { ArchiveErrorCode } from '../../domain/ArchiveError';
 import type { ArchiveFormatPrimitive } from '../../domain/ArchiveFormat';
 import type { ArchiveSessionPrimitive } from '../../domain/ArchiveSession';
+import type { ComicInfoPrimitive } from '../../domain/ComicInfo';
 
 /**
  * Results cross the worker boundary as plain data: Comlink only keeps `name` and `message`
@@ -18,5 +19,9 @@ export interface ArchiveWorkerApi {
     mimeType: string,
     maxWidth: number,
   ): Promise<WorkerResult<Blob>>;
+  readComicInfo(
+    sessionId: string,
+    entryPath: string,
+  ): Promise<WorkerResult<ComicInfoPrimitive | null>>;
   close(sessionId: string): Promise<WorkerResult<void>>;
 }

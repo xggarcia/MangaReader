@@ -1,6 +1,7 @@
 import { ArchiveError } from '../domain/ArchiveError';
 import { ARCHIVE_SIGNATURE_LENGTH, ArchiveFormat } from '../domain/ArchiveFormat';
 import type { ArchiveRepository } from '../domain/ArchiveRepository';
+import { ComicInfo } from '../domain/ComicInfo';
 import { OpenedComic } from '../domain/OpenedComic';
 import { PageList } from '../domain/PageList';
 
@@ -24,6 +25,11 @@ export function openArchive({ archiveRepository }: OpenArchiveProps) {
       throw new ArchiveError('empty', '[openArchive] Archive contains no images');
     }
 
-    return OpenedComic.create({ sessionId: session.getId(), format, pages });
+    return OpenedComic.create({
+      sessionId: session.getId(),
+      format,
+      pages,
+      comicInfoPath: ComicInfo.locateIn(session.getEntryPaths()),
+    });
   };
 }

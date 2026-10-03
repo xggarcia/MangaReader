@@ -75,7 +75,22 @@
   },
   "settings": {
     "title": "Settings",
-    "placeholder": "Settings will appear here."
+    "readingDefaults": "Reading defaults",
+    "appearance": "Appearance",
+    "theme": "Theme",
+    "themes": {
+      "system": "System",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "language": "Language",
+    "languages": {
+      "system": "System",
+      "es": "Español",
+      "en": "English"
+    },
+    "privacy": "Privacy",
+    "privacyText": "MangaReader works fully offline. Your comics, progress and settings are stored only on this device and are never uploaded or shared."
   },
   "errors": {
     "corrupt": "The file is damaged or is not a valid comic archive.",

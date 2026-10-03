@@ -37,6 +37,7 @@ export function createLibraryUseCases({
       coverRepository,
       openArchive: archive.openArchive,
       readCoverThumbnail: archive.readCoverThumbnail,
+      readComicInfo: archive.readComicInfo,
       closeArchive: archive.closeArchive,
     }),
     listLibrary: listLibrary({ comicRepository, progressRepository }),

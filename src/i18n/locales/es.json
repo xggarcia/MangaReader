@@ -75,7 +75,22 @@
   },
   "settings": {
     "title": "Ajustes",
-    "placeholder": "Aquí aparecerán los ajustes."
+    "readingDefaults": "Lectura por defecto",
+    "appearance": "Apariencia",
+    "theme": "Tema",
+    "themes": {
+      "system": "Sistema",
+      "light": "Claro",
+      "dark": "Oscuro"
+    },
+    "language": "Idioma",
+    "languages": {
+      "system": "Sistema",
+      "es": "Español",
+      "en": "English"
+    },
+    "privacy": "Privacidad",
+    "privacyText": "MangaReader funciona totalmente sin conexión. Tus cómics, tu progreso y tus ajustes se guardan solo en este dispositivo y nunca se suben ni se comparten."
   },
   "errors": {
     "corrupt": "El archivo está dañado o no es un cómic válido.",

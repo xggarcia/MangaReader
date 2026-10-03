@@ -2,15 +2,16 @@ import * as Comlink from 'comlink';
 import { ArchiveError } from '../../domain/ArchiveError';
 import { ArchiveFormat, type ArchiveFormatPrimitive } from '../../domain/ArchiveFormat';
 import type { ArchiveRepository } from '../../domain/ArchiveRepository';
+import { UnrarArchiveRepository } from '../UnrarArchiveRepository';
 import { ZipJsArchiveRepository } from '../ZipJsArchiveRepository';
 import type { ArchiveWorkerApi, WorkerResult } from './archiveWorkerApi';
 
 const zipRepository = new ZipJsArchiveRepository();
+const rarRepository = new UnrarArchiveRepository();
 const repositoryBySession = new Map<string, ArchiveRepository>();
 
 function repositoryFor(format: ArchiveFormat): ArchiveRepository {
-  if (format.isZip()) return zipRepository;
-  throw new ArchiveError('unsupported', '[archive.worker] RAR support is not available yet');
+  return format.isZip() ? zipRepository : rarRepository;
 }
 
 async function toResult<T>(operation: () => Promise<T>): Promise<WorkerResult<T>> {
@@ -50,6 +51,12 @@ const api: ArchiveWorkerApi = {
     toResult(() =>
       sessionRepository(sessionId).readEntryThumbnail(sessionId, entryPath, mimeType, maxWidth),
     ),
+
+  readComicInfo: (sessionId: string, entryPath: string) =>
+    toResult(async () => {
+      const info = await sessionRepository(sessionId).readComicInfo(sessionId, entryPath);
+      return info?.toPrimitive() ?? null;
+    }),
 
   close: (sessionId: string) =>
     toResult(async () => {
