@@ -32,6 +32,15 @@ export class WorkerArchiveRepository implements ArchiveRepository {
     return unwrap(await this.worker.readEntry(sessionId, entryPath, mimeType));
   }
 
+  async readEntryThumbnail(
+    sessionId: string,
+    entryPath: string,
+    mimeType: string,
+    maxWidth: number,
+  ): Promise<Blob> {
+    return unwrap(await this.worker.readEntryThumbnail(sessionId, entryPath, mimeType, maxWidth));
+  }
+
   async close(sessionId: string): Promise<void> {
     unwrap(await this.worker.close(sessionId));
   }

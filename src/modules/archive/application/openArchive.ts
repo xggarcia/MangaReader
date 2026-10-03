@@ -24,6 +24,6 @@ export function openArchive({ archiveRepository }: OpenArchiveProps) {
       throw new ArchiveError('empty', '[openArchive] Archive contains no images');
     }
 
-    return OpenedComic.create({ sessionId: session.getId(), pages });
+    return OpenedComic.create({ sessionId: session.getId(), format, pages });
   };
 }

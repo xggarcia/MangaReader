@@ -9,5 +9,12 @@ export interface ArchiveRepository {
   open(file: Blob, format: ArchiveFormat): Promise<ArchiveSession>;
   /** Extracts one entry; `mimeType` is applied to the returned Blob. */
   readEntry(sessionId: string, entryPath: string, mimeType: string): Promise<Blob>;
+  /** Extracts an image entry downscaled to at most `maxWidth` pixels wide. */
+  readEntryThumbnail(
+    sessionId: string,
+    entryPath: string,
+    mimeType: string,
+    maxWidth: number,
+  ): Promise<Blob>;
   close(sessionId: string): Promise<void>;
 }

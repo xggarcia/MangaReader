@@ -3,6 +3,7 @@ import { ArchiveError } from '../domain/ArchiveError';
 import type { ArchiveFormat } from '../domain/ArchiveFormat';
 import type { ArchiveRepository } from '../domain/ArchiveRepository';
 import { ArchiveSession } from '../domain/ArchiveSession';
+import { createThumbnail } from './createThumbnail';
 
 // This repository already runs inside the archive worker: no nested workers needed.
 // Native DecompressionStream handles inflate when available.
@@ -55,6 +56,15 @@ export class ZipJsArchiveRepository implements ArchiveRepository {
     } catch (error) {
       throw new ArchiveError('corrupt', `[ZipJsArchiveRepository] ${String(error)}`);
     }
+  }
+
+  async readEntryThumbnail(
+    sessionId: string,
+    entryPath: string,
+    mimeType: string,
+    maxWidth: number,
+  ): Promise<Blob> {
+    return createThumbnail(await this.readEntry(sessionId, entryPath, mimeType), maxWidth);
   }
 
   async close(sessionId: string): Promise<void> {

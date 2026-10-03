@@ -2,12 +2,14 @@ import type { ArchiveRepository } from '../domain/ArchiveRepository';
 import { WorkerArchiveRepository } from '../infrastructure/WorkerArchiveRepository';
 import { closeArchive } from './closeArchive';
 import { openArchive } from './openArchive';
+import { readCoverThumbnail } from './readCoverThumbnail';
 import { readPage } from './readPage';
 
 export function createArchiveUseCases(archiveRepository: ArchiveRepository) {
   return {
     openArchive: openArchive({ archiveRepository }),
     readPage: readPage({ archiveRepository }),
+    readCoverThumbnail: readCoverThumbnail({ archiveRepository }),
     closeArchive: closeArchive({ archiveRepository }),
   };
 }

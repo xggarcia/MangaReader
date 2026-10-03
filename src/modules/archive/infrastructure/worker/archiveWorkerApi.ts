@@ -12,5 +12,11 @@ export type WorkerResult<T> =
 export interface ArchiveWorkerApi {
   open(file: Blob, format: ArchiveFormatPrimitive): Promise<WorkerResult<ArchiveSessionPrimitive>>;
   readEntry(sessionId: string, entryPath: string, mimeType: string): Promise<WorkerResult<Blob>>;
+  readEntryThumbnail(
+    sessionId: string,
+    entryPath: string,
+    mimeType: string,
+    maxWidth: number,
+  ): Promise<WorkerResult<Blob>>;
   close(sessionId: string): Promise<WorkerResult<void>>;
 }

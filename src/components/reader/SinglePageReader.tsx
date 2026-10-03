@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useImmersiveMode } from '../../hooks/useImmersiveMode';
 import { usePageUrls } from '../../hooks/usePageUrls';
@@ -12,19 +12,33 @@ import styles from './Reader.module.css';
 interface SinglePageReaderProps {
   comic: OpenedComic;
   title: string;
+  /** 0-based page shown first. */
+  initialPage?: number;
+  onPageChange?: (page: number) => void;
 }
 
 // Reading direction will come from settings (milestone 5); manga order by default.
 const direction = ReadingDirection.default();
 
-export function SinglePageReader({ comic, title }: SinglePageReaderProps) {
+export function SinglePageReader({
+  comic,
+  title,
+  initialPage = 0,
+  onPageChange,
+}: SinglePageReaderProps) {
   const { t } = useTranslation();
   const pageCount = comic.getPages().count();
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(() =>
+    Math.min(Math.max(initialPage, 0), pageCount - 1),
+  );
   const [uiVisible, setUiVisible] = useState(true);
   const { urls, failed } = usePageUrls(comic, currentIndex);
 
   useImmersiveMode(!uiVisible);
+
+  useEffect(() => {
+    onPageChange?.(currentIndex);
+  }, [currentIndex, onPageChange]);
 
   const goTo = useCallback(
     (index: number) => setCurrentIndex(Math.min(Math.max(index, 0), pageCount - 1)),

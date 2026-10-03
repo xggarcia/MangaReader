@@ -9,15 +9,44 @@
   },
   "library": {
     "title": "Biblioteca",
+    "loading": "Cargando biblioteca…",
     "empty": "Tu biblioteca está vacía.",
     "emptyHint": "Añade archivos CBZ o CBR guardados en tu dispositivo para empezar a leer.",
-    "openFile": "Abrir archivo"
+    "add": "Añadir cómics",
+    "addShort": "Añadir",
+    "search": "Buscar",
+    "searchPlaceholder": "Título, serie o autor",
+    "noResults": "Ningún cómic coincide con «{{query}}».",
+    "sortBy": "Ordenar por",
+    "sort": {
+      "title": "Título",
+      "recentlyAdded": "Añadidos recientemente",
+      "lastRead": "Última lectura"
+    },
+    "count_one": "{{count}} cómic",
+    "count_other": "{{count}} cómics",
+    "dropHint": "Suelta los archivos para añadirlos a tu biblioteca",
+    "importing": "Añadiendo {{done}} de {{total}}…",
+    "importFailedTitle_one": "No se ha podido añadir {{count}} archivo",
+    "importFailedTitle_other": "No se han podido añadir {{count}} archivos",
+    "dismiss": "Cerrar",
+    "read": "Leído",
+    "progressLabel": "Progreso de lectura",
+    "pages_one": "{{count}} página",
+    "pages_other": "{{count}} páginas",
+    "issue": "n.º {{number}}",
+    "openComic": "Leer {{title}}",
+    "comicOptions": "Opciones de {{title}}",
+    "markAsRead": "Marcar como leído",
+    "markAsUnread": "Marcar como no leído",
+    "remove": "Eliminar de la biblioteca",
+    "removeConfirm": "¿Eliminar «{{title}}» de tu biblioteca? Se borrarán su copia guardada y su progreso.",
+    "cancel": "Cancelar"
   },
   "reader": {
     "title": "Lector",
     "loading": "Abriendo…",
     "loadingPage": "Cargando página…",
-    "noFile": "No hay ningún cómic seleccionado.",
     "pageCounter": "{{current}} / {{total}}",
     "pageAlt": "Página {{current}} de {{total}}",
     "pageSlider": "Ir a la página",
@@ -29,11 +58,12 @@
     "placeholder": "Aquí aparecerán los ajustes."
   },
   "errors": {
-    "archive": {
-      "corrupt": "El archivo está dañado o no es un cómic válido.",
-      "unsupported": "Este formato no es compatible. Usa archivos CBZ o CBR.",
-      "empty": "El archivo está vacío o no contiene imágenes."
-    },
+    "corrupt": "El archivo está dañado o no es un cómic válido.",
+    "unsupported": "Este formato no es compatible. Usa archivos CBZ o CBR.",
+    "empty": "El archivo está vacío o no contiene imágenes.",
+    "quotaExceeded": "No hay espacio libre suficiente en el dispositivo.",
+    "duplicate": "Este cómic ya está en tu biblioteca.",
+    "notFound": "Este cómic ya no está disponible.",
     "unknown": "Algo ha fallado al abrir el archivo."
   }
 }

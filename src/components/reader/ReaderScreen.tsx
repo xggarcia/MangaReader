@@ -1,32 +1,20 @@
 import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
-import { useOpenedComic } from '../../hooks/useOpenedComic';
-import { useReaderStore } from '../../stores/readerStore';
+import { Link, useParams } from 'react-router';
+import { useProgressSaver } from '../../hooks/useProgressSaver';
+import { useReadingSession } from '../../hooks/useReadingSession';
+import type { ReadingSession } from '../../modules/library/application/openComicForReading';
 import { SinglePageReader } from './SinglePageReader';
 import styles from './Reader.module.css';
 
-function titleFromFileName(fileName: string): string {
-  return fileName.replace(/\.(cbz|cbr|zip|rar)$/i, '');
-}
-
 export function ReaderScreen() {
-  const { t } = useTranslation();
-  const file = useReaderStore((state) => state.pendingFile);
-
-  if (!file) {
-    return (
-      <ReaderMessage>
-        <p>{t('reader.noFile')}</p>
-      </ReaderMessage>
-    );
-  }
-  return <ComicReader key={`${file.name}:${file.size}:${file.lastModified}`} file={file} />;
+  const { comicId = '' } = useParams();
+  return <LibraryComicReader key={comicId} comicId={comicId} />;
 }
 
-function ComicReader({ file }: { file: File }) {
+function LibraryComicReader({ comicId }: { comicId: string }) {
   const { t } = useTranslation();
-  const state = useOpenedComic(file);
+  const state = useReadingSession(comicId);
 
   if (state.status === 'loading') {
     return (
@@ -38,11 +26,24 @@ function ComicReader({ file }: { file: File }) {
   if (state.status === 'error') {
     return (
       <ReaderMessage>
-        <p role="alert">{state.code ? t(`errors.archive.${state.code}`) : t('errors.unknown')}</p>
+        <p role="alert">{t(`errors.${state.code}`)}</p>
       </ReaderMessage>
     );
   }
-  return <SinglePageReader comic={state.comic} title={titleFromFileName(file.name)} />;
+  return <ReadingView session={state.session} />;
+}
+
+function ReadingView({ session }: { session: ReadingSession }) {
+  const { comic, opened, startPage } = session;
+  const savePage = useProgressSaver(comic.getId(), opened.getPages().count());
+  return (
+    <SinglePageReader
+      comic={opened}
+      title={comic.getTitle()}
+      initialPage={startPage}
+      onPageChange={savePage}
+    />
+  );
 }
 
 function ReaderMessage({ children, showBack = true }: { children: ReactNode; showBack?: boolean }) {

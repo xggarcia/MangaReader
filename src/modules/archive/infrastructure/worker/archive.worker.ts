@@ -46,6 +46,11 @@ const api: ArchiveWorkerApi = {
   readEntry: (sessionId: string, entryPath: string, mimeType: string) =>
     toResult(() => sessionRepository(sessionId).readEntry(sessionId, entryPath, mimeType)),
 
+  readEntryThumbnail: (sessionId: string, entryPath: string, mimeType: string, maxWidth: number) =>
+    toResult(() =>
+      sessionRepository(sessionId).readEntryThumbnail(sessionId, entryPath, mimeType, maxWidth),
+    ),
+
   close: (sessionId: string) =>
     toResult(async () => {
       const repository = repositoryBySession.get(sessionId);

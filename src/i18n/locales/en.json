@@ -9,15 +9,44 @@
   },
   "library": {
     "title": "Library",
+    "loading": "Loading library…",
     "empty": "Your library is empty.",
     "emptyHint": "Add CBZ or CBR files stored on your device to start reading.",
-    "openFile": "Open file"
+    "add": "Add comics",
+    "addShort": "Add",
+    "search": "Search",
+    "searchPlaceholder": "Title, series or author",
+    "noResults": "No comics match “{{query}}”.",
+    "sortBy": "Sort by",
+    "sort": {
+      "title": "Title",
+      "recentlyAdded": "Recently added",
+      "lastRead": "Last read"
+    },
+    "count_one": "{{count}} comic",
+    "count_other": "{{count}} comics",
+    "dropHint": "Drop files to add them to your library",
+    "importing": "Adding {{done}} of {{total}}…",
+    "importFailedTitle_one": "{{count}} file could not be added",
+    "importFailedTitle_other": "{{count}} files could not be added",
+    "dismiss": "Dismiss",
+    "read": "Read",
+    "progressLabel": "Reading progress",
+    "pages_one": "{{count}} page",
+    "pages_other": "{{count}} pages",
+    "issue": "#{{number}}",
+    "openComic": "Read {{title}}",
+    "comicOptions": "Options for {{title}}",
+    "markAsRead": "Mark as read",
+    "markAsUnread": "Mark as unread",
+    "remove": "Remove from library",
+    "removeConfirm": "Remove “{{title}}” from your library? Its saved copy and progress will be deleted.",
+    "cancel": "Cancel"
   },
   "reader": {
     "title": "Reader",
     "loading": "Opening…",
     "loadingPage": "Loading page…",
-    "noFile": "No comic selected.",
     "pageCounter": "{{current}} / {{total}}",
     "pageAlt": "Page {{current}} of {{total}}",
     "pageSlider": "Go to page",
@@ -29,11 +58,12 @@
     "placeholder": "Settings will appear here."
   },
   "errors": {
-    "archive": {
-      "corrupt": "The file is damaged or is not a valid comic archive.",
-      "unsupported": "This file format is not supported. Use CBZ or CBR files.",
-      "empty": "The file is empty or contains no images."
-    },
+    "corrupt": "The file is damaged or is not a valid comic archive.",
+    "unsupported": "This file format is not supported. Use CBZ or CBR files.",
+    "empty": "The file is empty or contains no images.",
+    "quotaExceeded": "There is not enough free space on the device.",
+    "duplicate": "This comic is already in your library.",
+    "notFound": "This comic is no longer available.",
     "unknown": "Something went wrong while opening the file."
   }
 }
