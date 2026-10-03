@@ -102,6 +102,9 @@
 
 .cardItem {
   min-width: 0;
+  /* Skip layout and paint of off-screen cards in large libraries. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 240px;
 }
 
 .card {

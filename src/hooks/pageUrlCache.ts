@@ -9,10 +9,13 @@ export const EMPTY_PAGE_URL_SNAPSHOT: PageUrlSnapshot = { urls: new Map(), faile
 
 /**
  * Keeps object URLs only for the pages inside the current PageWindow: pages entering the window
- * are extracted, pages leaving it are revoked. External store for `useSyncExternalStore`.
+ * are extracted and decoded ahead of time, pages leaving it are revoked. External store for
+ * `useSyncExternalStore`.
  */
 export class PageUrlCache {
   private readonly urls = new Map<number, string>();
+  // Decoded images kept alive while their page is in the window, so turning the page is instant.
+  private readonly decoded = new Map<number, HTMLImageElement>();
   private readonly pending = new Set<number>();
   private readonly failed = new Set<number>();
   private readonly listeners = new Set<() => void>();
@@ -29,10 +32,9 @@ export class PageUrlCache {
   setCurrentPage(index: number, range: { behind?: number; ahead?: number } = {}): void {
     this.window = PageWindow.create({ current: index, total: this.totalPages, ...range });
     let changed = false;
-    for (const [pageIndex, url] of this.urls) {
+    for (const pageIndex of [...this.urls.keys()]) {
       if (!this.window.contains(pageIndex)) {
-        URL.revokeObjectURL(url);
-        this.urls.delete(pageIndex);
+        this.releasePage(pageIndex);
         changed = true;
       }
     }
@@ -51,8 +53,7 @@ export class PageUrlCache {
   /** Revokes every URL. The cache can be reused afterwards by calling `setCurrentPage`. */
   release(): void {
     this.generation++;
-    for (const url of this.urls.values()) URL.revokeObjectURL(url);
-    this.urls.clear();
+    for (const pageIndex of [...this.urls.keys()]) this.releasePage(pageIndex);
     this.pending.clear();
     this.failed.clear();
     this.window = null;
@@ -74,8 +75,9 @@ export class PageUrlCache {
         if (generation !== this.generation) return;
         this.pending.delete(pageIndex);
         if (!this.window?.contains(pageIndex)) return;
-        this.urls.set(pageIndex, URL.createObjectURL(blob));
-        this.emit();
+        const url = URL.createObjectURL(blob);
+        this.urls.set(pageIndex, url);
+        void this.decode(pageIndex, url, generation);
       },
       () => {
         if (generation !== this.generation) return;
@@ -84,6 +86,26 @@ export class PageUrlCache {
         this.emit();
       },
     );
+  }
+
+  /** Decodes the image off the critical path, then publishes it (even if decoding fails). */
+  private async decode(pageIndex: number, url: string, generation: number): Promise<void> {
+    if (typeof Image !== 'undefined') {
+      const image = new Image();
+      image.src = url;
+      this.decoded.set(pageIndex, image);
+      await image.decode().catch(() => undefined);
+    }
+    if (generation === this.generation && this.urls.get(pageIndex) === url) this.emit();
+  }
+
+  private releasePage(pageIndex: number): void {
+    const url = this.urls.get(pageIndex);
+    if (url) URL.revokeObjectURL(url);
+    this.urls.delete(pageIndex);
+    const image = this.decoded.get(pageIndex);
+    if (image) image.src = '';
+    this.decoded.delete(pageIndex);
   }
 
   private emit(): void {

@@ -20,9 +20,11 @@
     "test:watch": "vitest",
     "android:sync": "npm run build && cap sync android",
     "android:run": "npm run build && cap run android",
-    "android:open": "cap open android"
+    "android:open": "cap open android",
+    "assets": "node scripts/generate-app-assets.mjs && capacitor-assets generate --android --iconBackgroundColor \"#c2185b\" --iconBackgroundColorDark \"#c2185b\" --splashBackgroundColor \"#fafafa\" --splashBackgroundColorDark \"#121212\""
   },
   "dependencies": {
+    "@capacitor-community/keep-awake": "^8.0.1",
     "@capacitor/android": "^8.5.2",
     "@capacitor/app": "^8.1.2",
     "@capacitor/core": "^8.5.2",
@@ -41,6 +43,7 @@
     "zustand": "^5.0.15"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.2",
     "@eslint/js": "^9.39.5",
     "@testing-library/dom": "^10.4.2",

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useImmersiveMode } from '../../hooks/useImmersiveMode';
+import { useKeepScreenOn } from '../../hooks/useKeepScreenOn';
 import { usePageUrls, type PageRange } from '../../hooks/usePageUrls';
 import { useReaderKeyboard } from '../../hooks/useReaderKeyboard';
 import type { OpenedComic } from '../../modules/archive/domain/OpenedComic';
@@ -68,6 +69,7 @@ export function ComicReader({ comic, title, initialPage = 0, onPageChange }: Com
   const spread = layout.spreadContaining(currentIndex);
 
   useImmersiveMode(!uiVisible);
+  useKeepScreenOn();
 
   useEffect(() => {
     onPageChange?.(currentIndex);

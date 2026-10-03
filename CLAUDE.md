@@ -24,8 +24,9 @@ Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** via 
 | `npm run android:sync`                    | Build web + copy into `android/`                       |
 | `npm run android:run`                     | Build, sync and run on a connected device/emulator     |
 | `npm run android:open`                    | Open `android/` in Android Studio                      |
+| `npm run assets`                          | Regenerate launcher icons and splash screens           |
 
-Android builds need JDK 21 + Android SDK (bundled with Android Studio). CI (`.github/workflows/ci.yml`) runs lint, format check, typecheck, tests and build, then assembles a debug APK and uploads it as an artifact.
+Android builds need **JDK 21** + Android SDK. Android Studio bundles a newer JBR (Java 25) that Gradle 8.14 rejects, so point `JAVA_HOME` (and Android Studio's Gradle JDK) to a JDK 21. CI (`.github/workflows/ci.yml`) runs lint, format check, typecheck, tests and build, then assembles a debug APK and uploads it as an artifact.
 
 ## Architecture (DDD / Clean Architecture)
 
@@ -57,4 +58,6 @@ android/             Capacitor native project (committed); local plugins in app/
 - Heavy work (unzip, unrar, XML parsing, thumbnails) runs in the archive Web Worker, never on the UI thread.
 - Accessibility: keyboard reachable controls, ARIA labels on icon-only buttons, 44px touch targets, WCAG AA contrast via the CSS tokens in `src/styles/global.css`.
 - Styling: CSS Modules + CSS custom properties; theme via `data-theme` on `<html>` (absent = follow system).
-- Privacy: no network calls. CSP in `index.html` restricts connections to `'self'`, `blob:` and the local dev server; Android backup is disabled so copied comics are never uploaded.
+- Privacy: no network calls. The Android manifest has **no INTERNET permission** (keep it that way), CSP in `index.html` restricts connections to `'self'`, `blob:` and the local dev server, and Android backup is disabled so copied comics are never uploaded.
+- Native plugins: `@capacitor/app` (back button), `@capacitor-community/keep-awake` (screen on while reading) and the local `SystemUi` plugin (immersive mode).
+- Manual testing without a phone: run the Android emulator, `adb install` the debug APK and inspect the WebView through `chrome://inspect` (debug builds enable WebView debugging).
