@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router';
 import { useProgressSaver } from '../../hooks/useProgressSaver';
 import { useReadingSession } from '../../hooks/useReadingSession';
 import type { ReadingSession } from '../../modules/library/application/openComicForReading';
-import { SinglePageReader } from './SinglePageReader';
+import { ComicReader } from './ComicReader';
 import styles from './Reader.module.css';
 
 export function ReaderScreen() {
@@ -37,7 +37,7 @@ function ReadingView({ session }: { session: ReadingSession }) {
   const { comic, opened, startPage } = session;
   const savePage = useProgressSaver(comic.getId(), opened.getPages().count());
   return (
-    <SinglePageReader
+    <ComicReader
       comic={opened}
       title={comic.getTitle()}
       initialPage={startPage}

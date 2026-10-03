@@ -49,6 +49,11 @@ export class ReadingDirection {
     return movedRight === this.isRightToLeft() ? 1 : -1;
   }
 
+  /** Left-to-right screen order of pages given in reading order (manga puts the first on the right). */
+  arrangeForDisplay<T>(pagesInReadingOrder: readonly T[]): T[] {
+    return this.isRightToLeft() ? [...pagesInReadingOrder].reverse() : [...pagesInReadingOrder];
+  }
+
   toPrimitive(): ReadingDirectionPrimitive {
     return this.value;
   }

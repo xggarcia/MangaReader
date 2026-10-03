@@ -6,8 +6,17 @@ import { EMPTY_PAGE_URL_SNAPSHOT, PageUrlCache, type PageUrlSnapshot } from './p
 const noopSubscribe = () => () => undefined;
 const emptySnapshot = () => EMPTY_PAGE_URL_SNAPSHOT;
 
+export interface PageRange {
+  behind?: number;
+  ahead?: number;
+}
+
 /** Object URLs for the pages around `currentIndex`; far pages are released automatically. */
-export function usePageUrls(comic: OpenedComic | null, currentIndex: number): PageUrlSnapshot {
+export function usePageUrls(
+  comic: OpenedComic | null,
+  currentIndex: number,
+  { behind, ahead }: PageRange = {},
+): PageUrlSnapshot {
   const cache = useMemo(() => {
     if (!comic) return null;
     const { readPage } = getArchiveUseCases();
@@ -19,8 +28,8 @@ export function usePageUrls(comic: OpenedComic | null, currentIndex: number): Pa
   }, [cache]);
 
   useEffect(() => {
-    cache?.setCurrentPage(currentIndex);
-  }, [cache, currentIndex]);
+    cache?.setCurrentPage(currentIndex, { behind, ahead });
+  }, [cache, currentIndex, behind, ahead]);
 
   return useSyncExternalStore(
     cache?.subscribe ?? noopSubscribe,

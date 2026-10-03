@@ -40,9 +40,11 @@ export function useReaderKeyboard({
           onStep(event.shiftKey ? -1 : 1);
           break;
         case 'PageDown':
+        case 'ArrowDown':
           onStep(1);
           break;
         case 'PageUp':
+        case 'ArrowUp':
           onStep(-1);
           break;
         case 'Home':

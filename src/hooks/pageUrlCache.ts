@@ -26,8 +26,8 @@ export class PageUrlCache {
     private readonly totalPages: number,
   ) {}
 
-  setCurrentPage(index: number): void {
-    this.window = PageWindow.create({ current: index, total: this.totalPages });
+  setCurrentPage(index: number, range: { behind?: number; ahead?: number } = {}): void {
+    this.window = PageWindow.create({ current: index, total: this.totalPages, ...range });
     let changed = false;
     for (const [pageIndex, url] of this.urls) {
       if (!this.window.contains(pageIndex)) {

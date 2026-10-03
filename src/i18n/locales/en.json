@@ -51,7 +51,27 @@
     "pageAlt": "Page {{current}} of {{total}}",
     "pageSlider": "Go to page",
     "pageError": "This page could not be loaded.",
-    "backToLibrary": "Back to library"
+    "backToLibrary": "Back to library",
+    "options": "Reading options",
+    "modeLabel": "Reading mode",
+    "mode": {
+      "single": "Single",
+      "double": "Double",
+      "webtoon": "Webtoon"
+    },
+    "directionLabel": "Direction",
+    "direction": {
+      "rtl": "Right to left",
+      "ltr": "Left to right"
+    },
+    "fitLabel": "Fit",
+    "fit": {
+      "height": "Screen",
+      "width": "Width",
+      "original": "Original"
+    },
+    "brightness": "Brightness",
+    "close": "Close"
   },
   "settings": {
     "title": "Settings",
