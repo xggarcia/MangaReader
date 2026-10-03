@@ -89,6 +89,11 @@ export class Comic {
     return this.data.addedAt;
   }
 
+  /** Corrected metadata (edited by the user); blank series or number clear them. */
+  withInfo(info: { title: string; series: string | null; number: string | null }): Comic {
+    return Comic.create({ ...this.data, ...info });
+  }
+
   /** Whether a picked file is very likely this same comic (same name and size). */
   isSameFileAs(file: { name: string; size: number }): boolean {
     return this.data.fileName === file.name && this.data.fileSize === file.size;

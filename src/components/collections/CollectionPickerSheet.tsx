@@ -9,22 +9,19 @@ import { COLLECTION_COLOR_VALUES } from './collectionColors';
 import styles from './Collections.module.css';
 
 interface CollectionPickerSheetProps {
-  comicId: string;
-  comicTitle: string;
+  /** One comic, a whole series or a multi-selection. */
+  comicIds: readonly string[];
+  subtitle: string;
   onClose: () => void;
 }
 
-/** Checklist of collections for one comic, plus a quick field to create a new one with it. */
-export function CollectionPickerSheet({
-  comicId,
-  comicTitle,
-  onClose,
-}: CollectionPickerSheetProps) {
+/** Checklist of collections for some comics, plus a quick field to create one with them. */
+export function CollectionPickerSheet({ comicIds, subtitle, onClose }: CollectionPickerSheetProps) {
   const { t } = useTranslation();
   const sheetId = useId();
   const collections = useCollectionsStore((state) => state.collections);
   const loaded = useCollectionsStore((state) => state.loaded);
-  const { load, setComicIncluded, create } = useCollectionsStore.getState();
+  const { load, setComicsIncluded, create } = useCollectionsStore.getState();
   const [newName, setNewName] = useState('');
 
   useEffect(() => {
@@ -37,7 +34,7 @@ export function CollectionPickerSheet({
     haptics.success();
     // Cycle through the palette so consecutive collections look different.
     const color = COLLECTION_COLORS[collections.length % COLLECTION_COLORS.length] ?? 'magenta';
-    void create({ name, color, comicIds: [comicId] });
+    void create({ name, color, comicIds: [...comicIds] });
     setNewName('');
   };
 
@@ -49,11 +46,12 @@ export function CollectionPickerSheet({
       autoOpen
       onClose={onClose}
     >
-      <p className={styles.pickerSubtitle}>{comicTitle}</p>
+      <p className={styles.pickerSubtitle}>{subtitle}</p>
       {collections.length > 0 && (
         <ul className={styles.pickerList}>
           {collections.map((collection) => {
-            const included = collection.contains(comicId);
+            // Checked only when every comic is already in it; tapping then removes them all.
+            const included = comicIds.every((comicId) => collection.contains(comicId));
             return (
               <li key={collection.getId()}>
                 <button
@@ -63,7 +61,7 @@ export function CollectionPickerSheet({
                   className={styles.pickerRow}
                   onClick={() => {
                     haptics.selection();
-                    void setComicIncluded(collection.getId(), comicId, !included);
+                    void setComicsIncluded(collection.getId(), comicIds, !included);
                   }}
                 >
                   <span

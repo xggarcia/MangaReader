@@ -126,6 +126,8 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
+  /* Room for the stacked volumes peeking above series covers (paint is clipped to the cell). */
+  padding-top: 10px;
   /* Skip layout and paint of off-screen cells in large libraries. */
   content-visibility: auto;
   contain-intrinsic-size: auto 250px;
@@ -440,4 +442,216 @@
   .spinner {
     animation-duration: 2.4s;
   }
+}
+
+/* ---------- Header controls ---------- */
+.headerControls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.headerControls > fieldset {
+  margin: 0;
+}
+
+.doneButton {
+  min-height: 44px;
+  padding: 0 var(--space-3);
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: var(--text-headline);
+  cursor: pointer;
+}
+
+/* ---------- Series stack: two volumes peek out behind the cover ---------- */
+.stack {
+  overflow: visible;
+  isolation: isolate;
+  background: transparent;
+}
+
+.stack img {
+  border-radius: var(--radius-cover);
+}
+
+.stack::before,
+.stack::after {
+  position: absolute;
+  z-index: -1;
+  height: 100%;
+  border-radius: var(--radius-cover);
+  content: '';
+}
+
+.stack::before {
+  inset: -5px 6% auto;
+  background: color-mix(in srgb, var(--label) 22%, var(--bg-grouped));
+}
+
+.stack::after {
+  inset: -10px 12% auto;
+  background: color-mix(in srgb, var(--label) 11%, var(--bg-grouped));
+}
+
+.stackCount {
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  min-width: 24px;
+  padding: 2px 7px;
+  border-radius: 10px;
+  background: rgb(0 0 0 / 0.62);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  font: var(--text-caption2);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* ---------- Status badges ---------- */
+.readBadge {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--success);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+}
+
+/* ---------- Multi-select ---------- */
+.selectMark {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 0.25);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35);
+  transition:
+    background-color var(--duration-fast) ease-out,
+    transform var(--duration) var(--ease-spring);
+}
+
+.selectMark[data-selected='true'] {
+  border-color: var(--accent);
+  background: var(--accent);
+  transform: scale(1.06);
+}
+
+.cover[aria-pressed='true'] img {
+  opacity: 0.82;
+}
+
+.toolbar {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 35;
+  display: flex;
+  justify-content: space-around;
+  min-height: calc(var(--tab-height) + var(--safe-bottom));
+  padding: 0 var(--safe-right) var(--safe-bottom) var(--safe-left);
+  background: var(--material-bar);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  box-shadow: 0 -0.5px 0 var(--separator);
+  animation: toolbar-in var(--duration) var(--ease-ios);
+}
+
+@keyframes toolbar-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+
+.toolbarButton {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: var(--tab-height);
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: var(--text-caption2);
+  cursor: pointer;
+}
+
+.toolbarButton:disabled {
+  color: var(--label-tertiary);
+  cursor: default;
+}
+
+.toolbarDestructive:not(:disabled) {
+  color: var(--destructive);
+}
+
+/* ---------- Series screen ---------- */
+.seriesSummary {
+  margin-bottom: var(--space-5);
+  color: var(--label-secondary);
+  font: var(--text-subhead);
+}
+
+/* ---------- Edit info sheet ---------- */
+.infoForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.infoFields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--bg-sheet-card);
+}
+
+.infoFields label {
+  padding-left: var(--space-4);
+  color: var(--label-secondary);
+  font: var(--text-body);
+}
+
+.infoFields input {
+  min-height: 48px;
+  padding: 0 var(--space-4);
+  border: none;
+  background: transparent;
+  font: var(--text-body);
+  text-align: end;
+  outline: none;
+}
+
+.infoFields input:focus {
+  color: var(--accent);
+}
+
+.infoFields input:not(:first-of-type),
+.infoFields label:not(:first-of-type) {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.infoHint {
+  margin: 0 var(--space-4);
+  color: var(--label-secondary);
+  font: var(--text-footnote);
 }

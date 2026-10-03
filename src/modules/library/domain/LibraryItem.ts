@@ -3,6 +3,10 @@ import {
   type ReadingProgressPrimitive,
 } from '../../reading/domain/ReadingProgress';
 import { Comic, type ComicPrimitive } from './Comic';
+import { SeriesInfo } from './SeriesInfo';
+
+export const READ_STATUSES = ['unread', 'inProgress', 'read'] as const;
+export type ReadStatus = (typeof READ_STATUSES)[number];
 
 export interface LibraryItemPrimitive {
   comic: ComicPrimitive;
@@ -40,6 +44,16 @@ export class LibraryItem {
 
   withProgress(progress: ReadingProgress | null): LibraryItem {
     return LibraryItem.create({ comic: this.comic, progress });
+  }
+
+  /** Reading state: never opened, started, or finished. */
+  getStatus(): ReadStatus {
+    if (this.isRead()) return 'read';
+    return this.progress ? 'inProgress' : 'unread';
+  }
+
+  getSeries(): SeriesInfo {
+    return SeriesInfo.fromComic(this.comic);
   }
 
   isRead(): boolean {

@@ -6,7 +6,7 @@ import { goBack } from '../../app/navigation';
 import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
 import { useCollectionsStore } from '../../stores/collectionsStore';
 import { useLibraryStore } from '../../stores/libraryStore';
-import { ComicGrid } from '../library/ComicGrid';
+import { LibraryShelf } from '../library/LibraryShelf';
 import { BarButton } from '../ui/BarButton';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
@@ -88,7 +88,7 @@ export function CollectionDetailScreen() {
       {items.length === 0 ? (
         <p className={styles.detailEmpty}>{t('collections.detailEmpty')}</p>
       ) : (
-        <ComicGrid items={items} />
+        <LibraryShelf items={items} />
       )}
 
       {editing && (

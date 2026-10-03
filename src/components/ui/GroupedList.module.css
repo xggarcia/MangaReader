@@ -87,3 +87,20 @@
 .menuValue:active {
   opacity: 0.5;
 }
+
+.linkRow {
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: var(--label);
+  text-align: start;
+  cursor: pointer;
+}
+
+.linkRow:active {
+  background: var(--fill-secondary);
+}
+
+.chevron {
+  color: var(--label-tertiary);
+}

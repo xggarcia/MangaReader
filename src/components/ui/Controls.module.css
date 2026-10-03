@@ -200,6 +200,12 @@
   background: var(--fill-secondary);
 }
 
+.menuItem.menuDivider {
+  box-shadow: inset 0 8px 0 var(--fill-tertiary);
+  padding-top: 8px;
+  min-height: 54px;
+}
+
 .menuCheck {
   display: inline-flex;
 }

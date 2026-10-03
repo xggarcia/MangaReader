@@ -1,4 +1,4 @@
-import { ChevronsUpDown, type LucideIcon } from 'lucide-react';
+import { ChevronRight, ChevronsUpDown, type LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { Menu, type MenuItem } from './Menu';
 import styles from './GroupedList.module.css';
@@ -87,5 +87,29 @@ export function MenuRow<T extends string>({
         )}
       />
     </Row>
+  );
+}
+
+interface LinkRowProps {
+  icon?: LucideIcon;
+  iconColor?: string;
+  label: string;
+  detail?: string;
+  onClick: () => void;
+}
+
+/** Tappable row with a trailing value and a chevron, opening another screen. */
+export function LinkRow({ icon: Icon, iconColor, label, detail, onClick }: LinkRowProps) {
+  return (
+    <button type="button" className={`${styles.row} ${styles.linkRow}`} onClick={onClick}>
+      {Icon && (
+        <span className={styles.rowIcon} style={{ background: iconColor }} aria-hidden="true">
+          <Icon size={18} strokeWidth={2} />
+        </span>
+      )}
+      <span className={styles.rowLabel}>{label}</span>
+      {detail && <span className={styles.rowTrailing}>{detail}</span>}
+      <ChevronRight size={18} strokeWidth={2.2} aria-hidden className={styles.chevron} />
+    </button>
   );
 }

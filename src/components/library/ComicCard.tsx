@@ -1,4 +1,14 @@
-import { BookCheck, BookOpen, BookX, Check, Ellipsis, FolderPlus, Trash2 } from 'lucide-react';
+import {
+  BookCheck,
+  BookOpen,
+  BookX,
+  Check,
+  CircleCheck,
+  Ellipsis,
+  FolderPlus,
+  Pencil,
+  Trash2,
+} from 'lucide-react';
 import { memo, useRef, useState, type PointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCoverUrl } from '../../hooks/useCoverUrl';
@@ -6,8 +16,10 @@ import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
 import { haptics } from '../../shared/infrastructure/haptics';
 import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
+import { ComicInfoSheet } from './ComicInfoSheet';
 import { CoverContextMenu, type ContextAction } from './CoverContextMenu';
 import { openComic } from './openComic';
+import { useSelection } from './useSelection';
 import styles from './Library.module.css';
 
 interface ComicCardProps {
@@ -35,15 +47,24 @@ export const ComicCard = memo(function ComicCard({
   const [menuAnchor, setMenuAnchor] = useState<DOMRect | null>(null);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [pickingCollection, setPickingCollection] = useState(false);
+  const [editingInfo, setEditingInfo] = useState(false);
+  const selection = useSelection();
+  const selected = selection.isSelected([comicId]);
 
   const progress = item.getProgress();
   const percent = Math.round(item.getProgressRatio() * 100);
   const isRead = item.isRead();
-  const series = comic.getSeries();
-  const issue = comic.getNumber();
-  const subtitle = series
-    ? [series, issue ? t('library.issue', { number: issue }) : null].filter(Boolean).join(' ')
-    : t('library.pages', { count: comic.getPageCount() });
+  // Detected series and volume ("One Piece · Tomo 3"), else the page count.
+  const seriesInfo = item.getSeries();
+  const volume = seriesInfo.getVolume();
+  const subtitleParts = [
+    seriesInfo.getName() !== title ? seriesInfo.getName() : null,
+    volume !== null ? t('library.volume', { number: volume }) : null,
+  ].filter(Boolean);
+  const subtitle =
+    subtitleParts.length > 0
+      ? subtitleParts.join(' · ')
+      : t('library.pages', { count: comic.getPageCount() });
 
   const openMenu = () => {
     if (!cover.current) return;
@@ -58,6 +79,7 @@ export const ComicCard = memo(function ComicCard({
 
   const onPointerDown = (event: PointerEvent) => {
     suppressClick.current = false;
+    if (selection.active) return;
     const timer = setTimeout(() => {
       suppressClick.current = true;
       press.current = null;
@@ -97,6 +119,12 @@ export const ComicCard = memo(function ComicCard({
           onSelect: () => onSetReadStatus(comicId, true),
         },
     {
+      id: 'info',
+      label: t('library.editInfo'),
+      icon: Pencil,
+      onSelect: () => setEditingInfo(true),
+    },
+    {
       id: 'collection',
       label: t('collections.addTo'),
       icon: FolderPlus,
@@ -121,6 +149,7 @@ export const ComicCard = memo(function ComicCard({
         type="button"
         className={styles.cover}
         aria-label={t('library.openComic', { title })}
+        aria-pressed={selection.active ? selected : undefined}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={cancelPress}
@@ -136,7 +165,8 @@ export const ComicCard = memo(function ComicCard({
             suppressClick.current = false;
             return;
           }
-          openComic(comicId, cover.current);
+          if (selection.active) selection.toggle([comicId]);
+          else openComic(comicId, cover.current);
         }}
       >
         {coverUrl ? (
@@ -149,6 +179,16 @@ export const ComicCard = memo(function ComicCard({
         {progress && !isRead && (
           <span className={styles.coverProgress} aria-hidden="true">
             <span style={{ width: `${percent}%` }} />
+          </span>
+        )}
+        {isRead && (
+          <span className={styles.readBadge} aria-hidden="true">
+            <Check size={13} strokeWidth={3} />
+          </span>
+        )}
+        {selection.active && (
+          <span className={styles.selectMark} data-selected={selected} aria-hidden="true">
+            {selected && <CircleCheck size={26} strokeWidth={2} />}
           </span>
         )}
       </button>
@@ -172,6 +212,7 @@ export const ComicCard = memo(function ComicCard({
             aria-label={t('library.comicOptions', { title })}
             aria-haspopup="menu"
             onClick={openMenu}
+            disabled={selection.active}
           >
             <Ellipsis size={18} strokeWidth={2.2} aria-hidden />
           </button>
@@ -190,11 +231,12 @@ export const ComicCard = memo(function ComicCard({
       )}
       {pickingCollection && (
         <CollectionPickerSheet
-          comicId={comicId}
-          comicTitle={title}
+          comicIds={[comicId]}
+          subtitle={title}
           onClose={() => setPickingCollection(false)}
         />
       )}
+      {editingInfo && <ComicInfoSheet item={item} onClose={() => setEditingInfo(false)} />}
       {confirmingRemove && (
         <ConfirmSheet
           title={t('library.removeConfirm', { title })}

@@ -7,7 +7,7 @@ import { TabBar, type TabItem } from '../components/ui/TabBar';
 export function ShellLayout() {
   const { t } = useTranslation();
   const tabs: TabItem[] = [
-    { path: '/', label: t('tabs.library'), icon: LibraryBig },
+    { path: '/', label: t('tabs.library'), icon: LibraryBig, alsoActiveOn: ['/series/'] },
     { path: '/collections', label: t('tabs.collections'), icon: Folders },
     { path: '/settings', label: t('tabs.settings'), icon: Settings },
   ];

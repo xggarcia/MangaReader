@@ -31,7 +31,6 @@
     "progressLabel": "Progreso de lectura",
     "pages_one": "{{count}} página",
     "pages_other": "{{count}} páginas",
-    "issue": "n.º {{number}}",
     "openComic": "Leer {{title}}",
     "comicOptions": "Opciones de {{title}}",
     "markAsRead": "Marcar como leído",
@@ -48,7 +47,54 @@
     "clearSearch": "Borrar búsqueda",
     "allComics": "Todos los cómics",
     "closeMenu": "Cerrar menú",
-    "removeShort": "Eliminar"
+    "removeShort": "Eliminar",
+    "filterLabel": "Mostrar",
+    "filter": {
+      "all": "Todos",
+      "unread": "Sin leer",
+      "inProgress": "Leyendo",
+      "read": "Leídos"
+    },
+    "heading": {
+      "all": "Todos los cómics",
+      "unread": "Sin leer",
+      "inProgress": "Leyendo",
+      "read": "Leídos"
+    },
+    "emptyFilter": {
+      "all": "Aún no hay cómics.",
+      "unread": "No te queda nada sin leer. ¡Bien hecho!",
+      "inProgress": "Ahora mismo no estás leyendo nada.",
+      "read": "Todavía no has terminado ningún cómic."
+    },
+    "options": "Opciones de la biblioteca",
+    "select": "Seleccionar",
+    "selectDone": "OK",
+    "selectedCount_one": "{{count}} seleccionado",
+    "selectedCount_other": "{{count}} seleccionados",
+    "selectionActions": "Acciones para la selección",
+    "groupSeries": "Agrupar por serie",
+    "volume": "Tomo {{number}}",
+    "volumes_one": "{{count}} tomo",
+    "volumes_other": "{{count}} tomos",
+    "unreadCount_one": "{{count}} sin leer",
+    "unreadCount_other": "{{count}} sin leer",
+    "seriesFinished": "Completada",
+    "openSeries_one": "Abrir la serie {{name}}, {{count}} tomo",
+    "openSeries_other": "Abrir la serie {{name}}, {{count}} tomos",
+    "editInfo": "Editar información",
+    "fieldTitle": "Título",
+    "fieldSeries": "Serie",
+    "fieldVolume": "Tomo",
+    "editInfoHint": "Los tomos con la misma serie se agrupan juntos. Cámbiala para mover este cómic a otra serie.",
+    "toolbar": {
+      "collection": "Colección",
+      "markRead": "Leído",
+      "markUnread": "No leído",
+      "delete": "Eliminar"
+    },
+    "removeManyConfirm_one": "¿Eliminar {{count}} cómic de tu biblioteca?",
+    "removeManyConfirm_other": "¿Eliminar {{count}} cómics de tu biblioteca? Se borrarán sus copias guardadas y su progreso."
   },
   "reader": {
     "title": "Lector",
@@ -150,6 +196,23 @@
       "indigo": "Índigo",
       "purple": "Morado",
       "graphite": "Grafito"
+    },
+    "mine": "Mis colecciones",
+    "smart": {
+      "title": "Estado de lectura",
+      "inProgress": "Leyendo",
+      "unread": "Sin leer",
+      "read": "Terminados"
     }
+  },
+  "series": {
+    "options": "Opciones de la serie",
+    "next": "Siguiente",
+    "readCount_one": "{{count}} leído",
+    "readCount_other": "{{count}} leídos",
+    "markAllRead": "Marcar serie como leída",
+    "markAllUnread": "Marcar serie como no leída",
+    "addToCollection": "Añadir serie a colección",
+    "notStarted": "Sin empezar · {{count}} páginas"
   }
 }

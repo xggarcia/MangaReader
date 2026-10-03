@@ -15,7 +15,7 @@ import {
   createCollection,
   deleteCollection,
   listCollections,
-  setComicInCollection,
+  setComicsInCollection,
   updateCollection,
 } from './collections';
 import { getComicCover } from './getComicCover';
@@ -23,6 +23,7 @@ import { importComics } from './importComics';
 import { listLibrary } from './listLibrary';
 import { openComicForReading } from './openComicForReading';
 import { removeComic } from './removeComic';
+import { updateComicInfo } from './updateComicInfo';
 
 interface LibraryDependencies {
   comicRepository: ComicRepository;
@@ -66,11 +67,12 @@ export function createLibraryUseCases({
       openArchive: archive.openArchive,
     }),
     getComicCover: getComicCover({ coverRepository }),
+    updateComicInfo: updateComicInfo({ comicRepository }),
     listCollections: listCollections({ collectionRepository }),
     createCollection: createCollection({ collectionRepository }),
     updateCollection: updateCollection({ collectionRepository }),
     deleteCollection: deleteCollection({ collectionRepository }),
-    setComicInCollection: setComicInCollection({ collectionRepository }),
+    setComicsInCollection: setComicsInCollection({ collectionRepository }),
   };
 }
 

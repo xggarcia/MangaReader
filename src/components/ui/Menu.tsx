@@ -9,6 +9,8 @@ export interface MenuItem {
   icon?: LucideIcon;
   checked?: boolean;
   destructive?: boolean;
+  /** Starts a new group: drawn with a thicker separator above, like iOS menus. */
+  dividerBefore?: boolean;
   onSelect: () => void;
 }
 
@@ -72,7 +74,7 @@ export function Menu({ trigger, items, label }: MenuProps) {
               type="button"
               role={item.checked === undefined ? 'menuitem' : 'menuitemradio'}
               aria-checked={item.checked}
-              className={`${styles.menuItem} ${item.destructive ? styles.destructive : ''}`}
+              className={`${styles.menuItem} ${item.destructive ? styles.destructive : ''} ${item.dividerBefore ? styles.menuDivider : ''}`}
               onClick={() => {
                 haptics.selection();
                 menu.current?.hidePopover();

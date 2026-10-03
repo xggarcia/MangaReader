@@ -91,7 +91,7 @@
   flex-direction: column;
   align-items: center;
   gap: var(--space-3);
-  padding: 16vh var(--space-6) 0;
+  padding: var(--space-6) var(--space-6) 0;
   text-align: center;
 }
 
@@ -313,4 +313,10 @@
 
 .pickerNew button:disabled {
   opacity: 0.4;
+}
+
+.sectionHeading {
+  margin: var(--space-2) 0 var(--space-3);
+  font: var(--text-title3);
+  letter-spacing: -0.017em;
 }

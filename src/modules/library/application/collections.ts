@@ -64,21 +64,21 @@ export function deleteCollection({ collectionRepository }: CollectionUseCaseProp
   };
 }
 
-/** Adds or removes one comic from a collection (the "Add to collection" checklist). */
-export function setComicInCollection({ collectionRepository }: CollectionUseCaseProps) {
+/** Adds or removes comics from a collection (the "Add to collection" checklist). */
+export function setComicsInCollection({ collectionRepository }: CollectionUseCaseProps) {
   return async (props: {
     collectionId: string;
-    comicId: string;
+    comicIds: readonly string[];
     included: boolean;
   }): Promise<Collection> => {
     const collection = await findOrFail(
       collectionRepository,
       props.collectionId,
-      'setComicInCollection',
+      'setComicsInCollection',
     );
     const updated = props.included
-      ? collection.addComics([props.comicId])
-      : collection.removeComic(props.comicId);
+      ? collection.addComics(props.comicIds)
+      : props.comicIds.reduce((current, comicId) => current.removeComic(comicId), collection);
     await collectionRepository.save(updated);
     return updated;
   };

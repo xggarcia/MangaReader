@@ -6,7 +6,7 @@ import { openComic } from './openComic';
 import styles from './Library.module.css';
 
 /** The comic in progress, one tap away from the page where it was left. */
-export function ContinueReadingCard({ item }: { item: LibraryItem }) {
+export function ContinueReadingCard({ item, heading }: { item: LibraryItem; heading?: string }) {
   const { t } = useTranslation();
   const comic = item.getComic();
   const coverUrl = useCoverUrl(comic.getId());
@@ -14,11 +14,12 @@ export function ContinueReadingCard({ item }: { item: LibraryItem }) {
   const page = item.getResumePage() + 1;
   const total = comic.getPageCount();
   const percent = Math.round(item.getProgressRatio() * 100);
+  const started = item.getStatus() !== 'unread';
 
   return (
     <section className={styles.continue} aria-labelledby="continue-title">
       <h2 id="continue-title" className={styles.continueHeading}>
-        {t('library.continueReading')}
+        {heading ?? t('library.continueReading')}
       </h2>
       <button
         type="button"
@@ -32,14 +33,18 @@ export function ContinueReadingCard({ item }: { item: LibraryItem }) {
         <span className={styles.continueBody}>
           <span className={styles.continueTitle}>{comic.getTitle()}</span>
           <span className={styles.continueMeta}>
-            {t('library.pageOf', { current: page, total })} · {t('library.percent', { percent })}
+            {started
+              ? `${t('library.pageOf', { current: page, total })} · ${t('library.percent', { percent })}`
+              : t('series.notStarted', { count: total })}
           </span>
-          <span className={styles.continueBar} aria-hidden="true">
-            <span style={{ width: `${percent}%` }} />
-          </span>
+          {started && (
+            <span className={styles.continueBar} aria-hidden="true">
+              <span style={{ width: `${percent}%` }} />
+            </span>
+          )}
         </span>
         <span className={styles.capsule} aria-hidden="true">
-          {t('library.continue')}
+          {started ? t('library.continue') : t('library.read_action')}
         </span>
       </button>
     </section>

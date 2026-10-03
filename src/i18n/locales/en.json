@@ -31,7 +31,6 @@
     "progressLabel": "Reading progress",
     "pages_one": "{{count}} page",
     "pages_other": "{{count}} pages",
-    "issue": "#{{number}}",
     "openComic": "Read {{title}}",
     "comicOptions": "Options for {{title}}",
     "markAsRead": "Mark as read",
@@ -48,7 +47,54 @@
     "clearSearch": "Clear search",
     "allComics": "All comics",
     "closeMenu": "Close menu",
-    "removeShort": "Delete"
+    "removeShort": "Delete",
+    "filterLabel": "Show",
+    "filter": {
+      "all": "All",
+      "unread": "Unread",
+      "inProgress": "Reading",
+      "read": "Read"
+    },
+    "heading": {
+      "all": "All comics",
+      "unread": "Unread",
+      "inProgress": "Reading",
+      "read": "Read"
+    },
+    "emptyFilter": {
+      "all": "No comics yet.",
+      "unread": "Nothing left unread. Well done!",
+      "inProgress": "You are not reading anything right now.",
+      "read": "You have not finished any comic yet."
+    },
+    "options": "Library options",
+    "select": "Select",
+    "selectDone": "Done",
+    "selectedCount_one": "{{count}} selected",
+    "selectedCount_other": "{{count}} selected",
+    "selectionActions": "Actions for the selection",
+    "groupSeries": "Group by series",
+    "volume": "Vol. {{number}}",
+    "volumes_one": "{{count}} volume",
+    "volumes_other": "{{count}} volumes",
+    "unreadCount_one": "{{count}} unread",
+    "unreadCount_other": "{{count}} unread",
+    "seriesFinished": "Finished",
+    "openSeries_one": "Open series {{name}}, {{count}} volume",
+    "openSeries_other": "Open series {{name}}, {{count}} volumes",
+    "editInfo": "Edit info",
+    "fieldTitle": "Title",
+    "fieldSeries": "Series",
+    "fieldVolume": "Volume",
+    "editInfoHint": "Volumes with the same series are grouped together. Change it to move this comic to another series.",
+    "toolbar": {
+      "collection": "Collection",
+      "markRead": "Read",
+      "markUnread": "Unread",
+      "delete": "Delete"
+    },
+    "removeManyConfirm_one": "Delete {{count}} comic from your library?",
+    "removeManyConfirm_other": "Delete {{count}} comics from your library? Their saved copies and progress will be deleted."
   },
   "reader": {
     "title": "Reader",
@@ -150,6 +196,23 @@
       "indigo": "Indigo",
       "purple": "Purple",
       "graphite": "Graphite"
+    },
+    "mine": "My collections",
+    "smart": {
+      "title": "Reading status",
+      "inProgress": "Reading",
+      "unread": "Unread",
+      "read": "Finished"
     }
+  },
+  "series": {
+    "options": "Series options",
+    "next": "Up next",
+    "readCount_one": "{{count}} read",
+    "readCount_other": "{{count}} read",
+    "markAllRead": "Mark series as read",
+    "markAllUnread": "Mark series as unread",
+    "addToCollection": "Add series to collection",
+    "notStarted": "Not started · {{count}} pages"
   }
 }

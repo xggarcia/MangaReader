@@ -8,6 +8,8 @@ export interface TabItem {
   path: string;
   label: string;
   icon: LucideIcon;
+  /** Other route prefixes that belong to this tab (screens pushed from it). */
+  alsoActiveOn?: readonly string[];
 }
 
 interface TabBarProps {
@@ -21,10 +23,13 @@ export function TabBar({ tabs, label }: TabBarProps) {
 
   return (
     <nav className={styles.bar} aria-label={label}>
-      {tabs.map(({ path, label: tabLabel, icon: Icon }) => {
+      {tabs.map(({ path, label: tabLabel, icon: Icon, alsoActiveOn = [] }) => {
         // A tab stays selected on the screens pushed inside it (e.g. a collection's detail).
         const atRoot = path === pathname;
-        const active = atRoot || (path !== '/' && pathname.startsWith(`${path}/`));
+        const active =
+          atRoot ||
+          (path !== '/' && pathname.startsWith(`${path}/`)) ||
+          alsoActiveOn.some((prefix) => pathname.startsWith(prefix));
         return (
           <a
             key={path}

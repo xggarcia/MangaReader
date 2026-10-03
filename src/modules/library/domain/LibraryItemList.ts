@@ -1,7 +1,11 @@
-import { LibraryItem, type LibraryItemPrimitive } from './LibraryItem';
+import { LibraryItem, type LibraryItemPrimitive, type ReadStatus } from './LibraryItem';
+import { SeriesGroup } from './SeriesGroup';
 
 export const LIBRARY_SORT_ORDERS = ['title', 'recentlyAdded', 'lastRead'] as const;
 export type LibrarySortOrder = (typeof LIBRARY_SORT_ORDERS)[number];
+
+export const LIBRARY_FILTERS = ['all', 'unread', 'inProgress', 'read'] as const;
+export type LibraryFilter = (typeof LIBRARY_FILTERS)[number];
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
@@ -15,18 +19,31 @@ function normalizeForSearch(text: string): string {
 function searchableText(item: LibraryItem): string {
   const comic = item.getComic();
   return normalizeForSearch(
-    [comic.getTitle(), comic.getSeries(), comic.getAuthor(), comic.getFileName()]
+    [comic.getTitle(), item.getSeries().getName(), comic.getAuthor(), comic.getFileName()]
       .filter(Boolean)
       .join(' '),
   );
 }
 
-/** Sort key for titles: series and number first, so volumes of a series stay together. */
+/** Sort key for titles: series and volume first, so volumes of a series stay together. */
 function titleKey(item: LibraryItem): string {
-  const comic = item.getComic();
-  const series = comic.getSeries();
-  return series ? `${series} ${comic.getNumber() ?? ''} ${comic.getTitle()}` : comic.getTitle();
+  const series = item.getSeries();
+  const volume = series.getVolume();
+  return `${series.getName()} ${volume === null ? '' : String(volume).padStart(6, '0')} ${item.getComic().getTitle()}`;
 }
+
+const groupComparators: Record<LibrarySortOrder, (a: SeriesGroup, b: SeriesGroup) => number> = {
+  title: (a, b) => collator.compare(a.getName(), b.getName()),
+  recentlyAdded: (a, b) => b.getLastAddedAt() - a.getLastAddedAt(),
+  lastRead: (a, b) => {
+    const lastA = a.getLastReadAt();
+    const lastB = b.getLastReadAt();
+    if (lastA === null && lastB === null) return b.getLastAddedAt() - a.getLastAddedAt();
+    if (lastA === null) return 1;
+    if (lastB === null) return -1;
+    return lastB - lastA;
+  },
+};
 
 const comparators: Record<LibrarySortOrder, (a: LibraryItem, b: LibraryItem) => number> = {
   title: (a, b) => collator.compare(titleKey(a), titleKey(b)),
@@ -72,6 +89,37 @@ export class LibraryItemList {
         return words.every((word) => text.includes(word));
       }),
     );
+  }
+
+  /** Only the comics in a reading state (`all` keeps everything). */
+  filterByStatus(filter: LibraryFilter): LibraryItemList {
+    if (filter === 'all') return this;
+    return new LibraryItemList(
+      this.items.filter((item) => item.getStatus() === (filter as ReadStatus)),
+    );
+  }
+
+  /**
+   * Volumes grouped by series (detected from metadata or file names), each series ordered by
+   * volume, and the series themselves in the requested order.
+   */
+  groupBySeries(order: LibrarySortOrder): SeriesGroup[] {
+    const byKey = new Map<string, LibraryItem[]>();
+    for (const item of this.items) {
+      const key = item.getSeries().getKey();
+      const group = byKey.get(key);
+      if (group) group.push(item);
+      else byKey.set(key, [item]);
+    }
+    return [...byKey.values()]
+      .map((items) => SeriesGroup.create(items))
+      .sort(groupComparators[order]);
+  }
+
+  /** The series with the given key, or `null` if no comic belongs to it. */
+  findSeries(key: string): SeriesGroup | null {
+    const items = this.items.filter((item) => item.getSeries().getKey() === key);
+    return items.length > 0 ? SeriesGroup.create(items) : null;
   }
 
   sortBy(order: LibrarySortOrder): LibraryItemList {

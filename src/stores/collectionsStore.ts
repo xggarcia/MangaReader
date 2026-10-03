@@ -13,7 +13,11 @@ interface CollectionsState {
   }) => Promise<Collection>;
   update: (id: string, changes: { name?: string; color?: CollectionColor }) => Promise<void>;
   remove: (id: string) => Promise<void>;
-  setComicIncluded: (collectionId: string, comicId: string, included: boolean) => Promise<void>;
+  setComicsIncluded: (
+    collectionId: string,
+    comicIds: readonly string[],
+    included: boolean,
+  ) => Promise<void>;
 }
 
 function replace(collections: Collection[], updated: Collection): Collection[] {
@@ -44,10 +48,10 @@ export const useCollectionsStore = create<CollectionsState>((set, get) => ({
     set({ collections: get().collections.filter((collection) => collection.getId() !== id) });
   },
 
-  setComicIncluded: async (collectionId, comicId, included) => {
-    const updated = await getLibraryUseCases().setComicInCollection({
+  setComicsIncluded: async (collectionId, comicIds, included) => {
+    const updated = await getLibraryUseCases().setComicsInCollection({
       collectionId,
-      comicId,
+      comicIds,
       included,
     });
     set({ collections: replace(get().collections, updated) });

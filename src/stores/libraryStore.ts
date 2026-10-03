@@ -2,7 +2,13 @@ import { create } from 'zustand';
 import type { ImportErrorCode, ImportProgress } from '../modules/library/application/importComics';
 import { getLibraryUseCases } from '../modules/library/application/factory';
 import { LibraryItem } from '../modules/library/domain/LibraryItem';
-import { LibraryItemList, type LibrarySortOrder } from '../modules/library/domain/LibraryItemList';
+import {
+  LibraryItemList,
+  type LibraryFilter,
+  type LibrarySortOrder,
+} from '../modules/library/domain/LibraryItemList';
+import type { ComicInfoChanges } from '../modules/library/application/updateComicInfo';
+import { coverUrlCache } from '../hooks/coverUrlCache';
 import { getReadingUseCases } from '../modules/reading/application/factory';
 import { requestPersistentStorage } from '../shared/infrastructure/storageErrors';
 
@@ -18,12 +24,19 @@ interface LibraryState {
   importFailures: ImportFailure[];
   query: string;
   sortOrder: LibrarySortOrder;
+  filter: LibraryFilter;
+  groupSeries: boolean;
   load: () => Promise<void>;
   importFiles: (files: readonly File[]) => Promise<void>;
   remove: (comicId: string) => Promise<void>;
   setReadStatus: (comicId: string, isRead: boolean) => Promise<void>;
   setQuery: (query: string) => void;
   setSortOrder: (sortOrder: LibrarySortOrder) => void;
+  setFilter: (filter: LibraryFilter) => void;
+  setGroupSeries: (groupSeries: boolean) => void;
+  updateInfo: (comicId: string, changes: ComicInfoChanges) => Promise<void>;
+  setReadStatusMany: (comicIds: readonly string[], isRead: boolean) => Promise<void>;
+  removeMany: (comicIds: readonly string[]) => Promise<void>;
   dismissImportFailures: () => void;
 }
 
@@ -34,6 +47,8 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   importFailures: [],
   query: '',
   sortOrder: 'lastRead',
+  filter: 'all',
+  groupSeries: true,
 
   load: async () => {
     if (get().status === 'idle') set({ status: 'loading' });
@@ -67,7 +82,25 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
 
   remove: async (comicId) => {
     await getLibraryUseCases().removeComic(comicId);
+    coverUrlCache.forget(comicId);
     set({ items: get().items.remove(comicId) });
+  },
+
+  removeMany: async (comicIds) => {
+    for (const comicId of comicIds) await get().remove(comicId);
+  },
+
+  updateInfo: async (comicId, changes) => {
+    const item = get().items.findById(comicId);
+    if (!item) return;
+    const comic = await getLibraryUseCases().updateComicInfo(comicId, changes);
+    set({
+      items: get().items.update(LibraryItem.create({ comic, progress: item.getProgress() })),
+    });
+  },
+
+  setReadStatusMany: async (comicIds, isRead) => {
+    for (const comicId of comicIds) await get().setReadStatus(comicId, isRead);
   },
 
   setReadStatus: async (comicId, isRead) => {
@@ -83,5 +116,7 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
 
   setQuery: (query) => set({ query }),
   setSortOrder: (sortOrder) => set({ sortOrder }),
+  setFilter: (filter) => set({ filter }),
+  setGroupSeries: (groupSeries) => set({ groupSeries }),
   dismissImportFailures: () => set({ importFailures: [] }),
 }));

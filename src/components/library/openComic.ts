@@ -8,3 +8,8 @@ export function openComic(comicId: string, cover: HTMLElement | null): void {
   if (cover) cover.style.viewTransitionName = READER_COVER_TRANSITION;
   goTo(`/read/${comicId}`, 'open');
 }
+
+/** Route of a series screen (keys are normalised names, so they are URL-encoded). */
+export function seriesPath(key: string): string {
+  return `/series/${encodeURIComponent(key)}`;
+}
