@@ -140,7 +140,8 @@
   }
 }
 
-:root[data-theme='dark'] {
+/* Also applies to any subtree marked dark (e.g. sheets over the always-dark reader). */
+[data-theme='dark'] {
   --bg-grouped: #000000;
   --bg: #000000;
   --bg-elevated: #1c1c1e;
@@ -192,7 +193,6 @@ body {
   background: var(--bg-grouped);
   color: var(--label);
   -webkit-tap-highlight-color: transparent;
-  overscroll-behavior-y: none;
   text-rendering: optimizeLegibility;
 }
 

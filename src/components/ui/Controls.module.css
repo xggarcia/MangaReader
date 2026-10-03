@@ -305,3 +305,118 @@
   overflow-y: auto;
   overscroll-behavior: contain;
 }
+
+/* ---------- Action sheet (confirmations) ---------- */
+.actionSheet {
+  position: fixed;
+  inset: auto 0 0 0;
+  width: auto;
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 var(--space-2) calc(var(--space-2) + var(--safe-bottom));
+  border: none;
+  background: transparent;
+  color: var(--label);
+  transform: translateY(0);
+  transition:
+    transform var(--duration-slow) var(--ease-ios),
+    overlay var(--duration-slow) allow-discrete,
+    display var(--duration-slow) allow-discrete;
+}
+
+.actionSheet:not(:popover-open) {
+  transform: translateY(110%);
+}
+
+@starting-style {
+  .actionSheet:popover-open {
+    transform: translateY(110%);
+  }
+}
+
+.actionSheet::backdrop {
+  background: var(--dim);
+  opacity: 1;
+  transition:
+    opacity var(--duration-slow) ease-out,
+    overlay var(--duration-slow) allow-discrete,
+    display var(--duration-slow) allow-discrete;
+}
+
+.actionSheet:not(:popover-open)::backdrop {
+  opacity: 0;
+}
+
+@starting-style {
+  .actionSheet:popover-open::backdrop {
+    opacity: 0;
+  }
+}
+
+.actionGroup {
+  display: block;
+  width: 100%;
+  margin-bottom: var(--space-2);
+  overflow: hidden;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--material-thick);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+}
+
+.actionHeader {
+  padding: var(--space-4) var(--space-5) var(--space-3);
+  text-align: center;
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+.actionTitle {
+  color: var(--label-secondary);
+  font: var(--text-footnote);
+  font-weight: 600;
+}
+
+.actionMessage {
+  margin-top: 2px;
+  color: var(--label-secondary);
+  font: var(--text-footnote);
+}
+
+.actionButton {
+  display: block;
+  width: 100%;
+  min-height: 57px;
+  padding: 0 var(--space-4);
+  border: none;
+  background: transparent;
+  color: var(--accent);
+  font: var(--text-body);
+  font-size: 1.25rem;
+  cursor: pointer;
+}
+
+.actionButton:active {
+  background: var(--fill-secondary);
+}
+
+.actionCancel {
+  font-weight: 600;
+}
+
+.actionButton.destructive {
+  color: var(--destructive);
+}
+
+/* The Cancel button is also a group: keep the material behind it. */
+.actionGroup.actionButton {
+  background: var(--material-thick);
+}
+
+.actionGroup.actionButton:active {
+  background: var(--fill);
+}
+
+.actionSheet:focus-visible {
+  outline: none;
+}

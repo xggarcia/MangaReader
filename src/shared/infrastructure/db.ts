@@ -1,9 +1,11 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
+import type { CollectionPrimitive } from '../../modules/library/domain/Collection';
 import type { ComicPrimitive } from '../../modules/library/domain/Comic';
+import type { ReadingDayPrimitive } from '../../modules/reading/domain/ReadingDay';
 import type { ReadingProgressPrimitive } from '../../modules/reading/domain/ReadingProgress';
 
 export const DB_NAME = 'manga-reader';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
 export interface MangaReaderDB extends DBSchema {
   comics: { key: string; value: ComicPrimitive };
@@ -12,6 +14,9 @@ export interface MangaReaderDB extends DBSchema {
   files: { key: string; value: Blob };
   progress: { key: string; value: ReadingProgressPrimitive };
   settings: { key: string; value: unknown };
+  collections: { key: string; value: CollectionPrimitive };
+  /** One record per calendar day with reading activity (statistics). */
+  activity: { key: string; value: ReadingDayPrimitive };
 }
 
 export type MangaReaderDatabase = IDBPDatabase<MangaReaderDB>;
@@ -26,6 +31,10 @@ export function openMangaReaderDb(name: string = DB_NAME): Promise<MangaReaderDa
         db.createObjectStore('files');
         db.createObjectStore('progress', { keyPath: 'comicId' });
         db.createObjectStore('settings');
+      }
+      if (oldVersion < 2) {
+        db.createObjectStore('collections', { keyPath: 'id' });
+        db.createObjectStore('activity', { keyPath: 'date' });
       }
     },
   });

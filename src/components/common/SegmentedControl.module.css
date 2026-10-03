@@ -40,7 +40,7 @@
   transition: transform var(--duration-slow) var(--ease-spring);
 }
 
-:root[data-theme='dark'] .thumb {
+[data-theme='dark'] .thumb {
   background: #636366;
 }
 

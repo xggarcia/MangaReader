@@ -1,29 +1,9 @@
-.sliderRow,
-.segmentRow {
+.sliderRow {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-1) var(--space-4);
-}
-
-.segmentRow {
-  padding-top: var(--space-3);
-}
-
-.segmentRow > fieldset {
-  flex: 1;
-  margin: 0;
-}
-
-.segmentRow + *::before {
-  position: absolute;
-  top: 0;
-  right: 0;
-  left: var(--space-4);
-  height: 0.5px;
-  background: var(--separator);
-  content: '';
 }
 
 .sliderRow input {

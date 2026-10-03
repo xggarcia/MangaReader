@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { useReadingOptions } from '../../hooks/useReadingOptions';
 import { MAX_BRIGHTNESS, MIN_BRIGHTNESS } from '../../modules/settings/domain/Settings';
 import { useSettingsStore } from '../../stores/settingsStore';
-import { SegmentedControl } from '../common/SegmentedControl';
 import { GroupedSection, MenuRow, Row } from '../ui/GroupedList';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import styles from './Settings.module.css';
@@ -73,16 +72,14 @@ export function SettingsScreen() {
       </GroupedSection>
 
       <GroupedSection title={t('settings.appearance')}>
-        <div className={styles.segmentRow}>
-          <Moon size={18} aria-hidden className={styles.sliderIcon} />
-          <SegmentedControl
-            legend={t('settings.theme')}
-            hideLegend
-            value={values.theme}
-            options={options.themes}
-            onChange={(theme) => void update({ theme })}
-          />
-        </div>
+        <MenuRow
+          icon={Moon}
+          iconColor="#5e5ce6"
+          label={t('settings.theme')}
+          value={values.theme}
+          options={options.themes}
+          onChange={(theme) => void update({ theme })}
+        />
         <MenuRow
           icon={Globe}
           iconColor="#007aff"

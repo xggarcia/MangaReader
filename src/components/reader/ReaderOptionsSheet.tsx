@@ -13,8 +13,11 @@ interface ReaderOptionsSheetProps {
 export function ReaderOptionsSheet({ id, settings, onChange }: ReaderOptionsSheetProps) {
   const { t } = useTranslation();
   return (
-    <Sheet id={id} title={t('reader.options')} closeLabel={t('reader.done')}>
-      <ReadingPreferencesFields settings={settings} onChange={onChange} />
-    </Sheet>
+    // Always dark over the black reader, so the sheet never flashes white in a dark room.
+    <div data-theme="dark" style={{ display: 'contents' }}>
+      <Sheet id={id} title={t('reader.options')} closeLabel={t('reader.done')}>
+        <ReadingPreferencesFields settings={settings} onChange={onChange} />
+      </Sheet>
+    </div>
   );
 }

@@ -39,7 +39,15 @@ export function TabBar({ tabs, label }: TabBarProps) {
               goTo(path, 'tab', { replace: true });
             }}
           >
-            <Icon className={styles.icon} size={25} strokeWidth={active ? 2.2 : 1.75} aria-hidden />
+            <Icon
+              className={styles.icon}
+              size={25}
+              strokeWidth={active ? 2.1 : 1.75}
+              // Selected tabs read as filled, like iOS, without hiding the glyph's inner lines.
+              fill={active ? 'currentColor' : 'none'}
+              fillOpacity={active ? 0.22 : 0}
+              aria-hidden
+            />
             <span className={styles.label}>{tabLabel}</span>
           </a>
         );

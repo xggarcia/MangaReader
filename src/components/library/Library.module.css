@@ -123,6 +123,8 @@
 }
 
 .cell {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   /* Skip layout and paint of off-screen cells in large libraries. */
   content-visibility: auto;
@@ -192,12 +194,13 @@
 }
 
 .cellText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   margin-top: var(--space-2);
 }
 
 .cellTitle {
-  /* Always two lines tall so status rows line up across the grid. */
-  min-height: calc(2 * 1.38em);
   display: -webkit-box;
   overflow: hidden;
   font: var(--text-footnote);
@@ -216,6 +219,8 @@
 }
 
 .cellMeta {
+  /* Pinned to the bottom so status rows line up across a grid row. */
+  margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -251,10 +256,11 @@
   align-items: center;
   justify-content: center;
   width: 44px;
-  height: 32px;
+  height: 44px;
+  margin-block: -6px;
   margin-right: -12px;
   border: none;
-  border-radius: 16px;
+  border-radius: 22px;
   background: transparent;
   color: var(--label-secondary);
   cursor: pointer;

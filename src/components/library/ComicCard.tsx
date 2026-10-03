@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useCoverUrl } from '../../hooks/useCoverUrl';
 import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
 import { haptics } from '../../shared/infrastructure/haptics';
+import { ConfirmSheet } from '../ui/ConfirmSheet';
 import { CoverContextMenu, type ContextAction } from './CoverContextMenu';
 import { openComic } from './openComic';
 import styles from './Library.module.css';
@@ -31,6 +32,7 @@ export const ComicCard = memo(function ComicCard({
   const press = useRef<{ x: number; y: number; timer: ReturnType<typeof setTimeout> } | null>(null);
   const suppressClick = useRef(false);
   const [menuAnchor, setMenuAnchor] = useState<DOMRect | null>(null);
+  const [confirmingRemove, setConfirmingRemove] = useState(false);
 
   const progress = item.getProgress();
   const percent = Math.round(item.getProgressRatio() * 100);
@@ -99,7 +101,7 @@ export const ComicCard = memo(function ComicCard({
       destructive: true,
       onSelect: () => {
         haptics.warning();
-        if (window.confirm(t('library.removeConfirm', { title }))) onRemove(comicId);
+        setConfirmingRemove(true);
       },
     },
   ];
@@ -176,6 +178,16 @@ export const ComicCard = memo(function ComicCard({
           actions={actions}
           dismissLabel={t('library.closeMenu')}
           onClose={() => setMenuAnchor(null)}
+        />
+      )}
+      {confirmingRemove && (
+        <ConfirmSheet
+          title={t('library.removeConfirm', { title })}
+          confirmLabel={t('library.removeShort')}
+          cancelLabel={t('library.cancel')}
+          destructive
+          onConfirm={() => onRemove(comicId)}
+          onClose={() => setConfirmingRemove(false)}
         />
       )}
     </li>
