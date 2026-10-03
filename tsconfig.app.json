@@ -5,7 +5,12 @@
     "lib": ["ES2023", "DOM", "DOM.Iterable", "WebWorker.ImportScripts"],
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "types": ["vite/client", "vitest/globals", "@testing-library/jest-dom"],
+    "types": [
+      "vite/client",
+      "vite-plugin-pwa/vanillajs",
+      "vitest/globals",
+      "@testing-library/jest-dom"
+    ],
     "jsx": "react-jsx",
     "skipLibCheck": true,
     "allowImportingTsExtensions": false,

@@ -28,7 +28,7 @@ export function ImportStatus({ progress, failures, onDismiss }: ImportStatusProp
       </div>
       {failures.length > 0 && (
         <section className={styles.importErrors} role="alert">
-          <div className={styles.importErrorsHeader}>
+          <div className={styles.noticeHeader}>
             <AlertCircle size={20} strokeWidth={2} aria-hidden className={styles.importErrorIcon} />
             <h2>{t('library.importFailedTitle', { count: failures.length })}</h2>
             <button

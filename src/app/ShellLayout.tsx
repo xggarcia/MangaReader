@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 import { TabBar, type TabItem } from '../components/ui/TabBar';
 import { useEdgeSwipeBack } from '../hooks/useEdgeSwipeBack';
+import { isAppleMobile, isInstalledWebApp } from '../shared/infrastructure/webApp';
 
 const TAB_ROOTS = new Set(['/', '/collections', '/settings']);
 
@@ -17,8 +18,11 @@ export function ShellLayout() {
     { path: '/settings', label: t('tabs.settings'), icon: Settings },
   ];
 
-  // Android has the system Back gesture; on iOS pushed screens close with an edge swipe.
-  useEdgeSwipeBack(Capacitor.getPlatform() === 'ios' && !TAB_ROOTS.has(pathname));
+  // Android and browsers have their own Back; the iOS app and the iOS home-screen web app
+  // do not, so pushed screens close with an edge swipe there.
+  const iosWithoutBack =
+    Capacitor.getPlatform() === 'ios' || (isAppleMobile() && isInstalledWebApp());
+  useEdgeSwipeBack(iosWithoutBack && !TAB_ROOTS.has(pathname));
 
   return (
     <>

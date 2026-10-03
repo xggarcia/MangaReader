@@ -5,10 +5,12 @@ import { createRoot } from 'react-dom/client';
 import { RouterProvider } from 'react-router/dom';
 import '../i18n';
 import '../styles/global.css';
+import { registerOfflineSupport } from '../shared/infrastructure/webApp';
 import { registerRouter } from './navigation';
 import { router } from './router';
 
 registerRouter(router);
+void registerOfflineSupport();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) throw new Error('Root element #root not found');

@@ -17,6 +17,7 @@ import { Menu, type MenuItem } from '../ui/Menu';
 import { SearchField } from '../ui/SearchField';
 import { ContinueReadingCard } from './ContinueReadingCard';
 import { ImportStatus } from './ImportStatus';
+import { InstallHint } from './InstallHint';
 import { LibraryShelf } from './LibraryShelf';
 import { SelectionProvider } from './SelectionContext';
 import { useSelection } from './useSelection';
@@ -158,6 +159,7 @@ function LibraryContent() {
         }
       >
         {pickerInput}
+        <InstallHint />
         <ImportStatus
           progress={importProgress}
           failures={importFailures}

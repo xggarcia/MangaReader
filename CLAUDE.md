@@ -4,7 +4,7 @@ Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** and 
 
 ## Stack
 
-- React 19 + TypeScript 6 (strict) + Vite 8, rendered inside Capacitor 8 (Android WebView). No web deployment and no PWA.
+- React 19 + TypeScript 6 (strict) + Vite 8, rendered inside Capacitor 8 (Android WebView / iOS WKWebView), plus an installable web version (PWA via `vite-plugin-pwa`) on GitHub Pages.
 - State: Zustand (UI state only). Persistence: IndexedDB via `idb` (metadata, covers, progress, settings) and OPFS (copied comic files).
 - Archives: `@zip.js/zip.js` (CBZ, random access) and `node-unrar-js` (CBR, WASM), both inside one Web Worker exposed with Comlink.
 - i18n: `i18next` + `react-i18next` (EN/ES, `src/i18n/locales`).
@@ -29,7 +29,9 @@ Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** and 
 
 iOS: the Xcode project lives in `ios/App` (Swift Package Manager, iOS 17+ because the UI relies on popover, `@starting-style` and `linear()`). It can only be compiled on macOS: CI builds an **unsigned .ipa** on `macos-latest` (artifact `manga-reader-ios-unsigned-ipa`), which the owner signs and installs with Sideloadly and a free Apple ID (re-sign every 7 days). Platform differences live behind `src/shared/infrastructure/nativeSystemUi.ts` (Android `SystemUi` plugin vs iOS `@capacitor/status-bar`) and `useEdgeSwipeBack` (iOS edge-swipe back on pushed screens). If WKWebView cannot start the archive worker, `ResilientArchiveRepository` decodes on the main thread.
 
-Android builds need **JDK 21** + Android SDK. Android Studio bundles a newer JBR (Java 25) that Gradle 8.14 rejects, so point `JAVA_HOME` (and Android Studio's Gradle JDK) to a JDK 21. CI (`.github/workflows/ci.yml`) runs lint, format check, typecheck, tests and build, then assembles a debug APK and uploads it as an artifact.
+Android builds need **JDK 21** + Android SDK. Android Studio bundles a newer JBR (Java 25) that Gradle 8.14 rejects, so point `JAVA_HOME` (and Android Studio's Gradle JDK) to a JDK 21. CI (`.github/workflows/ci.yml`) runs lint, format check, typecheck, tests and build, then assembles a debug APK and uploads it as an artifact. On pushes to `main` it also deploys `dist/` to GitHub Pages (https://xggarcia.github.io/MangaReader/).
+
+Web version: the same build, served from GitHub Pages. `src/shared/infrastructure/webApp.ts` registers the offline service worker **only on the web** (never inside Capacitor), detects the iOS home-screen web app (which also gets the edge-swipe back) and drives the one-time "Add to Home Screen" hint on iPhone/iPad. Comics still stay on the device (OPFS/IndexedDB of the browser); the service worker only caches the app shell.
 
 ## Architecture (DDD / Clean Architecture)
 
@@ -61,6 +63,6 @@ android/             Capacitor native project (committed); local plugins in app/
 - Heavy work (unzip, unrar, XML parsing, thumbnails) runs in the archive Web Worker, never on the UI thread.
 - Accessibility: keyboard reachable controls, ARIA labels on icon-only buttons, 44px touch targets, WCAG AA contrast via the CSS tokens in `src/styles/global.css`.
 - Styling: CSS Modules + CSS custom properties; theme via `data-theme` on `<html>` (absent = follow system).
-- Privacy: no network calls. The Android manifest has **no INTERNET permission** (keep it that way), CSP in `index.html` restricts connections to `'self'`, `blob:` and the local dev server, and Android backup is disabled so copied comics are never uploaded.
+- Privacy: no network calls (the web version only downloads its own app files). The Android manifest has **no INTERNET permission** (keep it that way), CSP in `index.html` restricts connections to `'self'`, `blob:` and the local dev server, and Android backup is disabled so copied comics are never uploaded.
 - Native plugins: `@capacitor/app` (back button), `@capacitor-community/keep-awake` (screen on while reading) and the local `SystemUi` plugin (immersive mode).
 - Manual testing without a phone: run the Android emulator, `adb install` the debug APK and inspect the WebView through `chrome://inspect` (debug builds enable WebView debugging).

@@ -94,7 +94,9 @@
       "delete": "Eliminar"
     },
     "removeManyConfirm_one": "¿Eliminar {{count}} cómic de tu biblioteca?",
-    "removeManyConfirm_other": "¿Eliminar {{count}} cómics de tu biblioteca? Se borrarán sus copias guardadas y su progreso."
+    "removeManyConfirm_other": "¿Eliminar {{count}} cómics de tu biblioteca? Se borrarán sus copias guardadas y su progreso.",
+    "installHintTitle": "Instala MangaReader",
+    "installHintBody": "Pulsa Compartir y luego «Añadir a pantalla de inicio». Se abrirá a pantalla completa, funcionará sin conexión y Safari no borrará tu biblioteca."
   },
   "reader": {
     "title": "Lector",

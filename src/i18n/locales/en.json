@@ -94,7 +94,9 @@
       "delete": "Delete"
     },
     "removeManyConfirm_one": "Delete {{count}} comic from your library?",
-    "removeManyConfirm_other": "Delete {{count}} comics from your library? Their saved copies and progress will be deleted."
+    "removeManyConfirm_other": "Delete {{count}} comics from your library? Their saved copies and progress will be deleted.",
+    "installHintTitle": "Install MangaReader",
+    "installHintBody": "Tap Share, then “Add to Home Screen”. It opens full screen, works offline and keeps your library safe from Safari clearing site data."
   },
   "reader": {
     "title": "Reader",

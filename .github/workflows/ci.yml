@@ -68,7 +68,7 @@ jobs:
   ios:
     name: Build unsigned iOS app (.ipa)
     needs: verify
-    # macOS minutes count 10x on private repos: run on main and on demand only.
+    # macOS runners are slow to start: build on main and on demand only.
     if: github.event_name != 'pull_request'
     runs-on: macos-latest
     steps:
@@ -104,3 +104,28 @@ jobs:
           name: manga-reader-ios-unsigned-ipa
           path: ${{ runner.temp }}/MangaReader-unsigned.ipa
           retention-days: 14
+
+  pages:
+    name: Deploy web version to GitHub Pages
+    needs: verify
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-dist
+          path: dist
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+      - id: deploy
+        uses: actions/deploy-pages@v4

@@ -52,4 +52,22 @@ await Promise.all([
   ),
 ]);
 
-console.log('Source assets written to assets/');
+// Web app (PWA) icons, served from public/. iOS rounds apple-touch-icon itself: full bleed.
+const fullBleed = (size) =>
+  svg(size, `<rect width="100" height="100" fill="${ACCENT}"/>${glyph('#fff')}`);
+const rounded = (size) =>
+  svg(size, `<rect width="100" height="100" rx="22" fill="${ACCENT}"/>${glyph('#fff')}`);
+// Maskable icons keep the glyph inside the 80% safe circle.
+const maskable = (size) =>
+  svg(
+    size,
+    `<rect width="100" height="100" fill="${ACCENT}"/><g transform="translate(15 15) scale(0.7)">${glyph('#fff')}</g>`,
+  );
+await Promise.all([
+  render(rounded(192), 'public/pwa-192.png'),
+  render(rounded(512), 'public/pwa-512.png'),
+  render(maskable(512), 'public/pwa-maskable-512.png'),
+  render(fullBleed(180), 'public/apple-touch-icon.png'),
+]);
+
+console.log('Source assets written to assets/ and web icons to public/');

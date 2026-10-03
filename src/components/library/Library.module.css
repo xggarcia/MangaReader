@@ -358,22 +358,33 @@
   }
 }
 
-.importErrors {
+.importErrors,
+.notice {
   margin-bottom: var(--space-6);
   padding: var(--space-3) var(--space-4) var(--space-4);
   border-radius: var(--radius-lg);
   background: var(--bg-elevated);
 }
 
-.importErrorsHeader {
+.noticeHeader {
   display: flex;
   align-items: center;
   gap: var(--space-2);
 }
 
-.importErrorsHeader h2 {
+.noticeHeader h2 {
   flex: 1;
   font: var(--text-headline);
+}
+
+.noticeBody {
+  margin: var(--space-1) 0 0;
+  font: var(--text-subhead);
+  color: var(--label-secondary);
+}
+
+.installIcon {
+  color: var(--accent);
 }
 
 .importErrorIcon {
