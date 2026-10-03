@@ -1,15 +1,19 @@
+import { ArrowUpDown, BookOpen, Plus } from 'lucide-react';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFileDrop } from '../../hooks/useFileDrop';
+import { useFilePicker } from '../../hooks/useFilePicker';
+import { LIBRARY_SORT_ORDERS } from '../../modules/library/domain/LibraryItemList';
 import { useLibraryStore } from '../../stores/libraryStore';
-import { HeaderLink } from '../common/HeaderLink';
-import { ScreenHeader } from '../common/ScreenHeader';
-import screenStyles from '../common/Screen.module.css';
-import { AddComicsButton } from './AddComicsButton';
+import { BarButton } from '../ui/BarButton';
+import controls from '../ui/Controls.module.css';
+import { LargeTitleScreen } from '../ui/LargeTitleScreen';
+import { Menu } from '../ui/Menu';
+import { SearchField } from '../ui/SearchField';
 import { ComicCard } from './ComicCard';
+import { ContinueReadingCard } from './ContinueReadingCard';
 import { ImportStatus } from './ImportStatus';
 import styles from './Library.module.css';
-import { LibraryToolbar } from './LibraryToolbar';
 
 export function LibraryScreen() {
   const { t } = useTranslation();
@@ -38,71 +42,103 @@ export function LibraryScreen() {
     () => items.search(query).sortBy(sortOrder).toArray(),
     [items, query, sortOrder],
   );
+  const continueItem = useMemo(() => (query ? null : items.continueReading()), [items, query]);
 
   const addFiles = (files: File[]) => void importFiles(files);
+  const { openPicker, pickerInput } = useFilePicker(addFiles);
   const { isDragging, handlers } = useFileDrop(addFiles);
   const isImporting = importProgress !== null;
+  const isEmpty = status !== 'loading' && items.isEmpty();
 
   return (
-    <div className={styles.screen} {...handlers}>
-      <ScreenHeader
+    <div {...handlers}>
+      <LargeTitleScreen
         title={t('library.title')}
-        end={
+        trailing={
           <>
             {!items.isEmpty() && (
-              <AddComicsButton onFiles={addFiles} disabled={isImporting} compact />
+              <Menu
+                label={t('library.sortBy')}
+                items={LIBRARY_SORT_ORDERS.map((order) => ({
+                  id: order,
+                  label: t(`library.sort.${order}`),
+                  checked: order === sortOrder,
+                  onSelect: () => setSortOrder(order),
+                }))}
+                trigger={(triggerProps) => (
+                  <BarButton label={t('library.sortBy')} {...triggerProps}>
+                    <ArrowUpDown size={21} strokeWidth={2} aria-hidden />
+                  </BarButton>
+                )}
+              />
             )}
-            <HeaderLink to="/settings" label={t('nav.settings')} icon="⚙" />
+            <BarButton label={t('library.add')} onClick={openPicker} disabled={isImporting}>
+              <Plus size={26} strokeWidth={2} aria-hidden />
+            </BarButton>
           </>
         }
-      />
-      <main className={screenStyles.content}>
+        header={
+          !items.isEmpty() && (
+            <SearchField
+              value={query}
+              onChange={setQuery}
+              placeholder={t('library.searchPlaceholder')}
+              label={t('library.search')}
+              clearLabel={t('library.clearSearch')}
+            />
+          )
+        }
+      >
+        {pickerInput}
         <ImportStatus
           progress={importProgress}
           failures={importFailures}
           onDismiss={dismissImportFailures}
         />
 
-        {status === 'loading' && (
-          <p className={screenStyles.muted} role="status">
-            {t('library.loading')}
-          </p>
-        )}
-
-        {status !== 'loading' && items.isEmpty() && (
-          <section className={screenStyles.emptyState} aria-labelledby="library-empty">
-            <p id="library-empty">{t('library.empty')}</p>
-            <p className={screenStyles.muted}>{t('library.emptyHint')}</p>
-            <AddComicsButton onFiles={addFiles} disabled={isImporting} />
+        {isEmpty && (
+          <section className={styles.empty} aria-labelledby="library-empty">
+            <BookOpen size={56} strokeWidth={1.25} aria-hidden className={styles.emptyIcon} />
+            <h2 id="library-empty" className={styles.emptyTitle}>
+              {t('library.empty')}
+            </h2>
+            <p className={styles.emptyText}>{t('library.emptyHint')}</p>
+            <button
+              type="button"
+              className={controls.filledButton}
+              onClick={openPicker}
+              disabled={isImporting}
+            >
+              {t('library.add')}
+            </button>
           </section>
         )}
 
+        {continueItem && <ContinueReadingCard item={continueItem} />}
+
         {!items.isEmpty() && (
           <>
-            <LibraryToolbar
-              query={query}
-              sortOrder={sortOrder}
-              onQueryChange={setQuery}
-              onSortOrderChange={setSortOrder}
-            />
-            <p className={styles.count}>{t('library.count', { count: visibleItems.length })}</p>
+            <h2 className={styles.gridHeading}>
+              {t('library.allComics')}
+              <span className={styles.count}>{visibleItems.length}</span>
+            </h2>
             {visibleItems.length === 0 ? (
-              <p className={screenStyles.muted}>{t('library.noResults', { query })}</p>
+              <p className={styles.noResults}>{t('library.noResults', { query })}</p>
             ) : (
               <ul className={styles.grid}>
                 {visibleItems.map((item) => (
                   <ComicCard
                     key={item.getComic().getId()}
                     item={item}
-                    onSetReadStatus={(comicId, isRead) => void setReadStatus(comicId, isRead)}
-                    onRemove={(comicId) => void remove(comicId)}
+                    onSetReadStatus={setReadStatus}
+                    onRemove={remove}
                   />
                 ))}
               </ul>
             )}
           </>
         )}
-      </main>
+      </LargeTitleScreen>
       {isDragging && (
         <div className={styles.dropOverlay} aria-hidden="true">
           <p>{t('library.dropHint')}</p>

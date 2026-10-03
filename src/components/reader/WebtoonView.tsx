@@ -94,13 +94,7 @@ export function WebtoonView({
   };
 
   return (
-    <PageGestureLayer
-      direction={direction}
-      onStep={scrollByStep}
-      onToggleUi={onToggleUi}
-      swipeEnabled={false}
-      touchAction="pan-y"
-    >
+    <PageGestureLayer direction={direction} onStep={scrollByStep} onToggleUi={onToggleUi}>
       <div ref={scrollElement} className={styles.webtoonScroll} onScroll={handleScroll}>
         <div className={styles.webtoonStrip} style={{ height: virtualizer.getTotalSize() }}>
           {virtualizer.getVirtualItems().map((item) => {

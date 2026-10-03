@@ -1,0 +1,89 @@
+.section {
+  margin-bottom: var(--space-8);
+}
+
+.sectionTitle {
+  margin: 0 var(--space-4) var(--space-2);
+  color: var(--label-secondary);
+  font: var(--text-footnote);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.group {
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--bg-elevated);
+}
+
+.footer {
+  margin: var(--space-2) var(--space-4) 0;
+  color: var(--label-secondary);
+  font: var(--text-footnote);
+}
+
+.row {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 48px;
+  padding: var(--space-1) var(--space-4);
+}
+
+/* Hairline separator inset to the label, as on iOS. */
+.row + .row::before {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: var(--separator-inset, var(--space-4));
+  height: 0.5px;
+  background: var(--separator);
+  content: '';
+}
+
+.row:has(.rowIcon) + .row:has(.rowIcon) {
+  --separator-inset: 60px;
+}
+
+.rowIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.rowLabel {
+  flex: 1;
+  min-width: 0;
+  font: var(--text-body);
+}
+
+.rowTrailing {
+  display: flex;
+  flex: 0 1 auto;
+  align-items: center;
+  min-width: 0;
+  color: var(--label-secondary);
+}
+
+.menuValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 0 0 var(--space-2);
+  border: none;
+  background: none;
+  color: var(--label-secondary);
+  font: var(--text-body);
+  cursor: pointer;
+}
+
+.menuValue:active {
+  opacity: 0.5;
+}

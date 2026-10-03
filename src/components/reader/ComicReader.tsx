@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useImmersiveMode } from '../../hooks/useImmersiveMode';
+import { useDarkContentSystemBars } from '../../hooks/useSystemBars';
 import { useKeepScreenOn } from '../../hooks/useKeepScreenOn';
 import { usePageUrls, type PageRange } from '../../hooks/usePageUrls';
 import { useReaderKeyboard } from '../../hooks/useReaderKeyboard';
@@ -8,7 +9,7 @@ import type { OpenedComic } from '../../modules/archive/domain/OpenedComic';
 import type { PageStep } from '../../modules/reading/domain/ReadingDirection';
 import { SpreadLayout } from '../../modules/reading/domain/SpreadLayout';
 import { useSettingsStore } from '../../stores/settingsStore';
-import { PagedView } from './PagedView';
+import { Pager, type PagerHandle } from './Pager';
 import { ReaderOptionsSheet } from './ReaderOptionsSheet';
 import { ReaderOverlay } from './ReaderOverlay';
 import { WebtoonView, type WebtoonViewHandle } from './WebtoonView';
@@ -45,6 +46,7 @@ export function ComicReader({ comic, title, initialPage = 0, onPageChange }: Com
   const [uiVisible, setUiVisible] = useState(true);
   const [pageSizes, setPageSizes] = useState<PageSizes>(new Map());
   const webtoon = useRef<WebtoonViewHandle>(null);
+  const pager = useRef<PagerHandle>(null);
   const optionsId = useId();
 
   const { urls, failed } = usePageUrls(
@@ -70,6 +72,7 @@ export function ComicReader({ comic, title, initialPage = 0, onPageChange }: Com
 
   useImmersiveMode(!uiVisible);
   useKeepScreenOn();
+  useDarkContentSystemBars();
 
   useEffect(() => {
     onPageChange?.(currentIndex);
@@ -86,9 +89,9 @@ export function ComicReader({ comic, title, initialPage = 0, onPageChange }: Com
   const step = useCallback(
     (pageStep: PageStep) => {
       if (isWebtoon) webtoon.current?.scrollByStep(pageStep);
-      else setCurrentIndex((index) => layout.pageAfterStep(index, pageStep));
+      else pager.current?.step(pageStep);
     },
-    [isWebtoon, layout],
+    [isWebtoon],
   );
   const goTo = useCallback(
     (index: number) => {
@@ -130,14 +133,16 @@ export function ComicReader({ comic, title, initialPage = 0, onPageChange }: Com
             onToggleUi={toggleUi}
           />
         ) : (
-          <PagedView
-            spread={spread}
+          <Pager
+            ref={pager}
+            layout={layout}
+            currentPage={currentIndex}
             pageCount={pageCount}
             urls={urls}
             failed={failed}
             direction={direction}
             fit={fit}
-            onStep={step}
+            onNavigate={setCurrentIndex}
             onToggleUi={toggleUi}
             onPageSize={recordPageSize}
           />
@@ -146,17 +151,16 @@ export function ComicReader({ comic, title, initialPage = 0, onPageChange }: Com
       <p className="visually-hidden" aria-live="polite">
         {t('reader.pageAlt', { current: currentIndex + 1, total: pageCount })}
       </p>
-      {uiVisible && (
-        <ReaderOverlay
-          title={title}
-          currentIndex={currentIndex}
-          visiblePages={isWebtoon ? [currentIndex] : spread}
-          pageCount={pageCount}
-          direction={direction}
-          optionsId={optionsId}
-          onGoTo={goTo}
-        />
-      )}
+      <ReaderOverlay
+        visible={uiVisible}
+        title={title}
+        currentIndex={currentIndex}
+        visiblePages={isWebtoon ? [currentIndex] : spread}
+        pageCount={pageCount}
+        direction={direction}
+        optionsId={optionsId}
+        onGoTo={goTo}
+      />
       <ReaderOptionsSheet id={optionsId} settings={settings} onChange={updateSettings} />
     </div>
   );

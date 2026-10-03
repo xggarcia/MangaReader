@@ -1,0 +1,10 @@
+import { goTo } from '../../app/navigation';
+
+/** Shared element name: the tapped cover morphs into the reader while it opens. */
+export const READER_COVER_TRANSITION = 'reader-cover';
+
+/** Opens a comic, letting its cover grow into the reader. */
+export function openComic(comicId: string, cover: HTMLElement | null): void {
+  if (cover) cover.style.viewTransitionName = READER_COVER_TRANSITION;
+  goTo(`/read/${comicId}`, 'open');
+}

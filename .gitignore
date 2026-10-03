@@ -9,3 +9,6 @@ coverage
 .DS_Store
 Thumbs.db
 *.log
+
+# Design tooling working files
+.impeccable/review/

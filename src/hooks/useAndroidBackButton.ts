@@ -1,30 +1,35 @@
 import { useEffect } from 'react';
 import { App } from '@capacitor/app';
 import { Capacitor } from '@capacitor/core';
-import { useLocation, useNavigate } from 'react-router';
+import { useLocation } from 'react-router';
+import { goBack, goTo } from '../app/navigation';
+
+/** Tabs live side by side: Back from another tab returns to the library instead of popping. */
+const TAB_PATHS = new Set(['/settings']);
 
 /**
- * Maps the Android hardware back button: closes an open sheet first, then goes back in router
- * history, and exits the app from the root screen.
+ * Maps the Android hardware back button: closes an open sheet or menu first, then returns to
+ * the library from other tabs, goes back from pushed screens, and exits from the library.
  */
 export function useAndroidBackButton(): void {
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
     const listener = App.addListener('backButton', () => {
-      const openSheet = document.querySelector<HTMLElement>(':popover-open');
-      if (openSheet) {
-        openSheet.hidePopover();
+      const openLayer = document.querySelector<HTMLElement>(':popover-open');
+      if (openLayer) {
+        openLayer.hidePopover();
       } else if (pathname === '/') {
         void App.exitApp();
+      } else if (TAB_PATHS.has(pathname)) {
+        goTo('/', 'tab', { replace: true });
       } else {
-        void navigate(-1);
+        goBack();
       }
     });
     return () => {
       void listener.then((handle) => handle.remove());
     };
-  }, [navigate, pathname]);
+  }, [pathname]);
 }

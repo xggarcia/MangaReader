@@ -13,7 +13,6 @@
     "empty": "Tu biblioteca está vacía.",
     "emptyHint": "Añade archivos CBZ o CBR guardados en tu dispositivo para empezar a leer.",
     "add": "Añadir cómics",
-    "addShort": "Añadir",
     "search": "Buscar",
     "searchPlaceholder": "Título, serie o autor",
     "noResults": "Ningún cómic coincide con «{{query}}».",
@@ -23,8 +22,6 @@
       "recentlyAdded": "Añadidos recientemente",
       "lastRead": "Última lectura"
     },
-    "count_one": "{{count}} cómic",
-    "count_other": "{{count}} cómics",
     "dropHint": "Suelta los archivos para añadirlos a tu biblioteca",
     "importing": "Añadiendo {{done}} de {{total}}…",
     "importFailedTitle_one": "No se ha podido añadir {{count}} archivo",
@@ -41,7 +38,17 @@
     "markAsUnread": "Marcar como no leído",
     "remove": "Eliminar de la biblioteca",
     "removeConfirm": "¿Eliminar «{{title}}» de tu biblioteca? Se borrarán su copia guardada y su progreso.",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "continueReading": "Seguir leyendo",
+    "continue": "Seguir",
+    "read_action": "Leer",
+    "pageOf": "Página {{current}} de {{total}}",
+    "new": "Nuevo",
+    "percent": "{{percent}} %",
+    "clearSearch": "Borrar búsqueda",
+    "allComics": "Todos los cómics",
+    "closeMenu": "Cerrar menú",
+    "removeShort": "Eliminar"
   },
   "reader": {
     "title": "Lector",
@@ -71,7 +78,8 @@
       "original": "Original"
     },
     "brightness": "Brillo",
-    "close": "Cerrar"
+    "close": "Cerrar",
+    "done": "OK"
   },
   "settings": {
     "title": "Ajustes",
@@ -90,7 +98,12 @@
       "en": "English"
     },
     "privacy": "Privacidad",
-    "privacyText": "MangaReader funciona totalmente sin conexión. Tus cómics, tu progreso y tus ajustes se guardan solo en este dispositivo y nunca se suben ni se comparten."
+    "privacyText": "MangaReader funciona totalmente sin conexión. Tus cómics, tu progreso y tus ajustes se guardan solo en este dispositivo y nunca se suben ni se comparten.",
+    "readingFooter": "Se aplican al abrir un cómic. Puedes cambiarlos mientras lees con el botón Aa.",
+    "brightnessFooter": "Oscurece las páginas en el lector sin cambiar el brillo de la pantalla.",
+    "offline": "Solo sin conexión",
+    "offlineValue": "Sin acceso a la red",
+    "about": "Acerca de"
   },
   "errors": {
     "corrupt": "El archivo está dañado o no es un cómic válido.",
@@ -100,5 +113,10 @@
     "duplicate": "Este cómic ya está en tu biblioteca.",
     "notFound": "Este cómic ya no está disponible.",
     "unknown": "Algo ha fallado al abrir el archivo."
+  },
+  "tabs": {
+    "label": "Secciones",
+    "library": "Biblioteca",
+    "settings": "Ajustes"
   }
 }

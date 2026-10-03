@@ -1,28 +1,53 @@
 .group {
-  margin: 0 0 var(--space-4);
+  min-width: 0;
+  margin: 0 0 var(--space-5);
   padding: 0;
   border: none;
-  min-width: 0;
 }
 
 .group:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
 }
 
 .legend {
   margin-bottom: var(--space-2);
   padding: 0;
-  color: var(--color-text-muted);
-  font-size: 0.875rem;
+  color: var(--label-secondary);
+  font: var(--text-footnote);
   font-weight: 600;
 }
 
-.options {
+.track {
+  position: relative;
   display: flex;
-  gap: 2px;
   padding: 2px;
-  border-radius: var(--radius);
-  background: var(--color-border);
+  border-radius: 9px;
+  background: var(--fill-tertiary);
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  width: calc((100% - 4px) / var(--count));
+  border-radius: 7px;
+  background: var(--bg-elevated);
+  box-shadow:
+    0 3px 8px rgb(0 0 0 / 0.12),
+    0 3px 1px rgb(0 0 0 / 0.04);
+  transform: translateX(calc(100% * var(--index)));
+  transition: transform var(--duration-slow) var(--ease-spring);
+}
+
+:root[data-theme='dark'] .thumb {
+  background: #636366;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .thumb {
+    background: #636366;
+  }
 }
 
 .option {
@@ -34,30 +59,30 @@
 .option input {
   position: absolute;
   inset: 0;
+  z-index: 1;
   margin: 0;
   opacity: 0;
   cursor: pointer;
 }
 
 .option span {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
+  min-height: 40px;
   padding: 0 var(--space-2);
-  border-radius: calc(var(--radius) - 2px);
-  color: var(--color-text);
-  font-size: 0.875rem;
+  font: var(--text-footnote);
+  font-weight: 500;
   text-align: center;
+  transition: font-weight var(--duration-fast);
 }
 
 .option input:checked + span {
-  background: var(--color-surface);
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
   font-weight: 600;
 }
 
 .option input:focus-visible + span {
-  outline: 3px solid var(--color-focus);
-  outline-offset: 1px;
+  border-radius: 7px;
+  outline: 2px solid var(--focus);
 }

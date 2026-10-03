@@ -1,0 +1,119 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: var(--dim);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  backdrop-filter: blur(14px) saturate(140%);
+  animation: overlay-in var(--duration) ease-out;
+}
+
+.overlay.closing {
+  opacity: 0;
+  transition: opacity 260ms ease-out;
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: transparent;
+  cursor: default;
+}
+
+.preview {
+  position: fixed;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--fill);
+  box-shadow: var(--shadow-lifted);
+  transform-origin: top left;
+}
+
+.preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--label-secondary);
+  font: var(--text-large-title);
+}
+
+.menu {
+  position: fixed;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--material-thick);
+  -webkit-backdrop-filter: var(--material-blur);
+  backdrop-filter: var(--material-blur);
+  color: var(--label);
+  box-shadow: var(--shadow-menu);
+  transform-origin: top center;
+}
+
+.menuHeader {
+  padding: var(--space-3) var(--space-4);
+  box-shadow: inset 0 -0.5px 0 var(--separator);
+}
+
+.menuTitle {
+  overflow: hidden;
+  font: var(--text-subhead);
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.menuSubtitle {
+  color: var(--label-secondary);
+  font: var(--text-footnote);
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  min-height: 46px;
+  padding: 0 var(--space-4);
+  border: none;
+  background: transparent;
+  color: var(--label);
+  font: var(--text-body);
+  text-align: start;
+  cursor: pointer;
+}
+
+.action + .action {
+  box-shadow: inset 0 0.5px 0 var(--separator);
+}
+
+.action:active {
+  background: var(--fill-secondary);
+}
+
+.destructive {
+  color: var(--destructive);
+}

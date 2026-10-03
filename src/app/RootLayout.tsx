@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { useAndroidBackButton } from '../hooks/useAndroidBackButton';
+import { useThemeSystemBars } from '../hooks/useSystemBars';
 import { useTheme } from '../hooks/useTheme';
 import i18n, { detectSystemLanguage } from '../i18n';
 import { useSettingsStore } from '../stores/settingsStore';
@@ -20,6 +21,7 @@ export function RootLayout() {
 
   useAndroidBackButton();
   useTheme(theme);
+  useThemeSystemBars(theme);
 
   // Wait for stored preferences so the reader opens with the right mode and direction.
   return loaded ? <Outlet /> : null;

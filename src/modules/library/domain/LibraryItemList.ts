@@ -92,6 +92,17 @@ export class LibraryItemList {
     );
   }
 
+  /** The comic to resume: the most recently read one that is started but not finished. */
+  continueReading(): LibraryItem | null {
+    let best: LibraryItem | null = null;
+    for (const item of this.items) {
+      const lastReadAt = item.getLastReadAt();
+      if (lastReadAt === null || item.isRead()) continue;
+      if (!best || lastReadAt > (best.getLastReadAt() ?? 0)) best = item;
+    }
+    return best;
+  }
+
   findById(comicId: string): LibraryItem | null {
     return this.items.find((item) => item.getComic().getId() === comicId) ?? null;
   }

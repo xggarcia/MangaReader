@@ -1,26 +1,18 @@
 import { useEffect, useState } from 'react';
-import { getLibraryUseCases } from '../modules/library/application/factory';
+import { coverUrlCache } from './coverUrlCache';
 
-/** Object URL of a comic cover thumbnail, revoked on unmount. `null` while loading or missing. */
+/** Object URL of a comic cover thumbnail (shared cache). `null` while loading or missing. */
 export function useCoverUrl(comicId: string): string | null {
-  const [url, setUrl] = useState<string | null>(null);
+  const [url, setUrl] = useState<string | null>(() => coverUrlCache.peek(comicId));
 
   useEffect(() => {
     let cancelled = false;
-    let objectUrl: string | null = null;
-
-    getLibraryUseCases()
-      .getComicCover(comicId)
-      .then((cover) => {
-        if (cancelled || !cover) return;
-        objectUrl = URL.createObjectURL(cover);
-        setUrl(objectUrl);
-      })
-      .catch(() => undefined);
-
+    void coverUrlCache.acquire(comicId).then((loaded) => {
+      if (!cancelled) setUrl(loaded);
+    });
     return () => {
       cancelled = true;
-      if (objectUrl) URL.revokeObjectURL(objectUrl);
+      coverUrlCache.release(comicId);
     };
   }, [comicId]);
 

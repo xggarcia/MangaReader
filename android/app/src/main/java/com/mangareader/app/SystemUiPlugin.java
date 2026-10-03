@@ -9,17 +9,17 @@ import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
 
-/** Toggles Android immersive mode (hides status and navigation bars). JS side: src/shared/infrastructure/nativeSystemUi.ts */
+/** System bars control. JS side: src/shared/infrastructure/nativeSystemUi.ts */
 @CapacitorPlugin(name = "SystemUi")
 public class SystemUiPlugin extends Plugin {
 
+    /** Hides (immersive) or shows the status and navigation bars. */
     @PluginMethod
     public void setImmersive(PluginCall call) {
         final boolean enabled = Boolean.TRUE.equals(call.getBoolean("enabled", false));
         getActivity()
             .runOnUiThread(() -> {
-                Window window = getActivity().getWindow();
-                WindowInsetsControllerCompat controller = WindowCompat.getInsetsController(window, window.getDecorView());
+                WindowInsetsControllerCompat controller = controller();
                 if (enabled) {
                     controller.setSystemBarsBehavior(WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
                     controller.hide(WindowInsetsCompat.Type.systemBars());
@@ -28,5 +28,23 @@ public class SystemUiPlugin extends Plugin {
                 }
                 call.resolve();
             });
+    }
+
+    /** Dark icons on light content (`darkIcons: true`) or light icons on dark content. */
+    @PluginMethod
+    public void setBarsStyle(PluginCall call) {
+        final boolean darkIcons = Boolean.TRUE.equals(call.getBoolean("darkIcons", true));
+        getActivity()
+            .runOnUiThread(() -> {
+                WindowInsetsControllerCompat controller = controller();
+                controller.setAppearanceLightStatusBars(darkIcons);
+                controller.setAppearanceLightNavigationBars(darkIcons);
+                call.resolve();
+            });
+    }
+
+    private WindowInsetsControllerCompat controller() {
+        Window window = getActivity().getWindow();
+        return WindowCompat.getInsetsController(window, window.getDecorView());
     }
 }
