@@ -1,3 +1,4 @@
+import { PageQuality, type PageQualityPrimitive } from '../../archive/domain/PageQuality';
 import { FitMode, type FitModePrimitive } from '../../reading/domain/FitMode';
 import {
   ReadingDirection,
@@ -10,6 +11,9 @@ export type Theme = (typeof THEMES)[number];
 export const LANGUAGES = ['system', 'es', 'en'] as const;
 export type LanguagePreference = (typeof LANGUAGES)[number];
 
+/** Optimize new comics on import at this quality, or keep the files as they are. */
+export type ImportOptimization = 'off' | PageQualityPrimitive;
+
 export const MIN_BRIGHTNESS = 0.2;
 export const MAX_BRIGHTNESS = 1;
 
@@ -21,6 +25,7 @@ export interface SettingsPrimitive {
   language: LanguagePreference;
   /** Reader brightness, from MIN_BRIGHTNESS to 1. */
   brightness: number;
+  importOptimization: ImportOptimization;
 }
 
 const DEFAULTS: SettingsPrimitive = {
@@ -30,6 +35,7 @@ const DEFAULTS: SettingsPrimitive = {
   theme: 'system',
   language: 'system',
   brightness: 1,
+  importOptimization: 'off',
 };
 
 const isOneOf = <T extends string>(values: readonly T[], value: unknown): value is T =>
@@ -64,6 +70,9 @@ export class Settings {
       brightness: Settings.isValidBrightness(data.brightness)
         ? data.brightness
         : DEFAULTS.brightness,
+      importOptimization: Settings.isImportOptimization(data.importOptimization)
+        ? data.importOptimization
+        : DEFAULTS.importOptimization,
     });
   }
 
@@ -78,6 +87,13 @@ export class Settings {
     if (!Settings.isValidBrightness(props.brightness)) {
       throw new Error(`[Settings] Brightness out of range: ${props.brightness}`);
     }
+    if (!Settings.isImportOptimization(props.importOptimization)) {
+      throw new Error(`[Settings] Unknown import optimization: ${props.importOptimization}`);
+    }
+  }
+
+  private static isImportOptimization(value: unknown): value is ImportOptimization {
+    return value === 'off' || PageQuality.isPageQuality(value);
   }
 
   private static isValidBrightness(value: unknown): value is number {
@@ -116,6 +132,12 @@ export class Settings {
 
   getBrightness(): number {
     return this.data.brightness;
+  }
+
+  /** Quality new comics are optimized to on import; `null` keeps them as they are. */
+  getImportOptimization(): PageQuality | null {
+    const value = this.data.importOptimization;
+    return value === 'off' ? null : PageQuality.fromPrimitive(value);
   }
 
   toPrimitive(): SettingsPrimitive {

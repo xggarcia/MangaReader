@@ -1,6 +1,7 @@
 import type { ArchiveRepository } from '../domain/ArchiveRepository';
 import { ResilientArchiveRepository } from '../infrastructure/ResilientArchiveRepository';
 import { closeArchive } from './closeArchive';
+import { createOptimizedCopy } from './createOptimizedCopy';
 import { openArchive } from './openArchive';
 import { readComicInfo } from './readComicInfo';
 import { readCoverThumbnail } from './readCoverThumbnail';
@@ -12,6 +13,7 @@ export function createArchiveUseCases(archiveRepository: ArchiveRepository) {
     readPage: readPage({ archiveRepository }),
     readCoverThumbnail: readCoverThumbnail({ archiveRepository }),
     readComicInfo: readComicInfo({ archiveRepository }),
+    createOptimizedCopy: createOptimizedCopy({ archiveRepository }),
     closeArchive: closeArchive({ archiveRepository }),
   };
 }

@@ -60,7 +60,8 @@ android/             Capacitor native project (committed); local plugins in app/
 - Classes that talk to external systems (IndexedDB, OPFS, worker, archives) are named `*Repository`; the interface lives in `domain/`, implementations are prefixed by technology (`IdbComicRepository`).
 - Use cases: one operation each, dependencies injected via a props object, throw `Error('[useCaseName] message')`. User-facing errors use typed error codes mapped to i18n keys.
 - Tests: Object Mother functions in `test/helpers/*Mother.ts`, repository mocks via `*RepositoryMother` with `vi.fn()`. Use semantic queries (`getByRole`, `getByLabelText`) and ARIA states; never assert CSS classes.
-- Heavy work (unzip, unrar, XML parsing, thumbnails) runs in the archive Web Worker, never on the UI thread.
+- Heavy work (unzip, unrar, XML parsing, thumbnails, page recompression) runs in the archive Web Worker, never on the UI thread.
+- Reduce size (`optimizeComic`): the worker rewrites a comic as a CBZ with pages renamed by position (`0001.webp`…) so page indexes, and thus progress, stay valid. `PageQuality` limits the shorter side of each page; the stored file is replaced only after the new archive is complete and has the same page count. `Comic.fileSize` keeps the imported size (duplicate detection) while `storedSize` is what the copy takes now.
 - Accessibility: keyboard reachable controls, ARIA labels on icon-only buttons, 44px touch targets, WCAG AA contrast via the CSS tokens in `src/styles/global.css`.
 - Styling: CSS Modules + CSS custom properties; theme via `data-theme` on `<html>` (absent = follow system).
 - Privacy: no network calls (the web version only downloads its own app files). The Android manifest has **no INTERNET permission** (keep it that way), CSP in `index.html` restricts connections to `'self'`, `blob:` and the local dev server, and Android backup is disabled so copied comics are never uploaded.

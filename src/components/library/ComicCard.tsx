@@ -7,6 +7,7 @@ import {
   Ellipsis,
   FolderPlus,
   Pencil,
+  Shrink,
   Trash2,
 } from 'lucide-react';
 import { memo, useRef, useState, type PointerEvent } from 'react';
@@ -18,6 +19,7 @@ import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
 import { ComicInfoSheet } from './ComicInfoSheet';
 import { CoverContextMenu, type ContextAction } from './CoverContextMenu';
+import { OptimizeSheet } from './OptimizeSheet';
 import { openComic } from './openComic';
 import { useSelection } from './useSelection';
 import styles from './Library.module.css';
@@ -48,6 +50,7 @@ export const ComicCard = memo(function ComicCard({
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [pickingCollection, setPickingCollection] = useState(false);
   const [editingInfo, setEditingInfo] = useState(false);
+  const [optimizing, setOptimizing] = useState(false);
   const selection = useSelection();
   const selected = selection.isSelected([comicId]);
 
@@ -129,6 +132,12 @@ export const ComicCard = memo(function ComicCard({
       label: t('collections.addTo'),
       icon: FolderPlus,
       onSelect: () => setPickingCollection(true),
+    },
+    {
+      id: 'optimize',
+      label: t('optimize.action'),
+      icon: Shrink,
+      onSelect: () => setOptimizing(true),
     },
     {
       id: 'remove',
@@ -237,6 +246,7 @@ export const ComicCard = memo(function ComicCard({
         />
       )}
       {editingInfo && <ComicInfoSheet item={item} onClose={() => setEditingInfo(false)} />}
+      {optimizing && <OptimizeSheet comicIds={[comicId]} onClose={() => setOptimizing(false)} />}
       {confirmingRemove && (
         <ConfirmSheet
           title={t('library.removeConfirm', { title })}

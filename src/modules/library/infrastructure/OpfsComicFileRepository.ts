@@ -25,12 +25,18 @@ export class OpfsComicFileRepository implements ComicFileRepository {
 
   async save(comicId: string, file: Blob): Promise<void> {
     const directory = await this.directory();
+    const existed = await directory.getFileHandle(comicId).then(
+      () => true,
+      () => false,
+    );
     const handle = await directory.getFileHandle(comicId, { create: true });
     try {
+      // Writes go to a swap file that replaces the old content only once complete, so a failed
+      // replacement (e.g. storage full while optimizing) leaves the previous file intact.
       const writable = await handle.createWritable();
       await file.stream().pipeTo(writable);
     } catch (error) {
-      await directory.removeEntry(comicId).catch(() => undefined);
+      if (!existed) await directory.removeEntry(comicId).catch(() => undefined);
       if (isQuotaExceededError(error)) {
         throw new LibraryError('quotaExceeded', '[OpfsComicFileRepository] Storage is full');
       }

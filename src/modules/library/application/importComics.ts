@@ -73,6 +73,8 @@ export function importComics({
       author: info?.getWriter() ?? null,
       fileName: file.name,
       fileSize: file.size,
+      storedSize: file.size,
+      optimizedQuality: null,
       format: opened.getFormat().toPrimitive(),
       pageCount: opened.getPages().count(),
       addedAt: now(),

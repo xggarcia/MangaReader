@@ -155,6 +155,11 @@ export class LibraryItemList {
     return this.items.find((item) => item.getComic().getId() === comicId) ?? null;
   }
 
+  /** Bytes the stored comic files take on the device. */
+  getStoredSize(): number {
+    return this.items.reduce((total, item) => total + item.getComic().getStoredSize(), 0);
+  }
+
   count(): number {
     return this.items.length;
   }

@@ -216,5 +216,47 @@
     "markAllUnread": "Marcar serie como no leída",
     "addToCollection": "Añadir serie a colección",
     "notStarted": "Sin empezar · {{count}} páginas"
+  },
+  "optimize": {
+    "action": "Reducir tamaño",
+    "seriesAction": "Reducir tamaño de la serie",
+    "toolbar": "Reducir",
+    "title": "Reducir tamaño",
+    "subtitle_one": "{{count}} cómic · {{size}}",
+    "subtitle_other": "{{count}} cómics · {{size}}",
+    "quality": "Calidad",
+    "qualities": {
+      "high": {
+        "label": "Alta",
+        "detail": "Casi idéntica, con detalle de sobra para hacer zoom."
+      },
+      "balanced": {
+        "label": "Equilibrada",
+        "detail": "Nítida a pantalla completa en el móvil. Recomendada."
+      },
+      "compact": {
+        "label": "Compacta",
+        "detail": "Máximo ahorro. Se nota al hacer mucho zoom."
+      }
+    },
+    "explanation": "Las páginas se reducen y recomprimen en el teléfono, sin conexión. El archivo solo se sustituye cuando la copia nueva está completa; tu progreso, tus colecciones y la portada se mantienen.",
+    "start_one": "Reducir {{count}} cómic",
+    "start_other": "Reducir {{count}} cómics",
+    "alreadyDone": "Ya están reducidos a esta calidad.",
+    "progress": "Reduciendo {{current}} de {{total}}",
+    "stop": "Detener",
+    "stopping": "Terminando este cómic…",
+    "summarySaved": "{{size}} liberados",
+    "summaryOptimized_one": "{{count}} cómic reducido",
+    "summaryOptimized_other": "{{count}} cómics reducidos",
+    "summaryFailed_one": "{{count}} no se pudo reducir",
+    "summaryFailed_other": "{{count}} no se pudieron reducir",
+    "summaryNothing": "No se ha podido reducir más: ya ocupaban poco.",
+    "storage": "Almacenamiento",
+    "librarySize": "Biblioteca",
+    "onImport": "Reducir al importar",
+    "importOff": "No",
+    "reduceAll": "Reducir toda la biblioteca",
+    "storageFooter": "Reducir el tamaño recomprime las páginas a la resolución de la pantalla. Con la calidad Equilibrada suele ahorrarse entre un 50 % y un 80 %. Mantén la app abierta mientras trabaja."
   }
 }

@@ -216,5 +216,47 @@
     "markAllUnread": "Mark series as unread",
     "addToCollection": "Add series to collection",
     "notStarted": "Not started · {{count}} pages"
+  },
+  "optimize": {
+    "action": "Reduce Size",
+    "seriesAction": "Reduce Series Size",
+    "toolbar": "Reduce",
+    "title": "Reduce Size",
+    "subtitle_one": "{{count}} comic · {{size}}",
+    "subtitle_other": "{{count}} comics · {{size}}",
+    "quality": "Quality",
+    "qualities": {
+      "high": {
+        "label": "High",
+        "detail": "Nearly identical, with plenty of detail for zooming."
+      },
+      "balanced": {
+        "label": "Balanced",
+        "detail": "Sharp at full screen on a phone. Recommended."
+      },
+      "compact": {
+        "label": "Compact",
+        "detail": "Maximum savings. Noticeable when zooming in a lot."
+      }
+    },
+    "explanation": "Pages are downscaled and recompressed on your phone, offline. The file is only replaced once the new copy is complete; your progress, collections and cover are kept.",
+    "start_one": "Reduce {{count}} Comic",
+    "start_other": "Reduce {{count}} Comics",
+    "alreadyDone": "Already reduced to this quality.",
+    "progress": "Reducing {{current}} of {{total}}",
+    "stop": "Stop",
+    "stopping": "Finishing this comic…",
+    "summarySaved": "{{size}} freed",
+    "summaryOptimized_one": "{{count}} comic reduced",
+    "summaryOptimized_other": "{{count}} comics reduced",
+    "summaryFailed_one": "{{count}} could not be reduced",
+    "summaryFailed_other": "{{count}} could not be reduced",
+    "summaryNothing": "Could not reduce them further: they were already small.",
+    "storage": "Storage",
+    "librarySize": "Library",
+    "onImport": "Reduce on Import",
+    "importOff": "Off",
+    "reduceAll": "Reduce Entire Library",
+    "storageFooter": "Reducing size recompresses pages to screen resolution. Balanced usually saves 50% to 80%. Keep the app open while it works."
   }
 }

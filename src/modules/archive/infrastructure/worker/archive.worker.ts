@@ -1,6 +1,8 @@
 import * as Comlink from 'comlink';
 import { ArchiveError } from '../../domain/ArchiveError';
 import { ArchiveFormat, type ArchiveFormatPrimitive } from '../../domain/ArchiveFormat';
+import { OpenedComic, type OpenedComicPrimitive } from '../../domain/OpenedComic';
+import { PageQuality, type PageQualityPrimitive } from '../../domain/PageQuality';
 import { DispatchingArchiveRepository } from '../DispatchingArchiveRepository';
 import type { ArchiveWorkerApi, WorkerResult } from './archiveWorkerApi';
 
@@ -39,6 +41,19 @@ const api: ArchiveWorkerApi = {
       const info = await repository.readComicInfo(sessionId, entryPath);
       return info?.toPrimitive() ?? null;
     }),
+
+  createOptimizedCopy: (
+    comic: OpenedComicPrimitive,
+    quality: PageQualityPrimitive,
+    onProgress?: (done: number, total: number) => void,
+  ) =>
+    toResult(() =>
+      repository.createOptimizedCopy(
+        OpenedComic.fromPrimitive(comic),
+        PageQuality.fromPrimitive(quality),
+        onProgress ? (done, total) => void onProgress(done, total) : undefined,
+      ),
+    ),
 
   close: (sessionId: string) => toResult(() => repository.close(sessionId)),
 };

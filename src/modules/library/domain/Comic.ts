@@ -1,4 +1,5 @@
 import type { ArchiveFormatPrimitive } from '../../archive/domain/ArchiveFormat';
+import { PageQuality, type PageQualityPrimitive } from '../../archive/domain/PageQuality';
 
 export interface ComicPrimitive {
   id: string;
@@ -7,12 +8,21 @@ export interface ComicPrimitive {
   number: string | null;
   author: string | null;
   fileName: string;
+  /** Size of the imported file (identifies it when the same file is picked again). */
   fileSize: number;
+  /** Bytes the private copy takes now; smaller than `fileSize` once optimized. */
+  storedSize: number;
+  /** Quality the pages were optimized to, or `null` when the copy is the original file. */
+  optimizedQuality: PageQualityPrimitive | null;
   format: ArchiveFormatPrimitive;
   pageCount: number;
   /** Epoch milliseconds. */
   addedAt: number;
 }
+
+/** Comics saved before optimization existed lack its fields. */
+export type StoredComicPrimitive = Omit<ComicPrimitive, 'storedSize' | 'optimizedQuality'> &
+  Partial<Pick<ComicPrimitive, 'storedSize' | 'optimizedQuality'>>;
 
 const ARCHIVE_EXTENSION = /\.(cbz|cbr|zip|rar)$/i;
 
@@ -31,8 +41,12 @@ export class Comic {
     });
   }
 
-  static fromPrimitive(data: ComicPrimitive): Comic {
-    return Comic.create(data);
+  static fromPrimitive(data: StoredComicPrimitive): Comic {
+    return Comic.create({
+      ...data,
+      storedSize: data.storedSize ?? data.fileSize,
+      optimizedQuality: data.optimizedQuality ?? null,
+    });
   }
 
   static ensureIsValid(props: ComicPrimitive): void {
@@ -45,6 +59,10 @@ export class Comic {
     if (!Number.isFinite(props.fileSize) || props.fileSize < 0) {
       throw new Error('[Comic] fileSize must be a non-negative number');
     }
+    if (!Number.isFinite(props.storedSize) || props.storedSize < 0) {
+      throw new Error('[Comic] storedSize must be a non-negative number');
+    }
+    if (props.optimizedQuality !== null) PageQuality.fromPrimitive(props.optimizedQuality);
   }
 
   /** Title derived from a file name: extension removed, underscores turned into spaces. */
@@ -81,6 +99,21 @@ export class Comic {
     return this.data.fileSize;
   }
 
+  getStoredSize(): number {
+    return this.data.storedSize;
+  }
+
+  getOptimizedQuality(): PageQuality | null {
+    return this.data.optimizedQuality
+      ? PageQuality.fromPrimitive(this.data.optimizedQuality)
+      : null;
+  }
+
+  /** Whether its pages are already stored at this quality, so optimizing again saves nothing. */
+  isOptimizedAs(quality: PageQuality): boolean {
+    return this.data.optimizedQuality === quality.toPrimitive();
+  }
+
   getPageCount(): number {
     return this.data.pageCount;
   }
@@ -92,6 +125,23 @@ export class Comic {
   /** Corrected metadata (edited by the user); blank series or number clear them. */
   withInfo(info: { title: string; series: string | null; number: string | null }): Comic {
     return Comic.create({ ...this.data, ...info });
+  }
+
+  /**
+   * The private copy was optimized: `storedSize` is the new size, or the current one when
+   * the result was not worth keeping (so the comic is not optimized again at this quality).
+   */
+  withOptimizedCopy(props: {
+    quality: PageQuality;
+    storedSize: number;
+    format: ArchiveFormatPrimitive;
+  }): Comic {
+    return Comic.create({
+      ...this.data,
+      storedSize: props.storedSize,
+      format: props.format,
+      optimizedQuality: props.quality.toPrimitive(),
+    });
   }
 
   /** Whether a picked file is very likely this same comic (same name and size). */

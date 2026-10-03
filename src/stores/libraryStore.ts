@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import type { ImportErrorCode, ImportProgress } from '../modules/library/application/importComics';
 import { getLibraryUseCases } from '../modules/library/application/factory';
+import type { Comic } from '../modules/library/domain/Comic';
 import { LibraryItem } from '../modules/library/domain/LibraryItem';
 import {
   LibraryItemList,
@@ -27,7 +28,10 @@ interface LibraryState {
   filter: LibraryFilter;
   groupSeries: boolean;
   load: () => Promise<void>;
-  importFiles: (files: readonly File[]) => Promise<void>;
+  /** Resolves with the ids of the comics that were imported. */
+  importFiles: (files: readonly File[]) => Promise<string[]>;
+  /** Reflects a comic changed elsewhere (e.g. optimized), keeping its progress. */
+  replaceComic: (comic: Comic) => void;
   remove: (comicId: string) => Promise<void>;
   setReadStatus: (comicId: string, isRead: boolean) => Promise<void>;
   setQuery: (query: string) => void;
@@ -60,7 +64,7 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   },
 
   importFiles: async (files) => {
-    if (files.length === 0 || get().importProgress) return;
+    if (files.length === 0 || get().importProgress) return [];
     void requestPersistentStorage();
     set({ importProgress: { done: 0, total: files.length }, importFailures: [] });
 
@@ -78,6 +82,15 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
       }
     }
     set({ items, importFailures, importProgress: null, status: 'ready' });
+    return results.flatMap((result) =>
+      result.status === 'imported' ? [result.comic.getId()] : [],
+    );
+  },
+
+  replaceComic: (comic) => {
+    const item = get().items.findById(comic.getId());
+    if (!item) return;
+    set({ items: get().items.update(LibraryItem.create({ comic, progress: item.getProgress() })) });
   },
 
   remove: async (comicId) => {

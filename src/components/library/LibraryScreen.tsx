@@ -18,6 +18,7 @@ import { SearchField } from '../ui/SearchField';
 import { ContinueReadingCard } from './ContinueReadingCard';
 import { ImportStatus } from './ImportStatus';
 import { InstallHint } from './InstallHint';
+import { useOptimizationStore } from '../../stores/optimizationStore';
 import { LibraryShelf } from './LibraryShelf';
 import { SelectionProvider } from './SelectionContext';
 import { useSelection } from './useSelection';
@@ -75,7 +76,8 @@ function LibraryContent() {
     [items, query, filter],
   );
 
-  const addFiles = (files: File[]) => void importFiles(files);
+  const addFiles = (files: File[]) =>
+    void importFiles(files).then(useOptimizationStore.getState().optimizeImported);
   const { openPicker, pickerInput } = useFilePicker(addFiles);
   const { isDragging, handlers } = useFileDrop(addFiles);
   const isImporting = importProgress !== null;

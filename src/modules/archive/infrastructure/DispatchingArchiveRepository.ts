@@ -1,7 +1,9 @@
 import type { ArchiveFormat } from '../domain/ArchiveFormat';
-import type { ArchiveRepository } from '../domain/ArchiveRepository';
+import type { ArchiveRepository, OptimizeProgress } from '../domain/ArchiveRepository';
 import type { ArchiveSession } from '../domain/ArchiveSession';
 import type { ComicInfo } from '../domain/ComicInfo';
+import type { OpenedComic } from '../domain/OpenedComic';
+import type { PageQuality } from '../domain/PageQuality';
 import { UnrarArchiveRepository } from './UnrarArchiveRepository';
 import { ZipJsArchiveRepository } from './ZipJsArchiveRepository';
 
@@ -36,6 +38,14 @@ export class DispatchingArchiveRepository implements ArchiveRepository {
 
   readComicInfo(sessionId: string, entryPath: string): Promise<ComicInfo | null> {
     return this.owner(sessionId).readComicInfo(sessionId, entryPath);
+  }
+
+  createOptimizedCopy(
+    comic: OpenedComic,
+    quality: PageQuality,
+    onProgress?: OptimizeProgress,
+  ): Promise<Blob> {
+    return this.owner(comic.getSessionId()).createOptimizedCopy(comic, quality, onProgress);
   }
 
   async close(sessionId: string): Promise<void> {

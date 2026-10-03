@@ -1,7 +1,9 @@
 import type { ArchiveFormat } from '../domain/ArchiveFormat';
-import type { ArchiveRepository } from '../domain/ArchiveRepository';
+import type { ArchiveRepository, OptimizeProgress } from '../domain/ArchiveRepository';
 import type { ArchiveSession } from '../domain/ArchiveSession';
 import type { ComicInfo } from '../domain/ComicInfo';
+import type { OpenedComic } from '../domain/OpenedComic';
+import type { PageQuality } from '../domain/PageQuality';
 import { WorkerArchiveRepository } from './WorkerArchiveRepository';
 
 /**
@@ -33,6 +35,14 @@ export class ResilientArchiveRepository implements ArchiveRepository {
 
   async readComicInfo(sessionId: string, entryPath: string): Promise<ComicInfo | null> {
     return (await this.repository()).readComicInfo(sessionId, entryPath);
+  }
+
+  async createOptimizedCopy(
+    comic: OpenedComic,
+    quality: PageQuality,
+    onProgress?: OptimizeProgress,
+  ): Promise<Blob> {
+    return (await this.repository()).createOptimizedCopy(comic, quality, onProgress);
   }
 
   async close(sessionId: string): Promise<void> {

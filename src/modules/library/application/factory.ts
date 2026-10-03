@@ -22,6 +22,7 @@ import { getComicCover } from './getComicCover';
 import { importComics } from './importComics';
 import { listLibrary } from './listLibrary';
 import { openComicForReading } from './openComicForReading';
+import { optimizeComic } from './optimizeComic';
 import { removeComic } from './removeComic';
 import { updateComicInfo } from './updateComicInfo';
 
@@ -65,6 +66,13 @@ export function createLibraryUseCases({
       comicFileRepository,
       progressRepository,
       openArchive: archive.openArchive,
+    }),
+    optimizeComic: optimizeComic({
+      comicRepository,
+      comicFileRepository,
+      openArchive: archive.openArchive,
+      createOptimizedCopy: archive.createOptimizedCopy,
+      closeArchive: archive.closeArchive,
     }),
     getComicCover: getComicCover({ coverRepository }),
     updateComicInfo: updateComicInfo({ comicRepository }),

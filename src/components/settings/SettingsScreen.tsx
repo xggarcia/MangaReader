@@ -2,28 +2,48 @@ import {
   ArrowLeftRight,
   BookOpen,
   Globe,
+  HardDrive,
   Maximize,
   Moon,
   ShieldCheck,
+  Shrink,
   Sun,
   SunDim,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useReadingOptions } from '../../hooks/useReadingOptions';
+import { formatBytes } from '../../i18n/formatBytes';
+import { PAGE_QUALITIES } from '../../modules/archive/domain/PageQuality';
 import { MAX_BRIGHTNESS, MIN_BRIGHTNESS } from '../../modules/settings/domain/Settings';
+import { useLibraryStore } from '../../stores/libraryStore';
 import { useSettingsStore } from '../../stores/settingsStore';
-import { GroupedSection, MenuRow, Row } from '../ui/GroupedList';
+import { OptimizeSheet } from '../library/OptimizeSheet';
+import { GroupedSection, LinkRow, MenuRow, Row } from '../ui/GroupedList';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import styles from './Settings.module.css';
 
-const APP_VERSION = '0.2.0';
+const APP_VERSION = '0.3.0';
 
 export function SettingsScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const settings = useSettingsStore((state) => state.settings);
   const update = useSettingsStore((state) => state.update);
   const values = settings.toPrimitive();
   const options = useReadingOptions();
+  const items = useLibraryStore((state) => state.items);
+  const [optimizing, setOptimizing] = useState(false);
+  const importOptimizationOptions = [
+    { value: 'off' as const, label: t('optimize.importOff') },
+    ...PAGE_QUALITIES.map((value) => ({
+      value,
+      label: t(`optimize.qualities.${value}.label`),
+    })),
+  ];
+
+  useEffect(() => {
+    void useLibraryStore.getState().load();
+  }, []);
 
   return (
     <LargeTitleScreen title={t('settings.title')}>
@@ -89,6 +109,29 @@ export function SettingsScreen() {
           onChange={(language) => void update({ language })}
         />
       </GroupedSection>
+
+      <GroupedSection title={t('optimize.storage')} footer={t('optimize.storageFooter')}>
+        <Row icon={HardDrive} iconColor="#8e8e93" label={t('optimize.librarySize')}>
+          {formatBytes(items.getStoredSize(), i18n.language)}
+        </Row>
+        <MenuRow
+          icon={Shrink}
+          iconColor="#c2185b"
+          label={t('optimize.onImport')}
+          value={values.importOptimization}
+          options={importOptimizationOptions}
+          onChange={(importOptimization) => void update({ importOptimization })}
+        />
+        {!items.isEmpty() && (
+          <LinkRow label={t('optimize.reduceAll')} onClick={() => setOptimizing(true)} />
+        )}
+      </GroupedSection>
+      {optimizing && (
+        <OptimizeSheet
+          comicIds={items.toArray().map((item) => item.getComic().getId())}
+          onClose={() => setOptimizing(false)}
+        />
+      )}
 
       <GroupedSection title={t('settings.privacy')} footer={t('settings.privacyText')}>
         <Row icon={ShieldCheck} iconColor="#34c759" label={t('settings.offline')}>

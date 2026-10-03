@@ -1,4 +1,4 @@
-import { BookCheck, BookX, ChevronLeft, Ellipsis, FolderPlus } from 'lucide-react';
+import { BookCheck, BookX, ChevronLeft, Ellipsis, FolderPlus, Shrink } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
@@ -11,6 +11,7 @@ import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import { Menu } from '../ui/Menu';
 import { ContinueReadingCard } from './ContinueReadingCard';
 import { LibraryShelf } from './LibraryShelf';
+import { OptimizeSheet } from './OptimizeSheet';
 import styles from './Library.module.css';
 
 /** All volumes of a series in order, with where to continue and bulk actions. */
@@ -21,6 +22,7 @@ export function SeriesScreen() {
   const status = useLibraryStore((state) => state.status);
   const group = items.findSeries(decodeURIComponent(seriesKey));
   const [picking, setPicking] = useState(false);
+  const [optimizing, setOptimizing] = useState(false);
 
   useEffect(() => {
     void useLibraryStore.getState().load();
@@ -84,6 +86,12 @@ export function SeriesScreen() {
               dividerBefore: true,
               onSelect: () => setPicking(true),
             },
+            {
+              id: 'optimize',
+              label: t('optimize.seriesAction'),
+              icon: Shrink,
+              onSelect: () => setOptimizing(true),
+            },
           ]}
           trigger={(triggerProps) => (
             <BarButton label={t('series.options')} {...triggerProps}>
@@ -96,6 +104,7 @@ export function SeriesScreen() {
       <p className={styles.seriesSummary}>{summary}</p>
       {!group.isFinished() && <ContinueReadingCard item={next} heading={t('series.next')} />}
       <LibraryShelf items={volumes} />
+      {optimizing && <OptimizeSheet comicIds={ids} onClose={() => setOptimizing(false)} />}
       {picking && (
         <CollectionPickerSheet
           comicIds={ids}
