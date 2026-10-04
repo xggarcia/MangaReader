@@ -59,10 +59,10 @@ export function OptimizeSheet({ comicIds, onClose, onStarted }: OptimizeSheetPro
             size: formatBytes(size, i18n.language),
           })}
         </p>
-        <fieldset className={styles.qualityList}>
+        <fieldset className={styles.choiceList}>
           <legend className={styles.visuallyHidden}>{t('optimize.quality')}</legend>
           {PAGE_QUALITIES.map((value) => (
-            <label key={value} className={styles.qualityOption}>
+            <label key={value} className={styles.choiceOption}>
               <input
                 type="radio"
                 name={radioName}
@@ -70,15 +70,13 @@ export function OptimizeSheet({ comicIds, onClose, onStarted }: OptimizeSheetPro
                 checked={quality === value}
                 onChange={() => setQuality(value)}
               />
-              <span className={styles.qualityText}>
-                <span className={styles.qualityLabel}>
-                  {t(`optimize.qualities.${value}.label`)}
-                </span>
-                <span className={styles.qualityDetail}>
+              <span className={styles.choiceText}>
+                <span className={styles.choiceLabel}>{t(`optimize.qualities.${value}.label`)}</span>
+                <span className={styles.choiceDetail}>
                   {t(`optimize.qualities.${value}.detail`)}
                 </span>
               </span>
-              <Check size={20} strokeWidth={2.4} aria-hidden className={styles.qualityCheck} />
+              <Check size={20} strokeWidth={2.4} aria-hidden className={styles.choiceCheck} />
             </label>
           ))}
         </fieldset>

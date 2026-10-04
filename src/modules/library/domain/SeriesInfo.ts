@@ -105,6 +105,25 @@ export class SeriesInfo {
     return this.data.volume;
   }
 
+  /**
+   * How alike two series names look: the number of leading words they share, plus one when
+   * one name contains the other ("berserk" and "berserk deluxe" score 2).
+   */
+  similarityTo(other: SeriesInfo): number {
+    const words = this.data.key.split(' ');
+    const otherWords = other.data.key.split(' ');
+    let shared = 0;
+    while (
+      shared < Math.min(words.length, otherWords.length) &&
+      words[shared] === otherWords[shared]
+    ) {
+      shared++;
+    }
+    const contains =
+      this.data.key.includes(other.data.key) || other.data.key.includes(this.data.key);
+    return shared + (contains ? 1 : 0);
+  }
+
   toPrimitive(): SeriesInfoPrimitive {
     return { ...this.data };
   }

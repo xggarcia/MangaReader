@@ -21,6 +21,7 @@ import {
 import { getComicCover } from './getComicCover';
 import { importComics } from './importComics';
 import { listLibrary } from './listLibrary';
+import { mergeSeries } from './mergeSeries';
 import { openComicForReading } from './openComicForReading';
 import { optimizeComic } from './optimizeComic';
 import { removeComic } from './removeComic';
@@ -76,6 +77,7 @@ export function createLibraryUseCases({
     }),
     getComicCover: getComicCover({ coverRepository }),
     updateComicInfo: updateComicInfo({ comicRepository }),
+    mergeSeries: mergeSeries({ comicRepository }),
     listCollections: listCollections({ collectionRepository }),
     createCollection: createCollection({ collectionRepository }),
     updateCollection: updateCollection({ collectionRepository }),

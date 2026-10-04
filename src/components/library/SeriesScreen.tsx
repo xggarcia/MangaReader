@@ -1,8 +1,17 @@
-import { BookCheck, BookX, ChevronLeft, Ellipsis, FolderPlus, Shrink } from 'lucide-react';
+import {
+  BookCheck,
+  BookX,
+  ChevronLeft,
+  Ellipsis,
+  FolderPlus,
+  Merge,
+  Pencil,
+  Shrink,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
-import { goBack } from '../../app/navigation';
+import { goBack, goTo } from '../../app/navigation';
 import { useLibraryStore } from '../../stores/libraryStore';
 import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import collectionStyles from '../collections/Collections.module.css';
@@ -11,6 +20,8 @@ import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import { Menu } from '../ui/Menu';
 import { ContinueReadingCard } from './ContinueReadingCard';
 import { LibraryShelf } from './LibraryShelf';
+import { MergeSeriesSheet } from './MergeSeriesSheet';
+import { seriesPath } from './openComic';
 import { OptimizeSheet } from './OptimizeSheet';
 import styles from './Library.module.css';
 
@@ -23,6 +34,7 @@ export function SeriesScreen() {
   const group = items.findSeries(decodeURIComponent(seriesKey));
   const [picking, setPicking] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
+  const [merging, setMerging] = useState<'merge' | 'rename' | null>(null);
 
   useEffect(() => {
     void useLibraryStore.getState().load();
@@ -80,6 +92,19 @@ export function SeriesScreen() {
               onSelect: () => void setReadStatusMany(ids, false),
             },
             {
+              id: 'merge',
+              label: t('mergeSeries.action'),
+              icon: Merge,
+              dividerBefore: true,
+              onSelect: () => setMerging('merge'),
+            },
+            {
+              id: 'rename',
+              label: t('mergeSeries.rename'),
+              icon: Pencil,
+              onSelect: () => setMerging('rename'),
+            },
+            {
               id: 'collection',
               label: t('series.addToCollection'),
               icon: FolderPlus,
@@ -104,6 +129,17 @@ export function SeriesScreen() {
       <p className={styles.seriesSummary}>{summary}</p>
       {!group.isFinished() && <ContinueReadingCard item={next} heading={t('series.next')} />}
       <LibraryShelf items={volumes} />
+      {merging && (
+        <MergeSeriesSheet
+          title={merging === 'merge' ? t('mergeSeries.title') : t('mergeSeries.rename')}
+          comicIds={ids}
+          fromSeriesKey={merging === 'merge' ? group.getKey() : undefined}
+          onClose={() => setMerging(null)}
+          onMerged={(key) => {
+            if (key !== group.getKey()) goTo(seriesPath(key), 'tab', { replace: true });
+          }}
+        />
+      )}
       {optimizing && <OptimizeSheet comicIds={ids} onClose={() => setOptimizing(false)} />}
       {picking && (
         <CollectionPickerSheet

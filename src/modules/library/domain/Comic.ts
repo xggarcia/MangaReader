@@ -127,6 +127,11 @@ export class Comic {
     return Comic.create({ ...this.data, ...info });
   }
 
+  /** Moved into another series; the title and volume number are kept. */
+  withSeries(series: string): Comic {
+    return Comic.create({ ...this.data, series });
+  }
+
   /**
    * The private copy was optimized: `storedSize` is the new size, or the current one when
    * the result was not worth keeping (so the comic is not optimized again at this quality).

@@ -258,5 +258,22 @@
     "importOff": "No",
     "reduceAll": "Reducir toda la biblioteca",
     "storageFooter": "Reducir el tamaño recomprime las páginas a la resolución de la pantalla. Con la calidad Equilibrada suele ahorrarse entre un 50 % y un 80 %. Mantén la app abierta mientras trabaja."
+  },
+  "mergeSeries": {
+    "action": "Juntar con otras series…",
+    "rename": "Renombrar serie",
+    "toolbar": "Juntar",
+    "title": "Juntar series",
+    "seriesCount_one": "{{count}} serie",
+    "seriesCount_other": "{{count}} series",
+    "addHeading": "Añadir a esta serie",
+    "search": "Buscar series",
+    "noOthers": "No hay otras series en la biblioteca.",
+    "nameHeading": "Nombre de la serie",
+    "otherName": "Otro nombre",
+    "hint": "Cada tomo mantiene su número y se ordena junto a los demás. Para mover un solo tomo, usa «Editar información».",
+    "merge": "Juntar {{count}} series",
+    "saveName": "Guardar nombre",
+    "pickSeries": "Elige las series que quieres juntar"
   }
 }

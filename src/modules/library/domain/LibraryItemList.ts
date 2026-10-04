@@ -122,6 +122,21 @@ export class LibraryItemList {
     return items.length > 0 ? SeriesGroup.create(items) : null;
   }
 
+  /**
+   * The other series a series could be merged with, most alike names first (so "Berserk
+   * Deluxe" is offered first for "Berserk"), then alphabetically.
+   */
+  findMergeCandidates(key: string): SeriesGroup[] {
+    const target = this.findSeries(key)?.getSeries();
+    if (!target) return [];
+    const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
+    return this.groupBySeries('title')
+      .filter((group) => group.getKey() !== key)
+      .map((group) => ({ group, score: target.similarityTo(group.getSeries()) }))
+      .sort((a, b) => b.score - a.score || collator.compare(a.group.getName(), b.group.getName()))
+      .map(({ group }) => group);
+  }
+
   sortBy(order: LibrarySortOrder): LibraryItemList {
     return new LibraryItemList([...this.items].sort(comparators[order]));
   }

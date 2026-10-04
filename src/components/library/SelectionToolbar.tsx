@@ -1,10 +1,11 @@
-import { BookCheck, BookX, FolderPlus, Shrink, Trash2, type LucideIcon } from 'lucide-react';
+import { BookCheck, BookX, FolderPlus, Merge, Shrink, Trash2, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { haptics } from '../../shared/infrastructure/haptics';
 import { useLibraryStore } from '../../stores/libraryStore';
 import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
+import { MergeSeriesSheet } from './MergeSeriesSheet';
 import { OptimizeSheet } from './OptimizeSheet';
 import { useSelection } from './useSelection';
 import styles from './Library.module.css';
@@ -18,6 +19,7 @@ export function SelectionToolbar() {
   const [picking, setPicking] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
+  const [merging, setMerging] = useState(false);
   const { setReadStatusMany, removeMany } = useLibraryStore.getState();
 
   const action = (icon: LucideIcon, label: string, onClick: () => void, destructive = false) => {
@@ -46,6 +48,7 @@ export function SelectionToolbar() {
         {action(BookX, t('library.toolbar.markUnread'), () => {
           void setReadStatusMany(ids, false).then(selection.stop);
         })}
+        {action(Merge, t('mergeSeries.toolbar'), () => setMerging(true))}
         {action(Shrink, t('optimize.toolbar'), () => setOptimizing(true))}
         {action(
           Trash2,
@@ -62,6 +65,14 @@ export function SelectionToolbar() {
           comicIds={ids}
           subtitle={t('library.selectedCount', { count })}
           onClose={() => setPicking(false)}
+        />
+      )}
+      {merging && (
+        <MergeSeriesSheet
+          title={t('mergeSeries.title')}
+          comicIds={ids}
+          onMerged={selection.stop}
+          onClose={() => setMerging(false)}
         />
       )}
       {optimizing && (

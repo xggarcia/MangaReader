@@ -3,6 +3,7 @@ import type { ImportErrorCode, ImportProgress } from '../modules/library/applica
 import { getLibraryUseCases } from '../modules/library/application/factory';
 import type { Comic } from '../modules/library/domain/Comic';
 import { LibraryItem } from '../modules/library/domain/LibraryItem';
+import { SeriesInfo } from '../modules/library/domain/SeriesInfo';
 import {
   LibraryItemList,
   type LibraryFilter,
@@ -39,6 +40,8 @@ interface LibraryState {
   setFilter: (filter: LibraryFilter) => void;
   setGroupSeries: (groupSeries: boolean) => void;
   updateInfo: (comicId: string, changes: ComicInfoChanges) => Promise<void>;
+  /** Puts the comics into one series; resolves with the key of that series. */
+  mergeSeries: (comicIds: readonly string[], seriesName: string) => Promise<string>;
   setReadStatusMany: (comicIds: readonly string[], isRead: boolean) => Promise<void>;
   removeMany: (comicIds: readonly string[]) => Promise<void>;
   dismissImportFailures: () => void;
@@ -110,6 +113,12 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
     set({
       items: get().items.update(LibraryItem.create({ comic, progress: item.getProgress() })),
     });
+  },
+
+  mergeSeries: async (comicIds, seriesName) => {
+    const comics = await getLibraryUseCases().mergeSeries(comicIds, seriesName);
+    for (const comic of comics) get().replaceComic(comic);
+    return SeriesInfo.create({ name: seriesName, volume: null }).getKey();
   },
 
   setReadStatusMany: async (comicIds, isRead) => {

@@ -667,7 +667,7 @@
   font: var(--text-footnote);
 }
 
-/* Reduce size: quality picker (inset grouped radio list) */
+/* Inset grouped list of radio or checkbox choices (quality, series to merge) */
 .visuallyHidden {
   position: absolute;
   width: 1px;
@@ -677,7 +677,7 @@
   white-space: nowrap;
 }
 
-.qualityList {
+.choiceList {
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -686,7 +686,7 @@
   background: var(--bg-sheet-card);
 }
 
-.qualityOption {
+.choiceOption {
   position: relative;
   display: flex;
   align-items: center;
@@ -697,42 +697,42 @@
   transition: background-color var(--duration-fast) ease-out;
 }
 
-.qualityOption + .qualityOption {
+.choiceOption + .choiceOption {
   box-shadow: inset 0 0.5px 0 var(--separator);
 }
 
-.qualityOption:active {
+.choiceOption:active {
   background: var(--fill);
 }
 
-.qualityOption input {
+.choiceOption input {
   position: absolute;
   opacity: 0;
   pointer-events: none;
 }
 
-.qualityOption:has(input:focus-visible) {
+.choiceOption:has(input:focus-visible) {
   outline: 2px solid var(--accent);
   outline-offset: -2px;
 }
 
-.qualityText {
+.choiceText {
   display: flex;
   flex: 1;
   flex-direction: column;
   gap: 2px;
 }
 
-.qualityLabel {
+.choiceLabel {
   font: var(--text-body);
 }
 
-.qualityDetail {
+.choiceDetail {
   color: var(--label-secondary);
   font: var(--text-footnote);
 }
 
-.qualityCheck {
+.choiceCheck {
   flex: none;
   color: var(--accent);
   opacity: 0;
@@ -742,7 +742,7 @@
     transform var(--duration) var(--ease-spring);
 }
 
-.qualityOption:has(input:checked) .qualityCheck {
+.choiceOption:has(input:checked) .choiceCheck {
   opacity: 1;
   transform: none;
 }
@@ -780,4 +780,38 @@
 
 .hudButton {
   margin: -12px -12px -12px 0;
+}
+
+.choiceGroup {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.choiceHeading {
+  margin: 0 0 var(--space-2);
+  padding: 0 var(--space-4);
+  color: var(--label-secondary);
+  font: var(--text-footnote);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+/* The radio of a choice is hidden; the free-text name field is a visible control. */
+.choiceOption .choiceInput {
+  position: static;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: var(--text-body);
+  opacity: 1;
+  outline: none;
+  pointer-events: auto;
 }

@@ -1,4 +1,5 @@
 import type { LibraryItem } from './LibraryItem';
+import { SeriesInfo } from './SeriesInfo';
 
 const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' });
 
@@ -53,6 +54,10 @@ export class SeriesGroup {
   /** The volume whose cover represents the series (the first one). */
   getCoverItem(): LibraryItem {
     return this.volumes[0] as LibraryItem;
+  }
+
+  getSeries(): SeriesInfo {
+    return SeriesInfo.create({ name: this.name, volume: null });
   }
 
   countByStatus(status: 'unread' | 'inProgress' | 'read'): number {

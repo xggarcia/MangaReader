@@ -258,5 +258,22 @@
     "importOff": "Off",
     "reduceAll": "Reduce Entire Library",
     "storageFooter": "Reducing size recompresses pages to screen resolution. Balanced usually saves 50% to 80%. Keep the app open while it works."
+  },
+  "mergeSeries": {
+    "action": "Merge with Other Series…",
+    "rename": "Rename Series",
+    "toolbar": "Merge",
+    "title": "Merge Series",
+    "seriesCount_one": "{{count}} series",
+    "seriesCount_other": "{{count}} series",
+    "addHeading": "Add to This Series",
+    "search": "Search series",
+    "noOthers": "There are no other series in the library.",
+    "nameHeading": "Series Name",
+    "otherName": "Other name",
+    "hint": "Each volume keeps its number and is ordered with the rest. To move a single volume, use Edit Info.",
+    "merge": "Merge {{count}} Series",
+    "saveName": "Save Name",
+    "pickSeries": "Choose the Series to Merge"
   }
 }
