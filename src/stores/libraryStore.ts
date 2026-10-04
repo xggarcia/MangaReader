@@ -1,5 +1,10 @@
 import { create } from 'zustand';
-import type { ImportErrorCode, ImportProgress } from '../modules/library/application/importComics';
+import {
+  fileSource,
+  type ImportErrorCode,
+  type ImportProgress,
+  type ImportSource,
+} from '../modules/library/application/importComics';
 import { getLibraryUseCases } from '../modules/library/application/factory';
 import type { Comic } from '../modules/library/domain/Comic';
 import { LibraryItem } from '../modules/library/domain/LibraryItem';
@@ -31,6 +36,8 @@ interface LibraryState {
   load: () => Promise<void>;
   /** Resolves with the ids of the comics that were imported. */
   importFiles: (files: readonly File[]) => Promise<string[]>;
+  /** One entry per source, in order: the new comic id, or `null` when it was not imported. */
+  importSources: (sources: readonly ImportSource[]) => Promise<(string | null)[]>;
   /** Reflects a comic changed elsewhere (e.g. optimized), keeping its progress. */
   replaceComic: (comic: Comic) => void;
   remove: (comicId: string) => Promise<void>;
@@ -67,11 +74,16 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   },
 
   importFiles: async (files) => {
-    if (files.length === 0 || get().importProgress) return [];
-    void requestPersistentStorage();
-    set({ importProgress: { done: 0, total: files.length }, importFailures: [] });
+    const ids = await get().importSources(files.map(fileSource));
+    return ids.filter((id): id is string => id !== null);
+  },
 
-    const results = await getLibraryUseCases().importComics(files, (importProgress) =>
+  importSources: async (sources) => {
+    if (sources.length === 0 || get().importProgress) return sources.map(() => null);
+    void requestPersistentStorage();
+    set({ importProgress: { done: 0, total: sources.length }, importFailures: [] });
+
+    const results = await getLibraryUseCases().importComics(sources, (importProgress) =>
       set({ importProgress }),
     );
 
@@ -85,9 +97,7 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
       }
     }
     set({ items, importFailures, importProgress: null, status: 'ready' });
-    return results.flatMap((result) =>
-      result.status === 'imported' ? [result.comic.getId()] : [],
-    );
+    return results.map((result) => (result.status === 'imported' ? result.comic.getId() : null));
   },
 
   replaceComic: (comic) => {

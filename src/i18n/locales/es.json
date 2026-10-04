@@ -160,7 +160,8 @@
     "quotaExceeded": "No hay espacio libre suficiente en el dispositivo.",
     "duplicate": "Este cómic ya está en tu biblioteca.",
     "notFound": "Este cómic ya no está disponible.",
-    "unknown": "Algo ha fallado al abrir el archivo."
+    "unknown": "Algo ha fallado al abrir el archivo.",
+    "invalidExport": "Este archivo no es una biblioteca de MangaReader o está dañado."
   },
   "tabs": {
     "label": "Secciones",
@@ -275,5 +276,62 @@
     "merge": "Juntar {{count}} series",
     "saveName": "Guardar nombre",
     "pickSeries": "Elige las series que quieres juntar"
+  },
+  "folder": {
+    "title": "Carpeta de cómics",
+    "folder": "Carpeta",
+    "choose": "Elegir",
+    "deleteOriginals": "Borrar el original",
+    "deleteModes": {
+      "never": "Nunca",
+      "afterReduce": "Al reducirlo",
+      "always": "Siempre"
+    },
+    "footer": "Copia tus CBZ y CBR a esta carpeta desde el ordenador (por cable USB o con Quick Share) y la app te avisará para importarlos. El original se borra cuando la app ya tiene su copia; con «Al reducirlo», solo si se reduce al importar. Android no deja elegir Descargas entera: usa una carpeta dentro, por ejemplo Download/Manga.",
+    "newComics_one": "{{count}} cómic nuevo en {{folder}}",
+    "newComics_other": "{{count}} cómics nuevos en {{folder}}",
+    "newExports_one": "Hay una biblioteca exportada lista para importar.",
+    "newExports_other": "Hay {{count}} bibliotecas exportadas listas para importar.",
+    "exportsOnly": "Biblioteca exportada en {{folder}}",
+    "review": "Revisar",
+    "unavailable": "No se puede abrir la carpeta de cómics. Vuelve a elegirla en Ajustes › Carpeta de cómics.",
+    "sheetTitle": "Cómics nuevos",
+    "selectAll": "Seleccionar todo",
+    "selectNone": "Quitar selección",
+    "import_one": "Importar {{count}} cómic",
+    "import_other": "Importar {{count}} cómics",
+    "willDelete": {
+      "never": "Los originales se quedan en la carpeta.",
+      "afterReduce": "Los originales se borrarán de la carpeta cuando se hayan reducido (Ajustes › Reducir al importar).",
+      "afterReduceOff": "Los originales se quedan en la carpeta: solo se borran al reducirlos, y «Reducir al importar» está desactivado.",
+      "always": "Los originales se borrarán de la carpeta en cuanto la app tenga su copia."
+    }
+  },
+  "transfer": {
+    "title": "Pasar a otro dispositivo",
+    "export": "Exportar biblioteca",
+    "import": "Importar biblioteca",
+    "footer": "Crea un solo archivo con tus cómics, portadas, progreso y colecciones. Envíalo con Quick Share, Bluetooth o un cable y ábrelo en el otro dispositivo con MangaReader.",
+    "shareSeries": "Compartir serie",
+    "summary_one": "{{count}} cómic · {{size}}",
+    "summary_other": "{{count}} cómics · {{size}}",
+    "needsSpace": "Mientras se crea el archivo necesitas unos {{size}} libres.",
+    "start": "Crear archivo",
+    "creating": "Creando archivo… {{percent}} %",
+    "cancel": "Cancelar",
+    "ready": "Archivo listo",
+    "share": "Enviar a otro dispositivo",
+    "shareHint": "Elige Quick Share para enviarlo sin cables a un móvil o un PC cercano.",
+    "saveToFolder": "Guardar en la carpeta de cómics",
+    "saved": "Guardado en {{folder}}.",
+    "importTitle": "Importar biblioteca",
+    "importStarting": "Abriendo el archivo…",
+    "importing": "Importando {{done}} de {{total}}",
+    "importDone_one": "{{count}} cómic añadido",
+    "importDone_other": "{{count}} cómics añadidos",
+    "importSkipped_one": "{{count}} ya estaba en tu biblioteca",
+    "importSkipped_other": "{{count}} ya estaban en tu biblioteca",
+    "close": "Cerrar",
+    "failed": "No se ha podido completar"
   }
 }

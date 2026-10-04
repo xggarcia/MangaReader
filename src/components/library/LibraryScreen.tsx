@@ -8,7 +8,11 @@ import {
   LIBRARY_SORT_ORDERS,
   type LibraryFilter,
 } from '../../modules/library/domain/LibraryItemList';
+import { hasDeviceFiles } from '../../shared/infrastructure/deviceFiles';
+import { useDeviceFilesStore } from '../../stores/deviceFilesStore';
 import { useLibraryStore } from '../../stores/libraryStore';
+import { useOptimizationStore } from '../../stores/optimizationStore';
+import { useTransferStore } from '../../stores/transferStore';
 import { SegmentedControl } from '../common/SegmentedControl';
 import { BarButton } from '../ui/BarButton';
 import controls from '../ui/Controls.module.css';
@@ -16,9 +20,9 @@ import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import { Menu, type MenuItem } from '../ui/Menu';
 import { SearchField } from '../ui/SearchField';
 import { ContinueReadingCard } from './ContinueReadingCard';
+import { FolderNotice } from './FolderNotice';
 import { ImportStatus } from './ImportStatus';
 import { InstallHint } from './InstallHint';
-import { useOptimizationStore } from '../../stores/optimizationStore';
 import { LibraryShelf } from './LibraryShelf';
 import { SelectionProvider } from './SelectionContext';
 import { useSelection } from './useSelection';
@@ -57,6 +61,7 @@ function LibraryContent() {
   // Reload on every visit so progress saved by the reader is reflected.
   useEffect(() => {
     void load();
+    void useDeviceFilesStore.getState().scanFolder();
   }, [load]);
 
   const filtered = useMemo(
@@ -76,10 +81,21 @@ function LibraryContent() {
     [items, query, filter],
   );
 
-  const addFiles = (files: File[]) =>
-    void importFiles(files).then(useOptimizationStore.getState().optimizeImported);
+  // Library exports (.mangareader) picked or dropped on the web are imported whole.
+  const addFiles = (files: File[]) => {
+    const exportFile = files.find((file) => /.mangareader$/i.test(file.name));
+    const comics = files.filter((file) => file !== exportFile);
+    if (exportFile) void useTransferStore.getState().importExport(exportFile);
+    if (comics.length > 0) {
+      void importFiles(comics).then(useOptimizationStore.getState().optimizeImported);
+    }
+  };
   const { openPicker, pickerInput } = useFilePicker(addFiles);
   const { isDragging, handlers } = useFileDrop(addFiles);
+  // Android: the system picker, so originals can be deleted once imported.
+  const addComics = hasDeviceFiles()
+    ? () => void useDeviceFilesStore.getState().pickAndImport()
+    : openPicker;
   const isImporting = importProgress !== null;
   const isEmpty = status !== 'loading' && items.isEmpty();
 
@@ -119,7 +135,7 @@ function LibraryContent() {
           )}
         />
       )}
-      <BarButton label={t('library.add')} onClick={openPicker} disabled={isImporting}>
+      <BarButton label={t('library.add')} onClick={addComics} disabled={isImporting}>
         <Plus size={26} strokeWidth={2} aria-hidden />
       </BarButton>
     </>
@@ -162,6 +178,7 @@ function LibraryContent() {
       >
         {pickerInput}
         <InstallHint />
+        <FolderNotice />
         <ImportStatus
           progress={importProgress}
           failures={importFailures}
@@ -178,7 +195,7 @@ function LibraryContent() {
             <button
               type="button"
               className={controls.filledButton}
-              onClick={openPicker}
+              onClick={addComics}
               disabled={isImporting}
             >
               {t('library.add')}

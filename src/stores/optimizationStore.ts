@@ -33,8 +33,16 @@ interface OptimizationState {
   run: OptimizationSummary;
   /** Result of the last finished run, shown briefly. */
   summary: OptimizationSummary | null;
-  /** Queues comics to be optimized one by one, skipping those already at that quality. */
-  enqueue: (comicIds: readonly string[], quality: PageQuality) => void;
+  /**
+   * Queues comics to be optimized one by one, skipping those already at that quality.
+   * `onDone` is called for each comic once the library holds its final copy (`ok`), or when it
+   * could not be processed.
+   */
+  enqueue: (
+    comicIds: readonly string[],
+    quality: PageQuality,
+    onDone?: (comicId: string, ok: boolean) => void,
+  ) => void;
   /** Optimizes freshly imported comics when the import setting asks for it. */
   optimizeImported: (comicIds: readonly string[]) => void;
   /** Drops the pending comics; the one in progress finishes safely. */
@@ -48,6 +56,12 @@ const SUMMARY_VISIBLE_MS = 8000;
 export const useOptimizationStore = create<OptimizationState>((set, get) => {
   let processing = false;
   let summaryTimer: ReturnType<typeof setTimeout> | undefined;
+  const doneCallbacks = new Map<string, (comicId: string, ok: boolean) => void>();
+  const finish = (comicId: string, ok: boolean) => {
+    const callback = doneCallbacks.get(comicId);
+    doneCallbacks.delete(comicId);
+    callback?.(comicId, ok);
+  };
 
   const processQueue = async () => {
     if (processing) return;
@@ -63,6 +77,7 @@ export const useOptimizationStore = create<OptimizationState>((set, get) => {
             ? { comicId, title: comic.getTitle(), page: 0, pages: comic.getPageCount() }
             : null,
         });
+        if (!comic) finish(comicId, false);
         if (comic) {
           try {
             const result = await getLibraryUseCases().optimizeComic(
@@ -74,6 +89,7 @@ export const useOptimizationStore = create<OptimizationState>((set, get) => {
               },
             );
             useLibraryStore.getState().replaceComic(result.comic);
+            finish(comicId, true);
             const run = get().run;
             if (result.status === 'optimized') {
               set({
@@ -85,6 +101,7 @@ export const useOptimizationStore = create<OptimizationState>((set, get) => {
               });
             }
           } catch {
+            finish(comicId, false);
             set({ run: { ...get().run, failed: get().run.failed + 1 } });
           }
         }
@@ -115,14 +132,21 @@ export const useOptimizationStore = create<OptimizationState>((set, get) => {
     run: EMPTY_RUN,
     summary: null,
 
-    enqueue: (comicIds, quality) => {
+    enqueue: (comicIds, quality, onDone) => {
       const { queue, current } = get();
       const pending = new Set([...queue.map((job) => job.comicId), current?.comicId]);
       const items = useLibraryStore.getState().items;
-      const jobs = comicIds
-        .filter((comicId) => !pending.has(comicId))
-        .filter((comicId) => items.findById(comicId)?.getComic().isOptimizedAs(quality) === false)
-        .map((comicId) => ({ comicId, quality: quality.toPrimitive() }));
+      const jobs: OptimizationJob[] = [];
+      for (const comicId of comicIds) {
+        const comic = items.findById(comicId)?.getComic();
+        if (pending.has(comicId)) continue;
+        if (!comic || comic.isOptimizedAs(quality)) {
+          onDone?.(comicId, comic !== undefined);
+          continue;
+        }
+        if (onDone) doneCallbacks.set(comicId, onDone);
+        jobs.push({ comicId, quality: quality.toPrimitive() });
+      }
       if (jobs.length === 0) return;
       clearTimeout(summaryTimer);
       set({ queue: [...queue, ...jobs], total: get().total + jobs.length, summary: null });
@@ -136,6 +160,7 @@ export const useOptimizationStore = create<OptimizationState>((set, get) => {
 
     stop: () => {
       const dropped = get().queue.length;
+      for (const job of get().queue) finish(job.comicId, false);
       set({ queue: [], total: get().total - dropped, stopping: get().current !== null });
     },
 

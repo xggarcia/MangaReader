@@ -14,6 +14,16 @@ export type LanguagePreference = (typeof LANGUAGES)[number];
 /** Optimize new comics on import at this quality, or keep the files as they are. */
 export type ImportOptimization = 'off' | PageQualityPrimitive;
 
+/** When the original file is deleted after the library keeps its own copy. */
+export const DELETE_ORIGINALS = ['never', 'afterReduce', 'always'] as const;
+export type DeleteOriginals = (typeof DELETE_ORIGINALS)[number];
+
+/** Folder on the device watched for new comics (granted through the system picker). */
+export interface ComicsFolderSetting {
+  uri: string;
+  name: string;
+}
+
 export const MIN_BRIGHTNESS = 0.2;
 export const MAX_BRIGHTNESS = 1;
 
@@ -26,6 +36,8 @@ export interface SettingsPrimitive {
   /** Reader brightness, from MIN_BRIGHTNESS to 1. */
   brightness: number;
   importOptimization: ImportOptimization;
+  comicsFolder: ComicsFolderSetting | null;
+  deleteOriginals: DeleteOriginals;
 }
 
 const DEFAULTS: SettingsPrimitive = {
@@ -36,6 +48,8 @@ const DEFAULTS: SettingsPrimitive = {
   language: 'system',
   brightness: 1,
   importOptimization: 'off',
+  comicsFolder: null,
+  deleteOriginals: 'afterReduce',
 };
 
 const isOneOf = <T extends string>(values: readonly T[], value: unknown): value is T =>
@@ -73,6 +87,12 @@ export class Settings {
       importOptimization: Settings.isImportOptimization(data.importOptimization)
         ? data.importOptimization
         : DEFAULTS.importOptimization,
+      comicsFolder: Settings.isComicsFolder(data.comicsFolder)
+        ? { uri: data.comicsFolder.uri, name: data.comicsFolder.name }
+        : DEFAULTS.comicsFolder,
+      deleteOriginals: isOneOf(DELETE_ORIGINALS, data.deleteOriginals)
+        ? data.deleteOriginals
+        : DEFAULTS.deleteOriginals,
     });
   }
 
@@ -87,9 +107,26 @@ export class Settings {
     if (!Settings.isValidBrightness(props.brightness)) {
       throw new Error(`[Settings] Brightness out of range: ${props.brightness}`);
     }
+    if (props.comicsFolder !== null && !Settings.isComicsFolder(props.comicsFolder)) {
+      throw new Error('[Settings] Invalid comics folder');
+    }
+    if (!isOneOf(DELETE_ORIGINALS, props.deleteOriginals)) {
+      throw new Error(`[Settings] Unknown delete originals mode: ${props.deleteOriginals}`);
+    }
     if (!Settings.isImportOptimization(props.importOptimization)) {
       throw new Error(`[Settings] Unknown import optimization: ${props.importOptimization}`);
     }
+  }
+
+  private static isComicsFolder(value: unknown): value is ComicsFolderSetting {
+    const folder = value as Partial<ComicsFolderSetting> | null;
+    return (
+      typeof folder === 'object' &&
+      folder !== null &&
+      typeof folder.uri === 'string' &&
+      folder.uri !== '' &&
+      typeof folder.name === 'string'
+    );
   }
 
   private static isImportOptimization(value: unknown): value is ImportOptimization {
@@ -138,6 +175,14 @@ export class Settings {
   getImportOptimization(): PageQuality | null {
     const value = this.data.importOptimization;
     return value === 'off' ? null : PageQuality.fromPrimitive(value);
+  }
+
+  getComicsFolder(): ComicsFolderSetting | null {
+    return this.data.comicsFolder ? { ...this.data.comicsFolder } : null;
+  }
+
+  getDeleteOriginals(): DeleteOriginals {
+    return this.data.deleteOriginals;
   }
 
   toPrimitive(): SettingsPrimitive {

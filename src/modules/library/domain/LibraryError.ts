@@ -1,4 +1,9 @@
-export const LIBRARY_ERROR_CODES = ['quotaExceeded', 'duplicate', 'notFound'] as const;
+export const LIBRARY_ERROR_CODES = [
+  'quotaExceeded',
+  'duplicate',
+  'notFound',
+  'invalidExport',
+] as const;
 export type LibraryErrorCode = (typeof LIBRARY_ERROR_CODES)[number];
 
 /** User-facing library failure. `code` maps to the i18n key `errors.library.<code>`. */

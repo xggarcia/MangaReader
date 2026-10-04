@@ -13,6 +13,21 @@ export type ImportResult =
   | { status: 'imported'; fileName: string; comic: Comic }
   | { status: 'failed'; fileName: string; code: ImportErrorCode };
 
+/**
+ * Something to import, read only when its turn comes: a picked File, or a file in the comics
+ * folder that is copied in on demand (so hundreds of volumes are never held at once).
+ */
+export interface ImportSource {
+  name: string;
+  size: number;
+  read: () => Promise<Blob>;
+}
+
+/** A picked or dropped File as an import source. */
+export function fileSource(file: File): ImportSource {
+  return { name: file.name, size: file.size, read: () => Promise.resolve(file) };
+}
+
 export interface ImportProgress {
   done: number;
   total: number;
@@ -50,11 +65,12 @@ export function importComics({
   generateId = () => crypto.randomUUID(),
   now = Date.now,
 }: ImportComicsProps) {
-  async function importOne(file: File, existing: Comic[]): Promise<Comic> {
-    if (existing.some((comic) => comic.isSameFileAs(file))) {
-      throw new LibraryError('duplicate', `[importComics] Already in library: ${file.name}`);
+  async function importOne(source: ImportSource, existing: Comic[]): Promise<Comic> {
+    if (existing.some((comic) => comic.isSameFileAs(source))) {
+      throw new LibraryError('duplicate', `[importComics] Already in library: ${source.name}`);
     }
 
+    const file = await source.read();
     const opened = await openArchive(file);
     let cover: Blob | null = null;
     let info: ComicInfo | null = null;
@@ -67,12 +83,12 @@ export function importComics({
 
     const comic = Comic.create({
       id: generateId(),
-      title: info?.getTitle() ?? Comic.titleFromFileName(file.name),
+      title: info?.getTitle() ?? Comic.titleFromFileName(source.name),
       series: info?.getSeries() ?? null,
       number: info?.getNumber() ?? null,
       author: info?.getWriter() ?? null,
-      fileName: file.name,
-      fileSize: file.size,
+      fileName: source.name,
+      fileSize: source.size || file.size,
       storedSize: file.size,
       optimizedQuality: null,
       format: opened.getFormat().toPrimitive(),
@@ -92,22 +108,23 @@ export function importComics({
     return comic;
   }
 
+  /** One result per source, in the same order. */
   return async (
-    files: readonly File[],
+    sources: readonly ImportSource[],
     onProgress?: (progress: ImportProgress) => void,
   ): Promise<ImportResult[]> => {
     const existing = await comicRepository.findAll();
     const results: ImportResult[] = [];
 
-    for (const [index, file] of files.entries()) {
+    for (const [index, source] of sources.entries()) {
       try {
-        const comic = await importOne(file, existing);
+        const comic = await importOne(source, existing);
         existing.push(comic);
-        results.push({ status: 'imported', fileName: file.name, comic });
+        results.push({ status: 'imported', fileName: source.name, comic });
       } catch (error) {
-        results.push({ status: 'failed', fileName: file.name, code: errorCodeOf(error) });
+        results.push({ status: 'failed', fileName: source.name, code: errorCodeOf(error) });
       }
-      onProgress?.({ done: index + 1, total: files.length });
+      onProgress?.({ done: index + 1, total: sources.length });
     }
     return results;
   };

@@ -6,6 +6,7 @@ import {
   FolderPlus,
   Merge,
   Pencil,
+  Send,
   Shrink,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -19,6 +20,8 @@ import { BarButton } from '../ui/BarButton';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import { Menu } from '../ui/Menu';
 import { ContinueReadingCard } from './ContinueReadingCard';
+import { hasDeviceFiles } from '../../shared/infrastructure/deviceFiles';
+import { ExportSheet } from './ExportSheet';
 import { LibraryShelf } from './LibraryShelf';
 import { MergeSeriesSheet } from './MergeSeriesSheet';
 import { seriesPath } from './openComic';
@@ -34,6 +37,7 @@ export function SeriesScreen() {
   const group = items.findSeries(decodeURIComponent(seriesKey));
   const [picking, setPicking] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const [merging, setMerging] = useState<'merge' | 'rename' | null>(null);
 
   useEffect(() => {
@@ -117,6 +121,16 @@ export function SeriesScreen() {
               icon: Shrink,
               onSelect: () => setOptimizing(true),
             },
+            ...(hasDeviceFiles()
+              ? [
+                  {
+                    id: 'share',
+                    label: t('transfer.shareSeries'),
+                    icon: Send,
+                    onSelect: () => setSharing(true),
+                  },
+                ]
+              : []),
           ]}
           trigger={(triggerProps) => (
             <BarButton label={t('series.options')} {...triggerProps}>
@@ -138,6 +152,14 @@ export function SeriesScreen() {
           onMerged={(key) => {
             if (key !== group.getKey()) goTo(seriesPath(key), 'tab', { replace: true });
           }}
+        />
+      )}
+      {sharing && (
+        <ExportSheet
+          title={t('transfer.shareSeries')}
+          comicIds={ids}
+          label={group.getName()}
+          onClose={() => setSharing(false)}
         />
       )}
       {optimizing && <OptimizeSheet comicIds={ids} onClose={() => setOptimizing(false)} />}

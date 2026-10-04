@@ -1,29 +1,42 @@
 import {
   ArrowLeftRight,
   BookOpen,
+  Download,
+  FolderOpen,
   Globe,
   HardDrive,
   Maximize,
   Moon,
   ShieldCheck,
+  Send,
   Shrink,
   Sun,
   SunDim,
+  Trash2,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useFilePicker } from '../../hooks/useFilePicker';
 import { useReadingOptions } from '../../hooks/useReadingOptions';
 import { formatBytes } from '../../i18n/formatBytes';
 import { PAGE_QUALITIES } from '../../modules/archive/domain/PageQuality';
-import { MAX_BRIGHTNESS, MIN_BRIGHTNESS } from '../../modules/settings/domain/Settings';
+import {
+  DELETE_ORIGINALS,
+  MAX_BRIGHTNESS,
+  MIN_BRIGHTNESS,
+} from '../../modules/settings/domain/Settings';
+import { hasDeviceFiles } from '../../shared/infrastructure/deviceFiles';
+import { useDeviceFilesStore } from '../../stores/deviceFilesStore';
 import { useLibraryStore } from '../../stores/libraryStore';
 import { useSettingsStore } from '../../stores/settingsStore';
+import { useTransferStore } from '../../stores/transferStore';
+import { ExportSheet } from '../library/ExportSheet';
 import { OptimizeSheet } from '../library/OptimizeSheet';
 import { GroupedSection, LinkRow, MenuRow, Row } from '../ui/GroupedList';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import styles from './Settings.module.css';
 
-const APP_VERSION = '0.4.0';
+const APP_VERSION = '0.5.0';
 
 export function SettingsScreen() {
   const { t, i18n } = useTranslation();
@@ -33,6 +46,17 @@ export function SettingsScreen() {
   const options = useReadingOptions();
   const items = useLibraryStore((state) => state.items);
   const [optimizing, setOptimizing] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const android = hasDeviceFiles();
+  const folder = settings.getComicsFolder();
+  const deleteOptions = DELETE_ORIGINALS.map((value) => ({
+    value,
+    label: t(`folder.deleteModes.${value}`),
+  }));
+  // Web version: pick the exported file in the browser.
+  const { openPicker: pickExportFile, pickerInput: exportPickerInput } = useFilePicker((files) => {
+    if (files[0]) void useTransferStore.getState().importExport(files[0]);
+  });
   const importOptimizationOptions = [
     { value: 'off' as const, label: t('optimize.importOff') },
     ...PAGE_QUALITIES.map((value) => ({
@@ -131,6 +155,49 @@ export function SettingsScreen() {
           comicIds={items.toArray().map((item) => item.getComic().getId())}
           onClose={() => setOptimizing(false)}
         />
+      )}
+
+      {android && (
+        <GroupedSection title={t('folder.title')} footer={t('folder.footer')}>
+          <LinkRow
+            icon={FolderOpen}
+            iconColor="#007aff"
+            label={t('folder.folder')}
+            detail={folder?.name ?? t('folder.choose')}
+            onClick={() => void useDeviceFilesStore.getState().chooseFolder()}
+          />
+          <MenuRow
+            icon={Trash2}
+            iconColor="#ff3b30"
+            label={t('folder.deleteOriginals')}
+            value={values.deleteOriginals}
+            options={deleteOptions}
+            onChange={(deleteOriginals) => void update({ deleteOriginals })}
+          />
+        </GroupedSection>
+      )}
+
+      <GroupedSection title={t('transfer.title')} footer={t('transfer.footer')}>
+        {android && !items.isEmpty() && (
+          <LinkRow
+            icon={Send}
+            iconColor="#34c759"
+            label={t('transfer.export')}
+            onClick={() => setExporting(true)}
+          />
+        )}
+        <LinkRow
+          icon={Download}
+          iconColor="#5856d6"
+          label={t('transfer.import')}
+          onClick={
+            android ? () => void useDeviceFilesStore.getState().pickAndImport() : pickExportFile
+          }
+        />
+      </GroupedSection>
+      {exportPickerInput}
+      {exporting && (
+        <ExportSheet title={t('transfer.export')} onClose={() => setExporting(false)} />
       )}
 
       <GroupedSection title={t('settings.privacy')} footer={t('settings.privacyText')}>

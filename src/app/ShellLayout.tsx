@@ -2,6 +2,7 @@ import { Capacitor } from '@capacitor/core';
 import { Folders, LibraryBig, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
+import { ImportLibrarySheet } from '../components/library/ImportLibrarySheet';
 import { OptimizationStatus } from '../components/library/OptimizationStatus';
 import { TabBar, type TabItem } from '../components/ui/TabBar';
 import { useEdgeSwipeBack } from '../hooks/useEdgeSwipeBack';
@@ -29,6 +30,7 @@ export function ShellLayout() {
     <>
       <Outlet />
       <OptimizationStatus />
+      <ImportLibrarySheet />
       <TabBar tabs={tabs} label={t('tabs.label')} />
     </>
   );

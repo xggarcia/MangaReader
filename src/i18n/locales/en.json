@@ -160,7 +160,8 @@
     "quotaExceeded": "There is not enough free space on the device.",
     "duplicate": "This comic is already in your library.",
     "notFound": "This comic is no longer available.",
-    "unknown": "Something went wrong while opening the file."
+    "unknown": "Something went wrong while opening the file.",
+    "invalidExport": "This file is not a MangaReader library or it is damaged."
   },
   "tabs": {
     "label": "Sections",
@@ -275,5 +276,62 @@
     "merge": "Merge {{count}} Series",
     "saveName": "Save Name",
     "pickSeries": "Choose the Series to Merge"
+  },
+  "folder": {
+    "title": "Comics Folder",
+    "folder": "Folder",
+    "choose": "Choose",
+    "deleteOriginals": "Delete Original",
+    "deleteModes": {
+      "never": "Never",
+      "afterReduce": "When Reduced",
+      "always": "Always"
+    },
+    "footer": "Copy your CBZ and CBR files into this folder from your computer (USB cable or Quick Share) and the app will offer to import them. The original is deleted once the app has its own copy; with \"When Reduced\", only if it is reduced on import. Android does not allow the whole Download folder: use a folder inside it, such as Download/Manga.",
+    "newComics_one": "{{count}} new comic in {{folder}}",
+    "newComics_other": "{{count}} new comics in {{folder}}",
+    "newExports_one": "There is an exported library ready to import.",
+    "newExports_other": "There are {{count}} exported libraries ready to import.",
+    "exportsOnly": "Exported library in {{folder}}",
+    "review": "Review",
+    "unavailable": "The comics folder cannot be opened. Choose it again in Settings › Comics Folder.",
+    "sheetTitle": "New Comics",
+    "selectAll": "Select All",
+    "selectNone": "Deselect All",
+    "import_one": "Import {{count}} Comic",
+    "import_other": "Import {{count}} Comics",
+    "willDelete": {
+      "never": "The originals stay in the folder.",
+      "afterReduce": "The originals will be deleted from the folder once reduced (Settings › Reduce on Import).",
+      "afterReduceOff": "The originals stay in the folder: they are only deleted when reduced, and Reduce on Import is off.",
+      "always": "The originals will be deleted from the folder as soon as the app has its copy."
+    }
+  },
+  "transfer": {
+    "title": "Move to Another Device",
+    "export": "Export Library",
+    "import": "Import Library",
+    "footer": "Creates a single file with your comics, covers, progress and collections. Send it with Quick Share, Bluetooth or a cable and open it with MangaReader on the other device.",
+    "shareSeries": "Share Series",
+    "summary_one": "{{count}} comic · {{size}}",
+    "summary_other": "{{count}} comics · {{size}}",
+    "needsSpace": "You need about {{size}} free while the file is created.",
+    "start": "Create File",
+    "creating": "Creating file… {{percent}}%",
+    "cancel": "Cancel",
+    "ready": "File ready",
+    "share": "Send to Another Device",
+    "shareHint": "Choose Quick Share to send it wirelessly to a nearby phone or PC.",
+    "saveToFolder": "Save to Comics Folder",
+    "saved": "Saved to {{folder}}.",
+    "importTitle": "Import Library",
+    "importStarting": "Opening the file…",
+    "importing": "Importing {{done}} of {{total}}",
+    "importDone_one": "{{count}} comic added",
+    "importDone_other": "{{count}} comics added",
+    "importSkipped_one": "{{count}} was already in your library",
+    "importSkipped_other": "{{count}} were already in your library",
+    "close": "Close",
+    "failed": "Could not finish"
   }
 }

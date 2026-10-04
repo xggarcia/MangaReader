@@ -815,3 +815,78 @@
   outline: none;
   pointer-events: auto;
 }
+
+.noticeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.choiceToolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.textButton {
+  min-height: 44px;
+  padding: 0 var(--space-2);
+  border: none;
+  background: none;
+  color: var(--accent);
+  font: var(--text-subhead);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.choiceLabel {
+  overflow-wrap: anywhere;
+}
+
+.noticeActions button {
+  min-height: 44px;
+  border-radius: 22px;
+}
+
+.transferStatus {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius);
+  background: var(--bg-sheet-card);
+  font: var(--text-body);
+  font-variant-numeric: tabular-nums;
+}
+
+.transferStatus strong {
+  font: var(--text-headline);
+}
+
+.transferStatus .importBar {
+  height: 6px;
+  border-radius: 3px;
+}
+
+.secondaryButton {
+  min-height: 50px;
+  border: none;
+  border-radius: var(--radius-lg);
+  background: var(--fill);
+  color: var(--accent);
+  font: var(--text-headline);
+  cursor: pointer;
+}
+
+.secondaryButton:disabled {
+  color: var(--label-tertiary);
+  cursor: default;
+}
+
+.formError {
+  margin: 0 var(--space-4);
+  color: var(--destructive);
+  font: var(--text-footnote);
+}
