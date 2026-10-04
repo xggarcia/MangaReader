@@ -160,7 +160,7 @@ export class LibraryItemList {
     let best: LibraryItem | null = null;
     for (const item of this.items) {
       const lastReadAt = item.getLastReadAt();
-      if (lastReadAt === null || item.isRead()) continue;
+      if (lastReadAt === null || item.isRead() || item.isArchived()) continue;
       if (!best || lastReadAt > (best.getLastReadAt() ?? 0)) best = item;
     }
     return best;

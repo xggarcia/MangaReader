@@ -61,12 +61,14 @@ export function exportLibrary({
       const file = await comicFileRepository.get(comic.getId());
       if (file) files.set(comic.getId(), file);
     }
-    if (files.size === 0) throw new Error('[exportLibrary] There are no comics to export');
+    // Archived comics travel too: only their cover and reading record.
+    const exported = comics.filter((comic) => files.has(comic.getId()) || comic.isArchived());
+    if (exported.length === 0) throw new Error('[exportLibrary] There are no comics to export');
 
     const exportedAt = now();
     const manifest = LibraryExport.create({
       exportedAt,
-      comics: comics.filter((comic) => files.has(comic.getId())),
+      comics: exported,
       progress: await progressRepository.findAll(),
       collections: await collectionRepository.findAll(),
     });
@@ -85,15 +87,13 @@ export function exportLibrary({
         const comicId = comic.getId();
         const cover = await coverRepository.get(comicId);
         if (cover) await writer.addEntry(LIBRARY_EXPORT_PATHS.cover(comicId), cover);
-        await writer.addEntry(
-          LIBRARY_EXPORT_PATHS.comic(comicId),
-          files.get(comicId) as Blob,
-          (bytes) => {
-            options.signal?.throwIfAborted();
-            done += bytes;
-            onProgress?.({ done, total });
-          },
-        );
+        const file = files.get(comicId);
+        if (!file) continue;
+        await writer.addEntry(LIBRARY_EXPORT_PATHS.comic(comicId), file, (bytes) => {
+          options.signal?.throwIfAborted();
+          done += bytes;
+          onProgress?.({ done, total });
+        });
       }
       return await writer.finish();
     } catch (error) {
@@ -157,6 +157,8 @@ export function importLibraryExport({
       // Exported comic id -> id in this library, for comics already here.
       const localIdOf = new Map<string, string>();
       const incoming = new Map<string, Comic>();
+      // Comics kept here only as a reading record whose file comes in the export.
+      const restoring = new Map<string, Comic>();
       for (const comic of manifest.getComics()) {
         const local = library.find(
           (candidate) =>
@@ -165,6 +167,7 @@ export function importLibraryExport({
         );
         if (local) localIdOf.set(comic.getId(), local.getId());
         else incoming.set(comic.getId(), comic);
+        if (local?.isArchived() && !comic.isArchived()) restoring.set(comic.getId(), local);
       }
 
       const total = manifest.getComics().length;
@@ -173,8 +176,22 @@ export function importLibraryExport({
       const covers = new Map<string, Blob>();
       for (let entry = await reader.next(); entry; entry = await reader.next()) {
         const path = LibraryExport.parseEntryPath(entry.path);
-        const comic = path && path.kind !== 'manifest' ? incoming.get(path.comicId) : undefined;
-        if (!path || path.kind === 'manifest' || !comic) continue;
+        if (!path || path.kind === 'manifest') continue;
+        const archivedHere = restoring.get(path.comicId);
+        if (archivedHere && path.kind === 'comic') {
+          const file = await entry.read();
+          const exported = manifest.getComics().find((comic) => comic.getId() === path.comicId);
+          await comicFileRepository.save(archivedHere.getId(), file);
+          await comicRepository.save(
+            archivedHere.restore({
+              size: file.size,
+              format: exported?.toPrimitive().format ?? archivedHere.toPrimitive().format,
+            }),
+          );
+          continue;
+        }
+        const comic = incoming.get(path.comicId);
+        if (!comic) continue;
         if (path.kind === 'cover') {
           covers.set(path.comicId, await entry.read());
           continue;
@@ -194,6 +211,19 @@ export function importLibraryExport({
           throw error;
         }
         covers.delete(comicId);
+        localIdOf.set(comicId, comicId);
+        onProgress?.({ done: ++done, total });
+      }
+
+      // Archived comics have no file entry: their cover and reading record are all there is.
+      for (const comic of incoming.values()) {
+        if (!comic.isArchived() || localIdOf.has(comic.getId())) continue;
+        const comicId = comic.getId();
+        const cover = covers.get(comicId);
+        if (cover) await coverRepository.save(comicId, cover);
+        await comicRepository.save(comic);
+        const progress = manifest.getProgressFor(comicId);
+        if (progress) await progressRepository.save(progress);
         localIdOf.set(comicId, comicId);
         onProgress?.({ done: ++done, total });
       }

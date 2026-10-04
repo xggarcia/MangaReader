@@ -96,7 +96,17 @@
     "removeManyConfirm_one": "¿Eliminar {{count}} cómic de tu biblioteca?",
     "removeManyConfirm_other": "¿Eliminar {{count}} cómics de tu biblioteca? Se borrarán sus copias guardadas y su progreso.",
     "installHintTitle": "Instala MangaReader",
-    "installHintBody": "Pulsa Compartir y luego «Añadir a pantalla de inicio». Se abrirá a pantalla completa, funcionará sin conexión y Safari no borrará tu biblioteca."
+    "installHintBody": "Pulsa Compartir y luego «Añadir a pantalla de inicio». Se abrirá a pantalla completa, funcionará sin conexión y Safari no borrará tu biblioteca.",
+    "archived": "Solo portada",
+    "openArchived": "{{title}}, solo portada",
+    "archivedTitle": "Ya no tienes este cómic en el dispositivo",
+    "archivedMessage": "Lo eliminaste después de leerlo: conservas su portada y tu progreso. Vuelve a importar el archivo para leerlo de nuevo.",
+    "reimport": "Importar de nuevo",
+    "understood": "Entendido",
+    "forget": "Quitar del historial",
+    "forgetConfirm": "¿Quitar «{{title}}» del historial? Se borrarán su portada y su progreso.",
+    "removeReadConfirm": "¿Eliminar «{{title}}»? Se borrará el archivo, pero conservarás la portada para seguir viendo que lo has leído.",
+    "removeKeepsRead": "Los que ya hayas leído conservarán su portada para que sigas viendo que los has leído."
   },
   "reader": {
     "title": "Lector",

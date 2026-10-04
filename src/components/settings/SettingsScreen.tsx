@@ -36,7 +36,7 @@ import { GroupedSection, LinkRow, MenuRow, Row } from '../ui/GroupedList';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import styles from './Settings.module.css';
 
-const APP_VERSION = '0.5.0';
+const APP_VERSION = '0.6.0';
 
 export function SettingsScreen() {
   const { t, i18n } = useTranslation();

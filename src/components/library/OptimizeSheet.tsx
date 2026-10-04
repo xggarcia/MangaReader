@@ -29,7 +29,11 @@ export function OptimizeSheet({ comicIds, onClose, onStarted }: OptimizeSheetPro
   const items = useLibraryStore((state) => state.items);
   const [quality, setQuality] = useState<PageQualityPrimitive>(PageQuality.default().toPrimitive());
 
-  const comics = comicIds.flatMap((id) => items.findById(id)?.getComic() ?? []);
+  // Archived comics (deleted after reading) have no file left to reduce.
+  const comics = comicIds.flatMap((id) => {
+    const comic = items.findById(id)?.getComic();
+    return comic && !comic.isArchived() ? [comic] : [];
+  });
   const size = comics.reduce((total, comic) => total + comic.getStoredSize(), 0);
   const chosen = PageQuality.fromPrimitive(quality);
   const pending = comics.filter((comic) => !comic.isOptimizedAs(chosen));

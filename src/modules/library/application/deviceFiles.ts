@@ -36,8 +36,10 @@ export function findNewInFolder({
       comicRepository.findAll(),
     ]);
     const isImported = (file: DeviceFile) =>
-      library.some((comic: Comic) =>
-        comic.isSameFileAs({ name: file.getName(), size: file.getSize() }),
+      library.some(
+        (comic: Comic) =>
+          // A comic kept only as a reading record is offered again: importing restores it.
+          !comic.isArchived() && comic.isSameFileAs({ name: file.getName(), size: file.getSize() }),
       );
     return {
       comics: files.filter((file) => file.isComicArchive() && !isImported(file)).sort(byPath),

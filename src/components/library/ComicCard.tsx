@@ -1,4 +1,5 @@
 import {
+  Archive,
   BookCheck,
   BookOpen,
   BookX,
@@ -14,7 +15,9 @@ import { memo, useRef, useState, type PointerEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useCoverUrl } from '../../hooks/useCoverUrl';
 import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
+import { hasDeviceFiles } from '../../shared/infrastructure/deviceFiles';
 import { haptics } from '../../shared/infrastructure/haptics';
+import { useDeviceFilesStore } from '../../stores/deviceFilesStore';
 import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
 import { ComicInfoSheet } from './ComicInfoSheet';
@@ -51,6 +54,8 @@ export const ComicCard = memo(function ComicCard({
   const [pickingCollection, setPickingCollection] = useState(false);
   const [editingInfo, setEditingInfo] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
+  const [explainingArchived, setExplainingArchived] = useState(false);
+  const archived = item.isArchived();
   const selection = useSelection();
   const selected = selection.isSelected([comicId]);
 
@@ -101,55 +106,62 @@ export const ComicCard = memo(function ComicCard({
     }
   };
 
-  const actions: ContextAction[] = [
-    {
-      id: 'read',
-      label: progress ? t('library.continue') : t('library.read_action'),
-      icon: BookOpen,
-      onSelect: () => openComic(comicId, cover.current),
+  const removeAction: ContextAction = {
+    id: 'remove',
+    label: archived ? t('library.forget') : t('library.removeShort'),
+    icon: Trash2,
+    destructive: true,
+    onSelect: () => {
+      haptics.warning();
+      setConfirmingRemove(true);
     },
-    isRead
-      ? {
-          id: 'unread',
-          label: t('library.markAsUnread'),
-          icon: BookX,
-          onSelect: () => onSetReadStatus(comicId, false),
-        }
-      : {
-          id: 'markRead',
-          label: t('library.markAsRead'),
-          icon: BookCheck,
-          onSelect: () => onSetReadStatus(comicId, true),
+  };
+  const infoAction: ContextAction = {
+    id: 'info',
+    label: t('library.editInfo'),
+    icon: Pencil,
+    onSelect: () => setEditingInfo(true),
+  };
+  const collectionAction: ContextAction = {
+    id: 'collection',
+    label: t('collections.addTo'),
+    icon: FolderPlus,
+    onSelect: () => setPickingCollection(true),
+  };
+  // Archived comics (deleted after reading) keep only what needs no file.
+  const archivedActions: ContextAction[] = [infoAction, collectionAction, removeAction];
+  const actions: ContextAction[] = archived
+    ? archivedActions
+    : [
+        {
+          id: 'read',
+          label: progress ? t('library.continue') : t('library.read_action'),
+          icon: BookOpen,
+          onSelect: () => openComic(comicId, cover.current),
         },
-    {
-      id: 'info',
-      label: t('library.editInfo'),
-      icon: Pencil,
-      onSelect: () => setEditingInfo(true),
-    },
-    {
-      id: 'collection',
-      label: t('collections.addTo'),
-      icon: FolderPlus,
-      onSelect: () => setPickingCollection(true),
-    },
-    {
-      id: 'optimize',
-      label: t('optimize.action'),
-      icon: Shrink,
-      onSelect: () => setOptimizing(true),
-    },
-    {
-      id: 'remove',
-      label: t('library.removeShort'),
-      icon: Trash2,
-      destructive: true,
-      onSelect: () => {
-        haptics.warning();
-        setConfirmingRemove(true);
-      },
-    },
-  ];
+        isRead
+          ? {
+              id: 'unread',
+              label: t('library.markAsUnread'),
+              icon: BookX,
+              onSelect: () => onSetReadStatus(comicId, false),
+            }
+          : {
+              id: 'markRead',
+              label: t('library.markAsRead'),
+              icon: BookCheck,
+              onSelect: () => onSetReadStatus(comicId, true),
+            },
+        infoAction,
+        collectionAction,
+        {
+          id: 'optimize',
+          label: t('optimize.action'),
+          icon: Shrink,
+          onSelect: () => setOptimizing(true),
+        },
+        removeAction,
+      ];
 
   return (
     <li className={styles.cell}>
@@ -157,7 +169,9 @@ export const ComicCard = memo(function ComicCard({
         ref={cover}
         type="button"
         className={styles.cover}
-        aria-label={t('library.openComic', { title })}
+        aria-label={
+          archived ? t('library.openArchived', { title }) : t('library.openComic', { title })
+        }
         aria-pressed={selection.active ? selected : undefined}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
@@ -175,6 +189,7 @@ export const ComicCard = memo(function ComicCard({
             return;
           }
           if (selection.active) selection.toggle([comicId]);
+          else if (archived) setExplainingArchived(true);
           else openComic(comicId, cover.current);
         }}
       >
@@ -193,6 +208,12 @@ export const ComicCard = memo(function ComicCard({
         {isRead && (
           <span className={styles.readBadge} aria-hidden="true">
             <Check size={13} strokeWidth={3} />
+          </span>
+        )}
+        {archived && (
+          <span className={styles.archivedBadge} aria-hidden="true">
+            <Archive size={12} strokeWidth={2.4} />
+            {t('library.archived')}
           </span>
         )}
         {selection.active && (
@@ -249,12 +270,30 @@ export const ComicCard = memo(function ComicCard({
       {optimizing && <OptimizeSheet comicIds={[comicId]} onClose={() => setOptimizing(false)} />}
       {confirmingRemove && (
         <ConfirmSheet
-          title={t('library.removeConfirm', { title })}
-          confirmLabel={t('library.removeShort')}
+          title={
+            archived
+              ? t('library.forgetConfirm', { title })
+              : isRead
+                ? t('library.removeReadConfirm', { title })
+                : t('library.removeConfirm', { title })
+          }
+          confirmLabel={archived ? t('library.forget') : t('library.removeShort')}
           cancelLabel={t('library.cancel')}
           destructive
           onConfirm={() => onRemove(comicId)}
           onClose={() => setConfirmingRemove(false)}
+        />
+      )}
+      {explainingArchived && (
+        <ConfirmSheet
+          title={t('library.archivedTitle')}
+          message={t('library.archivedMessage')}
+          confirmLabel={hasDeviceFiles() ? t('library.reimport') : t('library.understood')}
+          cancelLabel={t('library.cancel')}
+          onConfirm={() => {
+            if (hasDeviceFiles()) void useDeviceFilesStore.getState().pickAndImport();
+          }}
+          onClose={() => setExplainingArchived(false)}
         />
       )}
     </li>

@@ -21,6 +21,12 @@ export function SelectionToolbar() {
   const [optimizing, setOptimizing] = useState(false);
   const [merging, setMerging] = useState(false);
   const { setReadStatusMany, removeMany } = useLibraryStore.getState();
+  const items = useLibraryStore((state) => state.items);
+  // Read comics keep their cover when deleted: say so before confirming.
+  const keepsSomeCovers = ids.some((id) => {
+    const item = items.findById(id);
+    return item?.isRead() === true && !item.isArchived();
+  });
 
   const action = (icon: LucideIcon, label: string, onClick: () => void, destructive = false) => {
     const Icon = icon;
@@ -85,6 +91,7 @@ export function SelectionToolbar() {
       {confirmingDelete && (
         <ConfirmSheet
           title={t('library.removeManyConfirm', { count })}
+          message={keepsSomeCovers ? t('library.removeKeepsRead') : undefined}
           confirmLabel={t('library.removeShort')}
           cancelLabel={t('library.cancel')}
           destructive

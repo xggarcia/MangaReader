@@ -140,8 +140,9 @@ export const useOptimizationStore = create<OptimizationState>((set, get) => {
       for (const comicId of comicIds) {
         const comic = items.findById(comicId)?.getComic();
         if (pending.has(comicId)) continue;
-        if (!comic || comic.isOptimizedAs(quality)) {
-          onDone?.(comicId, comic !== undefined);
+        // Archived comics have no file to optimize.
+        if (!comic || comic.isArchived() || comic.isOptimizedAs(quality)) {
+          onDone?.(comicId, comic !== undefined && !comic.isArchived());
           continue;
         }
         if (onDone) doneCallbacks.set(comicId, onDone);

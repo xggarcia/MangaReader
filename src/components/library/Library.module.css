@@ -890,3 +890,22 @@
   color: var(--destructive);
   font: var(--text-footnote);
 }
+
+/* Read and deleted: only the cover and reading record remain. */
+.archivedBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 2px 7px 2px 5px;
+  border-radius: 10px;
+  background: rgb(0 0 0 / 0.62);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font: var(--text-caption2);
+  font-weight: 600;
+  pointer-events: none;
+}

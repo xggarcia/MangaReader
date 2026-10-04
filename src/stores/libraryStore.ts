@@ -91,7 +91,9 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
     const importFailures: ImportFailure[] = [];
     for (const result of results) {
       if (result.status === 'imported') {
-        items = items.add(LibraryItem.create({ comic: result.comic, progress: null }));
+        // A restored comic (it was kept only as a reading record) keeps its progress.
+        const progress = items.findById(result.comic.getId())?.getProgress() ?? null;
+        items = items.add(LibraryItem.create({ comic: result.comic, progress }));
       } else {
         importFailures.push({ fileName: result.fileName, code: result.code });
       }
@@ -107,7 +109,12 @@ export const useLibraryStore = create<LibraryState>((set, get) => ({
   },
 
   remove: async (comicId) => {
-    await getLibraryUseCases().removeComic(comicId);
+    const result = await getLibraryUseCases().removeComic(comicId);
+    if (result.status === 'archived') {
+      // Read comics stay as a cover and reading record; only the file is gone.
+      get().replaceComic(result.comic);
+      return;
+    }
     coverUrlCache.forget(comicId);
     set({ items: get().items.remove(comicId) });
   },

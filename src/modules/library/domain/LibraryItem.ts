@@ -56,6 +56,11 @@ export class LibraryItem {
     return SeriesInfo.fromComic(this.comic);
   }
 
+  /** Its file was deleted after reading: only the cover and reading record remain. */
+  isArchived(): boolean {
+    return this.comic.isArchived();
+  }
+
   isRead(): boolean {
     return this.progress?.isRead() ?? false;
   }

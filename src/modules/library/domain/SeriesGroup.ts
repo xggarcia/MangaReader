@@ -70,9 +70,11 @@ export class SeriesGroup {
 
   /** Where to continue: the volume in progress, else the first unread one, else the first. */
   getNextToRead(): LibraryItem {
+    // Archived volumes have no file to open.
+    const readable = this.volumes.filter((item) => !item.isArchived());
     return (
-      this.volumes.find((item) => item.getStatus() === 'inProgress') ??
-      this.volumes.find((item) => item.getStatus() === 'unread') ??
+      readable.find((item) => item.getStatus() === 'inProgress') ??
+      readable.find((item) => item.getStatus() === 'unread') ??
       this.getCoverItem()
     );
   }

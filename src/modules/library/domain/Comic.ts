@@ -14,6 +14,11 @@ export interface ComicPrimitive {
   storedSize: number;
   /** Quality the pages were optimized to, or `null` when the copy is the original file. */
   optimizedQuality: PageQualityPrimitive | null;
+  /**
+   * When its file was deleted after reading it (epoch ms): the comic stays in the library with
+   * its cover and progress, as a record of what was read. `null` while the file is stored.
+   */
+  archivedAt: number | null;
   format: ArchiveFormatPrimitive;
   pageCount: number;
   /** Epoch milliseconds. */
@@ -21,8 +26,9 @@ export interface ComicPrimitive {
 }
 
 /** Comics saved before optimization existed lack its fields. */
-export type StoredComicPrimitive = Omit<ComicPrimitive, 'storedSize' | 'optimizedQuality'> &
-  Partial<Pick<ComicPrimitive, 'storedSize' | 'optimizedQuality'>>;
+type AddedLaterField = 'storedSize' | 'optimizedQuality' | 'archivedAt';
+export type StoredComicPrimitive = Omit<ComicPrimitive, AddedLaterField> &
+  Partial<Pick<ComicPrimitive, AddedLaterField>>;
 
 const ARCHIVE_EXTENSION = /\.(cbz|cbr|zip|rar)$/i;
 
@@ -46,6 +52,7 @@ export class Comic {
       ...data,
       storedSize: data.storedSize ?? data.fileSize,
       optimizedQuality: data.optimizedQuality ?? null,
+      archivedAt: data.archivedAt ?? null,
     });
   }
 
@@ -63,6 +70,9 @@ export class Comic {
       throw new Error('[Comic] storedSize must be a non-negative number');
     }
     if (props.optimizedQuality !== null) PageQuality.fromPrimitive(props.optimizedQuality);
+    if (props.archivedAt !== null && !Number.isFinite(props.archivedAt)) {
+      throw new Error('[Comic] archivedAt must be a timestamp or null');
+    }
   }
 
   /** Title derived from a file name: extension removed, underscores turned into spaces. */
@@ -97,6 +107,27 @@ export class Comic {
 
   getFileSize(): number {
     return this.data.fileSize;
+  }
+
+  /** Only its cover and reading record remain; the file was deleted. */
+  isArchived(): boolean {
+    return this.data.archivedAt !== null;
+  }
+
+  /** Without its file (deleted to save space): kept as a record of what was read. */
+  archive(now: number): Comic {
+    return Comic.create({ ...this.data, archivedAt: now, storedSize: 0, optimizedQuality: null });
+  }
+
+  /** Its file was imported again: readable once more, with its progress and cover. */
+  restore(file: { size: number; format: ArchiveFormatPrimitive }): Comic {
+    return Comic.create({
+      ...this.data,
+      archivedAt: null,
+      storedSize: file.size,
+      format: file.format,
+      optimizedQuality: null,
+    });
   }
 
   getStoredSize(): number {

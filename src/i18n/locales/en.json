@@ -96,7 +96,17 @@
     "removeManyConfirm_one": "Delete {{count}} comic from your library?",
     "removeManyConfirm_other": "Delete {{count}} comics from your library? Their saved copies and progress will be deleted.",
     "installHintTitle": "Install MangaReader",
-    "installHintBody": "Tap Share, then “Add to Home Screen”. It opens full screen, works offline and keeps your library safe from Safari clearing site data."
+    "installHintBody": "Tap Share, then “Add to Home Screen”. It opens full screen, works offline and keeps your library safe from Safari clearing site data.",
+    "archived": "Cover only",
+    "openArchived": "{{title}}, cover only",
+    "archivedTitle": "This comic is no longer on your device",
+    "archivedMessage": "You deleted it after reading it: its cover and your progress are kept. Import the file again to read it.",
+    "reimport": "Import Again",
+    "understood": "OK",
+    "forget": "Remove from History",
+    "forgetConfirm": "Remove “{{title}}” from your history? Its cover and progress will be deleted.",
+    "removeReadConfirm": "Delete “{{title}}”? The file will be deleted, but its cover stays so you can still see you read it.",
+    "removeKeepsRead": "The ones you have read keep their cover so you can still see you read them."
   },
   "reader": {
     "title": "Reader",

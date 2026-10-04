@@ -65,12 +65,32 @@ export function importComics({
   generateId = () => crypto.randomUUID(),
   now = Date.now,
 }: ImportComicsProps) {
+  /** The same file as a comic kept only as a reading record: it becomes readable again. */
+  async function restore(archived: Comic, file: Blob): Promise<Comic> {
+    const opened = await openArchive(file);
+    await closeArchive(opened);
+    const restored = archived.restore({
+      size: file.size,
+      format: opened.getFormat().toPrimitive(),
+    });
+    await comicFileRepository.save(archived.getId(), file);
+    try {
+      await comicRepository.save(restored);
+    } catch (error) {
+      await comicFileRepository.delete(archived.getId()).catch(() => undefined);
+      throw error;
+    }
+    return restored;
+  }
+
   async function importOne(source: ImportSource, existing: Comic[]): Promise<Comic> {
-    if (existing.some((comic) => comic.isSameFileAs(source))) {
+    const match = existing.find((comic) => comic.isSameFileAs(source));
+    if (match && !match.isArchived()) {
       throw new LibraryError('duplicate', `[importComics] Already in library: ${source.name}`);
     }
 
     const file = await source.read();
+    if (match) return restore(match, file);
     const opened = await openArchive(file);
     let cover: Blob | null = null;
     let info: ComicInfo | null = null;
@@ -91,6 +111,7 @@ export function importComics({
       fileSize: source.size || file.size,
       storedSize: file.size,
       optimizedQuality: null,
+      archivedAt: null,
       format: opened.getFormat().toPrimitive(),
       pageCount: opened.getPages().count(),
       addedAt: now(),
@@ -119,7 +140,9 @@ export function importComics({
     for (const [index, source] of sources.entries()) {
       try {
         const comic = await importOne(source, existing);
-        existing.push(comic);
+        const index = existing.findIndex((candidate) => candidate.equals(comic));
+        if (index >= 0) existing[index] = comic;
+        else existing.push(comic);
         results.push({ status: 'imported', fileName: source.name, comic });
       } catch (error) {
         results.push({ status: 'failed', fileName: source.name, code: errorCodeOf(error) });
