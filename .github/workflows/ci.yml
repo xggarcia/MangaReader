@@ -65,12 +65,16 @@ jobs:
           ANDROID_DEBUG_KEYSTORE: ${{ secrets.ANDROID_DEBUG_KEYSTORE }}
         run: |
           if [ -n "$ANDROID_DEBUG_KEYSTORE" ]; then
-            mkdir -p ~/.android
-            echo "$ANDROID_DEBUG_KEYSTORE" | base64 -d > ~/.android/debug.keystore
+            echo "$ANDROID_DEBUG_KEYSTORE" | base64 -d > "$RUNNER_TEMP/debug.keystore"
+            echo "ANDROID_DEBUG_KEYSTORE_PATH=$RUNNER_TEMP/debug.keystore" >> "$GITHUB_ENV"
           fi
       - name: Assemble debug APK
         working-directory: android
         run: ./gradlew assembleDebug --no-daemon
+      - name: Show the signing certificate
+        run: |
+          APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          "$APKSIGNER" verify --print-certs android/app/build/outputs/apk/debug/app-debug.apk | grep SHA-256
       - uses: actions/upload-artifact@v4
         with:
           name: manga-reader-debug-apk

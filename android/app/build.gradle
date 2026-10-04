@@ -16,6 +16,19 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        // CI signs with the owner's debug key (repository secret) so its APKs install over the
+        // app already on the phone; locally the default ~/.android/debug.keystore is used.
+        def ciKeystore = System.getenv("ANDROID_DEBUG_KEYSTORE_PATH")
+        if (ciKeystore) {
+            debug {
+                storeFile file(ciKeystore)
+                storePassword "android"
+                keyAlias "androiddebugkey"
+                keyPassword "android"
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
