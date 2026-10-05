@@ -4,6 +4,7 @@ import { getSyncUseCases } from '../modules/sync/application/factory';
 import type { PairedDevice } from '../modules/sync/domain/SyncTransportRepository';
 import { hasLocalSync } from '../shared/infrastructure/localSync';
 import { useCollectionsStore } from './collectionsStore';
+import { useDeviceTransferStore } from './deviceTransferStore';
 import { useLibraryStore } from './libraryStore';
 
 export type PairingState =
@@ -124,6 +125,8 @@ export const useSyncStore = create<SyncState>((set, get) => {
               }
               break;
             case 'sessionOpened': {
+              // Send sessions carry comic files: deviceTransferStore handles them.
+              if (event.purpose !== 'sync') break;
               const session = sync.createSession(event.sessionId, ({ changed }) =>
                 finishSession(event.peer, changed),
               );
@@ -155,6 +158,13 @@ export const useSyncStore = create<SyncState>((set, get) => {
 
     pause: async () => {
       if (!hasLocalSync() || get().pairing.status !== 'off') return;
+      // A comic transfer keeps running when the user switches apps for a moment.
+      const { outgoing, incoming } = useDeviceTransferStore.getState();
+      const transferring =
+        outgoing.status === 'connecting' ||
+        outgoing.status === 'transferring' ||
+        incoming.status === 'receiving';
+      if (transferring) return;
       await getSyncUseCases().stop();
     },
 

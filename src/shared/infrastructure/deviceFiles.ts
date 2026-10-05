@@ -110,13 +110,14 @@ function toBase64(chunk: Blob): Promise<string> {
 }
 
 /**
- * Streams a Blob into the export being written, chunk by chunk; the next chunk is read while
+ * Streams a Blob to the native side chunk by chunk (the stream open there decides where the
+ * bytes go: a library export, or a comic sent to a paired device); the next chunk is read while
  * the previous one is written. Raw bytes through the binary channel when the WebView supports
- * it (several times faster), base64 through the plugin bridge otherwise.
+ * it (several times faster), base64 through `writeBase64` over the plugin bridge otherwise.
  */
-export async function writeBlobToExport(
-  id: string,
+export async function streamBlobToNative(
   blob: Blob,
+  writeBase64: (data: string) => Promise<void>,
   onBytes?: (bytes: number) => void,
 ): Promise<void> {
   const channel = binaryChannel();
@@ -132,7 +133,16 @@ export async function writeBlobToExport(
     offset += written;
     next = offset < blob.size ? read(offset) : null;
     if (channel && data instanceof ArrayBuffer) await sendBinary(channel, data);
-    else await DeviceFiles.writeExport({ id, data: data as string });
+    else await writeBase64(data as string);
     onBytes?.(written);
   }
+}
+
+/** Streams a Blob into the library export being written. */
+export function writeBlobToExport(
+  id: string,
+  blob: Blob,
+  onBytes?: (bytes: number) => void,
+): Promise<void> {
+  return streamBlobToNative(blob, (data) => DeviceFiles.writeExport({ id, data }), onBytes);
 }

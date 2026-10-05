@@ -64,8 +64,6 @@ public class DeviceFilesPlugin extends Plugin {
     private final Map<String, ZipInputStream> backups = new HashMap<>();
     private final List<JSObject> receivedFiles = new ArrayList<>();
     private int nextId = 1;
-    /** Export receiving binary chunks from the page (only one runs at a time). */
-    private String activeExport = null;
 
     @Override
     public void load() {
@@ -97,9 +95,9 @@ public class DeviceFilesPlugin extends Plugin {
                 io.execute(() -> {
                     String answer = "ok";
                     try {
-                        exportStream(activeExport).write(data);
+                        BinaryChannel.write(data);
                     } catch (Exception e) {
-                        answer = isStorageFull(e) ? "error:STORAGE_FULL" : "error:EXPORT_FAILED";
+                        answer = isStorageFull(e) ? "error:STORAGE_FULL" : "error:WRITE_FAILED";
                     }
                     final String result = answer;
                     getActivity().runOnUiThread(() -> reply.postMessage(result));
@@ -345,7 +343,7 @@ public class DeviceFilesPlugin extends Plugin {
                 String id = "export-" + (nextId++);
                 exports.put(id, zip);
                 exportFiles.put(id, file);
-                activeExport = id;
+                BinaryChannel.setSink(chunk -> zip.write(chunk));
                 JSObject response = new JSObject();
                 response.put("id", id);
                 call.resolve(response);

@@ -346,7 +346,7 @@
   },
   "sync": {
     "title": "Sincronización",
-    "footer": "Los dispositivos emparejados se sincronizan solos cuando tienen MangaReader abierto en la misma Wi-Fi: qué has leído, por qué página vas y las portadas. Si un cómic no está en este dispositivo, aparece con su portada y su página; impórtalo para leerlo. Todo va cifrado y solo entre tus dispositivos, nunca por Internet.",
+    "footer": "Los dispositivos emparejados se sincronizan solos cuando tienen MangaReader abierto en la misma Wi-Fi: qué has leído, por qué página vas y las portadas. Si un cómic no está en este dispositivo, aparece con su portada y su página; impórtalo para leerlo. Todo va cifrado y solo entre tus dispositivos, nunca por Internet. Desde el menú de un cómic, una serie o una colección puedes enviar los archivos a otro dispositivo emparejado: solo viaja lo que no tenga.",
     "pairDevice": "Emparejar un dispositivo",
     "pairTitle": "Emparejar",
     "pairingHint": "Abre también Ajustes › Sincronización › Emparejar en el otro dispositivo, conectado a la misma Wi-Fi. Este aparece allí como «{{name}}».",
@@ -372,5 +372,32 @@
     "syncedWith": "Sincronizado con {{name}}",
     "changes_one": "{{count}} cambio",
     "changes_other": "{{count}} cambios"
+  },
+  "deviceSend": {
+    "action": "Enviar a otro dispositivo",
+    "seriesAction": "Enviar serie a otro dispositivo",
+    "collectionAction": "Enviar colección a otro dispositivo",
+    "chooseDevice": "Elige el dispositivo. Tiene que tener MangaReader abierto en la misma Wi-Fi. Solo se envía lo que no tenga ya.",
+    "noPeers": "Primero empareja un dispositivo en Ajustes › Sincronización.",
+    "connecting": "Conectando con {{name}}…",
+    "checking": "Comprobando qué tiene {{name}}…",
+    "sending": "Enviando {{current}} de {{total}} a {{name}}",
+    "alreadyThere_one": "{{count}} ya lo tenía",
+    "alreadyThere_other": "{{count}} ya los tenía",
+    "sent_one": "{{count}} cómic enviado a {{name}}",
+    "sent_other": "{{count}} cómics enviados a {{name}}",
+    "nothingMissing": "{{name}} ya los tiene todos",
+    "failedCount_one": "{{count}} no se ha podido enviar",
+    "failedCount_other": "{{count}} no se han podido enviar",
+    "interrupted": "Se ha cortado la conexión antes de terminar.",
+    "failed": {
+      "notFound": "No se encuentra «{{name}}». Abre MangaReader en ese dispositivo, conectado a la misma Wi-Fi.",
+      "unreachable": "No se ha podido conectar con «{{name}}». Comprueba que estáis en la misma Wi-Fi.",
+      "nothing": "No hay nada que enviar: solo están sus portadas en este dispositivo."
+    },
+    "receivingFrom": "Recibiendo cómics de {{name}}",
+    "receiving": "Recibiendo {{current}} de {{total}} de {{name}}",
+    "received_one": "{{count}} cómic recibido de {{name}}",
+    "received_other": "{{count}} cómics recibidos de {{name}}"
   }
 }

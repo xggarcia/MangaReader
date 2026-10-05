@@ -346,7 +346,7 @@
   },
   "sync": {
     "title": "Sync",
-    "footer": "Paired devices sync on their own when MangaReader is open on the same Wi-Fi: what you read, the page you are on, and the covers. A comic that is not on this device shows its cover and page; import it to read it. Everything is encrypted and only between your devices, never over the Internet.",
+    "footer": "Paired devices sync on their own when MangaReader is open on the same Wi-Fi: what you read, the page you are on, and the covers. A comic that is not on this device shows its cover and page; import it to read it. Everything is encrypted and only between your devices, never over the Internet. From the menu of a comic, series or collection you can send the files to another paired device: only what it lacks is sent.",
     "pairDevice": "Pair a Device",
     "pairTitle": "Pair",
     "pairingHint": "Also open Settings › Sync › Pair on the other device, on the same Wi-Fi. This one shows up there as “{{name}}”.",
@@ -372,5 +372,32 @@
     "syncedWith": "Synced with {{name}}",
     "changes_one": "{{count}} change",
     "changes_other": "{{count}} changes"
+  },
+  "deviceSend": {
+    "action": "Send to Another Device",
+    "seriesAction": "Send Series to Another Device",
+    "collectionAction": "Send Collection to Another Device",
+    "chooseDevice": "Choose the device. It must have MangaReader open on the same Wi-Fi. Only what it does not have yet is sent.",
+    "noPeers": "First pair a device in Settings › Sync.",
+    "connecting": "Connecting to {{name}}…",
+    "checking": "Checking what {{name}} has…",
+    "sending": "Sending {{current}} of {{total}} to {{name}}",
+    "alreadyThere_one": "{{count}} was already there",
+    "alreadyThere_other": "{{count}} were already there",
+    "sent_one": "{{count}} comic sent to {{name}}",
+    "sent_other": "{{count}} comics sent to {{name}}",
+    "nothingMissing": "{{name}} already has them all",
+    "failedCount_one": "{{count}} could not be sent",
+    "failedCount_other": "{{count}} could not be sent",
+    "interrupted": "The connection dropped before finishing.",
+    "failed": {
+      "notFound": "Cannot find “{{name}}”. Open MangaReader on that device, on the same Wi-Fi.",
+      "unreachable": "Could not connect to “{{name}}”. Make sure you are on the same Wi-Fi.",
+      "nothing": "Nothing to send: only their covers are on this device."
+    },
+    "receivingFrom": "Receiving comics from {{name}}",
+    "receiving": "Receiving {{current}} of {{total}} from {{name}}",
+    "received_one": "{{count}} comic received from {{name}}",
+    "received_other": "{{count}} comics received from {{name}}"
   }
 }

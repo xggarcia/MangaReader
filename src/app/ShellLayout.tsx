@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Outlet, useLocation } from 'react-router';
 import { ImportLibrarySheet } from '../components/library/ImportLibrarySheet';
 import { OptimizationStatus } from '../components/library/OptimizationStatus';
+import { ReceiveStatus } from '../components/sync/ReceiveStatus';
 import { SyncStatus } from '../components/sync/SyncStatus';
 import { TabBar, type TabItem } from '../components/ui/TabBar';
 import { useEdgeSwipeBack } from '../hooks/useEdgeSwipeBack';
@@ -33,6 +34,7 @@ export function ShellLayout() {
       <OptimizationStatus />
       <ImportLibrarySheet />
       <SyncStatus />
+      <ReceiveStatus />
       <TabBar tabs={tabs} label={t('tabs.label')} />
     </>
   );

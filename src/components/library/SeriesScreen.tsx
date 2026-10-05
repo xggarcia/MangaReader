@@ -8,6 +8,7 @@ import {
   Pencil,
   Send,
   Shrink,
+  Smartphone,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,6 +22,8 @@ import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import { Menu } from '../ui/Menu';
 import { ContinueReadingCard } from './ContinueReadingCard';
 import { hasDeviceFiles } from '../../shared/infrastructure/deviceFiles';
+import { useSyncStore } from '../../stores/syncStore';
+import { SendSheet } from '../sync/SendSheet';
 import { ExportSheet } from './ExportSheet';
 import { LibraryShelf } from './LibraryShelf';
 import { MergeSeriesSheet } from './MergeSeriesSheet';
@@ -38,6 +41,8 @@ export function SeriesScreen() {
   const [picking, setPicking] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
   const [sharing, setSharing] = useState(false);
+  const [sendingToDevice, setSendingToDevice] = useState(false);
+  const canSend = useSyncStore((state) => state.peers.length > 0);
   const [merging, setMerging] = useState<'merge' | 'rename' | null>(null);
 
   useEffect(() => {
@@ -121,6 +126,16 @@ export function SeriesScreen() {
               icon: Shrink,
               onSelect: () => setOptimizing(true),
             },
+            ...(canSend
+              ? [
+                  {
+                    id: 'sendToDevice',
+                    label: t('deviceSend.seriesAction'),
+                    icon: Smartphone,
+                    onSelect: () => setSendingToDevice(true),
+                  },
+                ]
+              : []),
             ...(hasDeviceFiles()
               ? [
                   {
@@ -152,6 +167,13 @@ export function SeriesScreen() {
           onMerged={(key) => {
             if (key !== group.getKey()) goTo(seriesPath(key), 'tab', { replace: true });
           }}
+        />
+      )}
+      {sendingToDevice && (
+        <SendSheet
+          title={t('deviceSend.seriesAction')}
+          comicIds={ids}
+          onClose={() => setSendingToDevice(false)}
         />
       )}
       {sharing && (

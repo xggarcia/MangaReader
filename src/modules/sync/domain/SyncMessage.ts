@@ -1,4 +1,5 @@
 import type { SyncEntryPrimitive } from './SyncEntry';
+import type { OfferedCollection, OfferedComic } from './TransferOffer';
 
 export const SYNC_PROTOCOL_VERSION = 1;
 
@@ -18,7 +19,13 @@ export type SyncMessage =
   | { type: 'manifest'; version: number; entries: SyncEntryPrimitive[] }
   | { type: 'covers-request'; ids: string[] }
   | { type: 'covers'; items: SyncCover[] }
-  | { type: 'covers-end' };
+  | { type: 'covers-end' }
+  // Sending comics: the offer, the ones the other device lacks, and each one once imported
+  // (the files themselves travel as binary frames between these messages).
+  | { type: 'offer'; comics: OfferedComic[]; collection: OfferedCollection | null }
+  | { type: 'offer-reply'; wanted: string[] }
+  | { type: 'comic-imported'; id: string; ok: boolean }
+  | { type: 'send-done' };
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null;
@@ -43,6 +50,14 @@ export function parseSyncMessage(json: string): SyncMessage | null {
       return Array.isArray(value.items) ? (value as SyncMessage) : null;
     case 'covers-end':
       return { type: 'covers-end' };
+    case 'offer':
+      return Array.isArray(value.comics) ? (value as SyncMessage) : null;
+    case 'offer-reply':
+      return Array.isArray(value.wanted) ? (value as SyncMessage) : null;
+    case 'comic-imported':
+      return typeof value.id === 'string' ? (value as SyncMessage) : null;
+    case 'send-done':
+      return { type: 'send-done' };
     default:
       return null;
   }

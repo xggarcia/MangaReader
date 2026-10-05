@@ -9,6 +9,7 @@ import {
   FolderPlus,
   Pencil,
   Shrink,
+  Smartphone,
   Trash2,
 } from 'lucide-react';
 import { memo, useRef, useState, type PointerEvent } from 'react';
@@ -18,6 +19,8 @@ import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
 import { hasDeviceFiles } from '../../shared/infrastructure/deviceFiles';
 import { haptics } from '../../shared/infrastructure/haptics';
 import { useDeviceFilesStore } from '../../stores/deviceFilesStore';
+import { useSyncStore } from '../../stores/syncStore';
+import { SendSheet } from '../sync/SendSheet';
 import { CollectionPickerSheet } from '../collections/CollectionPickerSheet';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
 import { ComicInfoSheet } from './ComicInfoSheet';
@@ -55,6 +58,8 @@ export const ComicCard = memo(function ComicCard({
   const [editingInfo, setEditingInfo] = useState(false);
   const [optimizing, setOptimizing] = useState(false);
   const [explainingArchived, setExplainingArchived] = useState(false);
+  const [sending, setSending] = useState(false);
+  const canSend = useSyncStore((state) => state.peers.length > 0);
   const archived = item.isArchived();
   const selection = useSelection();
   const selected = selection.isSelected([comicId]);
@@ -154,6 +159,16 @@ export const ComicCard = memo(function ComicCard({
             },
         infoAction,
         collectionAction,
+        ...(canSend
+          ? [
+              {
+                id: 'send',
+                label: t('deviceSend.action'),
+                icon: Smartphone,
+                onSelect: () => setSending(true),
+              },
+            ]
+          : []),
         {
           id: 'optimize',
           label: t('optimize.action'),
@@ -282,6 +297,13 @@ export const ComicCard = memo(function ComicCard({
           destructive
           onConfirm={() => onRemove(comicId)}
           onClose={() => setConfirmingRemove(false)}
+        />
+      )}
+      {sending && (
+        <SendSheet
+          title={t('deviceSend.action')}
+          comicIds={[comicId]}
+          onClose={() => setSending(false)}
         />
       )}
       {explainingArchived && (

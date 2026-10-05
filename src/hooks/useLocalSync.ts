@@ -1,6 +1,7 @@
 import { App } from '@capacitor/app';
 import { useEffect } from 'react';
 import { hasLocalSync } from '../shared/infrastructure/localSync';
+import { useDeviceTransferStore } from '../stores/deviceTransferStore';
 import { useSyncStore } from '../stores/syncStore';
 
 /** While the app is open: sync again every few minutes with paired devices around. */
@@ -15,6 +16,7 @@ export function useLocalSync(enabled: boolean): void {
   useEffect(() => {
     if (!enabled || !hasLocalSync()) return;
     const store = useSyncStore.getState();
+    void useDeviceTransferStore.getState().init();
     void store.resume();
     const resumed = App.addListener('resume', () => void store.resume());
     const paused = App.addListener('pause', () => void store.pause());

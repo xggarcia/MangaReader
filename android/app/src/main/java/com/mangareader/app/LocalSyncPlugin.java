@@ -13,9 +13,13 @@ import com.getcapacitor.Plugin;
 import com.getcapacitor.PluginCall;
 import com.getcapacitor.PluginMethod;
 import com.getcapacitor.annotation.CapacitorPlugin;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -59,6 +63,12 @@ public class LocalSyncPlugin extends Plugin {
     private static final String PREFS = "local_sync";
     private static final int MAX_FRAME = 32 * 1024 * 1024;
     private static final int CONNECT_TIMEOUT_MS = 5000;
+    /** Receiving a large comic can take a while between messages (the page imports each one). */
+    private static final int SESSION_TIMEOUT_MS = 5 * 60 * 1000;
+    private static final byte FILE_BEGIN = 1;
+    private static final byte FILE_DATA = 2;
+    private static final byte FILE_END = 3;
+    private static final long PROGRESS_STEP = 4L * 1024 * 1024;
 
     private final SecureRandom random = new SecureRandom();
     private final ExecutorService executor = Executors.newCachedThreadPool();
@@ -123,6 +133,7 @@ public class LocalSyncPlugin extends Plugin {
         String systemName = Settings.Global.getString(getContext().getContentResolver(), "device_name");
         deviceName = systemName != null && !systemName.isEmpty() ? systemName : Build.MODEL;
         loadPeers();
+        clearIncoming();
     }
 
     // ---------- Plugin API ----------
@@ -219,8 +230,8 @@ public class LocalSyncPlugin extends Plugin {
     @PluginMethod
     public void syncNow(PluginCall call) {
         for (Endpoint endpoint : endpoints.values()) {
-            if (peers.containsKey(endpoint.id) && !hasSession(endpoint.id)) {
-                executor.execute(() -> connectForSync(endpoint.host, endpoint.port));
+            if (peers.containsKey(endpoint.id) && !hasSession(endpoint.id, "sync")) {
+                executor.execute(() -> connectForSync(endpoint.host, endpoint.port, "sync", null));
             }
         }
         call.resolve();
@@ -232,16 +243,97 @@ public class LocalSyncPlugin extends Plugin {
         String host = call.getString("host");
         int port = call.getInt("port", 0);
         boolean pair = Boolean.TRUE.equals(call.getBoolean("pair", false));
+        String purpose = call.getString("purpose", "sync");
+        String requestId = call.getString("requestId");
         executor.execute(() -> {
             try {
                 InetAddress address = InetAddress.getByName(host);
                 if (pair) startPairing(address, port);
-                else connectForSync(address, port);
+                else connectForSync(address, port, purpose, requestId);
             } catch (IOException e) {
                 notifyFailure("unreachable");
             }
         });
         call.resolve();
+    }
+
+    /** Opens a session to send comics to a paired device that is on the network now. */
+    @PluginMethod
+    public void openSendSession(PluginCall call) {
+        String peerId = call.getString("peerId", "");
+        String requestId = call.getString("requestId");
+        Endpoint endpoint = endpoints.get(peerId);
+        if (endpoint == null || !peers.containsKey(peerId)) {
+            call.reject("Device not on the network", "NOT_FOUND");
+            return;
+        }
+        executor.execute(() -> connectForSync(endpoint.host, endpoint.port, "send", requestId));
+        call.resolve();
+    }
+
+    /** Starts a file on the session; its bytes then arrive through the binary channel. */
+    @PluginMethod
+    public void beginOutgoingFile(PluginCall call) {
+        Session session = sessions.get(call.getString("sessionId", ""));
+        String fileId = call.getString("fileId", "");
+        if (session == null) {
+            call.reject("Session closed", "CLOSED");
+            return;
+        }
+        executor.execute(() -> {
+            try {
+                JSONObject header = new JSONObject();
+                header.put("fileId", fileId);
+                session.send(concat(new byte[] { FILE_BEGIN }, bytes(header.toString())));
+                BinaryChannel.Sink sink = chunk -> session.send(concat(new byte[] { FILE_DATA }, chunk));
+                session.outgoingSink = sink;
+                BinaryChannel.setSink(sink);
+                call.resolve();
+            } catch (Exception e) {
+                session.close();
+                call.reject(e.getMessage(), "CLOSED");
+            }
+        });
+    }
+
+    /** Fallback when the WebView has no binary channel: a base64 chunk over the bridge. */
+    @PluginMethod
+    public void writeOutgoingFile(PluginCall call) {
+        Session session = sessions.get(call.getString("sessionId", ""));
+        String data = call.getString("data", "");
+        if (session == null) {
+            call.reject("Session closed", "CLOSED");
+            return;
+        }
+        executor.execute(() -> {
+            try {
+                session.send(concat(new byte[] { FILE_DATA }, Base64.decode(data, Base64.DEFAULT)));
+                call.resolve();
+            } catch (Exception e) {
+                session.close();
+                call.reject(e.getMessage(), "CLOSED");
+            }
+        });
+    }
+
+    @PluginMethod
+    public void endOutgoingFile(PluginCall call) {
+        Session session = sessions.get(call.getString("sessionId", ""));
+        if (session == null) {
+            call.reject("Session closed", "CLOSED");
+            return;
+        }
+        executor.execute(() -> {
+            try {
+                if (session.outgoingSink != null) BinaryChannel.clearSink(session.outgoingSink);
+                session.outgoingSink = null;
+                session.send(new byte[] { FILE_END });
+                call.resolve();
+            } catch (Exception e) {
+                session.close();
+                call.reject(e.getMessage(), "CLOSED");
+            }
+        });
     }
 
     @PluginMethod
@@ -437,8 +529,8 @@ public class LocalSyncPlugin extends Plugin {
             notifyCandidates();
         }
         // Both devices find each other: the one with the smaller id connects.
-        if (peers.containsKey(id) && !hasSession(id) && deviceId.compareTo(id) < 0) {
-            executor.execute(() -> connectForSync(endpoint.host, endpoint.port));
+        if (peers.containsKey(id) && !hasSession(id, "sync") && deviceId.compareTo(id) < 0) {
+            executor.execute(() -> connectForSync(endpoint.host, endpoint.port, "sync", null));
         }
     }
 
@@ -493,10 +585,10 @@ public class LocalSyncPlugin extends Plugin {
             socket.close();
             return;
         }
-        openSession(socket, in, out, peer, clientNonce, serverNonce, false);
+        openSession(socket, in, out, peer, clientNonce, serverNonce, false, hello.optString("purpose", "sync"), null);
     }
 
-    private void connectForSync(InetAddress host, int port) {
+    private void connectForSync(InetAddress host, int port, String purpose, String requestId) {
         Socket socket = new Socket();
         try {
             socket.connect(new InetSocketAddress(host, port), CONNECT_TIMEOUT_MS);
@@ -506,13 +598,15 @@ public class LocalSyncPlugin extends Plugin {
             byte[] clientNonce = randomBytes(16);
             JSONObject hello = new JSONObject();
             hello.put("mode", "sync");
+            hello.put("purpose", purpose);
             hello.put("id", deviceId);
             hello.put("nonce", b64(clientNonce));
             writeFrame(out, hello.toString().getBytes(StandardCharsets.UTF_8));
             JSONObject reply = new JSONObject(new String(readFrame(in), StandardCharsets.UTF_8));
             Peer peer = peers.get(reply.getString("id"));
-            if (peer == null || hasSession(peer.id)) {
+            if (peer == null || ("sync".equals(purpose) && hasSession(peer.id, "sync"))) {
                 socket.close();
+                notifySessionFailed(requestId);
                 return;
             }
             byte[] serverNonce = Base64.decode(reply.getString("nonce"), Base64.NO_WRAP);
@@ -521,12 +615,15 @@ public class LocalSyncPlugin extends Plugin {
                 socket.close();
                 return;
             }
+            // Remember where it answered, so comics can be sent to it even before discovery sees it.
+            endpoints.putIfAbsent(peer.id, new Endpoint(peer.id, peer.name, host, port));
             JSONObject proof = new JSONObject();
             proof.put("mac", b64(hmac(peer.key, concat(bytes("client"), clientNonce, serverNonce))));
             writeFrame(out, proof.toString().getBytes(StandardCharsets.UTF_8));
-            openSession(socket, in, out, peer, clientNonce, serverNonce, true);
+            openSession(socket, in, out, peer, clientNonce, serverNonce, true, purpose, requestId);
         } catch (Exception e) {
             closeQuietly(socket);
+            notifySessionFailed(requestId);
         }
     }
 
@@ -537,23 +634,48 @@ public class LocalSyncPlugin extends Plugin {
         Peer peer,
         byte[] clientNonce,
         byte[] serverNonce,
-        boolean isClient
+        boolean isClient,
+        String purpose,
+        String requestId
     ) throws Exception {
         byte[] key = hmac(peer.key, concat(bytes("session"), clientNonce, serverNonce));
-        Session session = new Session(UUID.randomUUID().toString(), peer, socket, in, out, key, isClient);
+        Session session = new Session(UUID.randomUUID().toString(), peer, socket, in, out, key, isClient, purpose);
         sessions.put(session.id, session);
-        socket.setSoTimeout(60000);
+        socket.setSoTimeout(SESSION_TIMEOUT_MS);
         JSObject event = new JSObject();
         event.put("sessionId", session.id);
         event.put("peerId", peer.id);
         event.put("peerName", peer.name);
+        event.put("purpose", purpose);
+        event.put("initiator", isClient);
+        if (requestId != null) event.put("requestId", requestId);
         notifyListeners("sessionOpened", event);
         session.readLoop();
     }
 
-    private boolean hasSession(String peerId) {
-        for (Session session : sessions.values()) if (session.peer.id.equals(peerId)) return true;
+    private boolean hasSession(String peerId, String purpose) {
+        for (Session session : sessions.values()) {
+            if (session.peer.id.equals(peerId) && session.purpose.equals(purpose)) return true;
+        }
         return false;
+    }
+
+    private void notifySessionFailed(String requestId) {
+        if (requestId == null) return;
+        JSObject event = new JSObject();
+        event.put("requestId", requestId);
+        notifyListeners("sessionFailed", event);
+    }
+
+    private File cacheDirectory(String name) {
+        File directory = new File(getContext().getCacheDir(), name);
+        if (!directory.exists()) directory.mkdirs();
+        return directory;
+    }
+
+    private void clearIncoming() {
+        File[] files = new File(getContext().getCacheDir(), "incoming").listFiles();
+        if (files != null) for (File file : files) file.delete();
     }
 
     /** An authenticated connection; each frame is AES-256-GCM with a per-direction counter IV. */
@@ -566,11 +688,28 @@ public class LocalSyncPlugin extends Plugin {
         final DataOutputStream out;
         final SecretKeySpec key;
         final int sendDirection;
+        final String purpose;
+        volatile BinaryChannel.Sink outgoingSink;
+        OutputStream incoming;
+        File incomingFile;
+        String incomingFileId;
+        long received;
+        long nextProgress;
         long sendCounter = 0;
         long receiveCounter = 0;
         boolean closed = false;
 
-        Session(String id, Peer peer, Socket socket, DataInputStream in, DataOutputStream out, byte[] key, boolean isClient) {
+        Session(
+            String id,
+            Peer peer,
+            Socket socket,
+            DataInputStream in,
+            DataOutputStream out,
+            byte[] key,
+            boolean isClient,
+            String purpose
+        ) {
+            this.purpose = purpose;
             this.id = id;
             this.peer = peer;
             this.socket = socket;
@@ -593,9 +732,15 @@ public class LocalSyncPlugin extends Plugin {
                     byte[] frame = readFrame(in);
                     Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
                     cipher.init(Cipher.DECRYPT_MODE, key, new GCMParameterSpec(128, iv(receiveDirection, receiveCounter++)));
+                    byte[] plain = cipher.doFinal(frame);
+                    // Text messages are JSON objects; comic files travel as binary frames.
+                    if (plain.length > 0 && plain[0] != (byte) '{') {
+                        receiveFile(plain);
+                        continue;
+                    }
                     JSObject event = new JSObject();
                     event.put("sessionId", id);
-                    event.put("data", new String(cipher.doFinal(frame), StandardCharsets.UTF_8));
+                    event.put("data", new String(plain, StandardCharsets.UTF_8));
                     notifyListeners("sessionMessage", event);
                 }
             } catch (Exception e) {
@@ -605,10 +750,62 @@ public class LocalSyncPlugin extends Plugin {
             }
         }
 
+        /** Writes a received comic to the cache; the page imports it from there. */
+        private void receiveFile(byte[] plain) throws Exception {
+            switch (plain[0]) {
+                case FILE_BEGIN: {
+                    JSONObject header = new JSONObject(new String(plain, 1, plain.length - 1, StandardCharsets.UTF_8));
+                    incomingFileId = header.getString("fileId");
+                    incomingFile = new File(cacheDirectory("incoming"), UUID.randomUUID() + ".tmp");
+                    incoming = new BufferedOutputStream(new FileOutputStream(incomingFile), 1 << 20);
+                    received = 0;
+                    nextProgress = PROGRESS_STEP;
+                    break;
+                }
+                case FILE_DATA:
+                    if (incoming == null) throw new IOException("Data without a file");
+                    incoming.write(plain, 1, plain.length - 1);
+                    received += plain.length - 1;
+                    if (received >= nextProgress) {
+                        nextProgress = received + PROGRESS_STEP;
+                        JSObject event = new JSObject();
+                        event.put("sessionId", id);
+                        event.put("fileId", incomingFileId);
+                        event.put("received", received);
+                        notifyListeners("fileProgress", event);
+                    }
+                    break;
+                case FILE_END: {
+                    if (incoming == null) throw new IOException("End without a file");
+                    incoming.close();
+                    incoming = null;
+                    JSObject event = new JSObject();
+                    event.put("sessionId", id);
+                    event.put("fileId", incomingFileId);
+                    event.put("path", incomingFile.getAbsolutePath());
+                    event.put("size", received);
+                    incomingFile = null;
+                    notifyListeners("fileReceived", event);
+                    break;
+                }
+                default:
+                    throw new IOException("Unknown frame");
+            }
+        }
+
         synchronized void close() {
             if (closed) return;
             closed = true;
             closeQuietly(socket);
+            if (outgoingSink != null) BinaryChannel.clearSink(outgoingSink);
+            if (incoming != null) {
+                try {
+                    incoming.close();
+                } catch (IOException ignored) {
+                    // Discarding a partial file.
+                }
+                if (incomingFile != null) incomingFile.delete();
+            }
             sessions.remove(id);
             JSObject event = new JSObject();
             event.put("sessionId", id);

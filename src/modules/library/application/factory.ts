@@ -38,6 +38,7 @@ import {
   takeReceivedFiles,
 } from './deviceFiles';
 import { getComicCover } from './getComicCover';
+import { getComicFile } from './getComicFile';
 import { importComics } from './importComics';
 import { exportLibrary, importLibraryExport } from './libraryExport';
 import { listLibrary } from './listLibrary';
@@ -110,6 +111,7 @@ export function createLibraryUseCases({
       closeArchive: archive.closeArchive,
     }),
     getComicCover: getComicCover({ coverRepository }),
+    getComicFile: getComicFile({ comicFileRepository }),
     updateComicInfo: updateComicInfo({ comicRepository }),
     mergeSeries: mergeSeries({ comicRepository }),
     listCollections: listCollections({ collectionRepository }),

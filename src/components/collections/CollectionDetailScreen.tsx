@@ -1,4 +1,4 @@
-import { ChevronLeft, Ellipsis, Pencil, Trash2 } from 'lucide-react';
+import { ChevronLeft, Ellipsis, Pencil, Smartphone, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router';
@@ -6,6 +6,8 @@ import { goBack } from '../../app/navigation';
 import type { LibraryItem } from '../../modules/library/domain/LibraryItem';
 import { useCollectionsStore } from '../../stores/collectionsStore';
 import { useLibraryStore } from '../../stores/libraryStore';
+import { useSyncStore } from '../../stores/syncStore';
+import { SendSheet } from '../sync/SendSheet';
 import { LibraryShelf } from '../library/LibraryShelf';
 import { BarButton } from '../ui/BarButton';
 import { ConfirmSheet } from '../ui/ConfirmSheet';
@@ -24,6 +26,8 @@ export function CollectionDetailScreen() {
   const library = useLibraryStore((state) => state.items);
   const [editing, setEditing] = useState(false);
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [sending, setSending] = useState(false);
+  const canSend = useSyncStore((state) => state.peers.length > 0);
 
   useEffect(() => {
     if (!loaded) void useCollectionsStore.getState().load();
@@ -68,6 +72,16 @@ export function CollectionDetailScreen() {
               icon: Pencil,
               onSelect: () => setEditing(true),
             },
+            ...(canSend && items.length > 0
+              ? [
+                  {
+                    id: 'send',
+                    label: t('deviceSend.collectionAction'),
+                    icon: Smartphone,
+                    onSelect: () => setSending(true),
+                  },
+                ]
+              : []),
             {
               id: 'delete',
               label: t('collections.delete'),
@@ -98,6 +112,14 @@ export function CollectionDetailScreen() {
           initialColor={collection.getColor()}
           onSave={(values) => void useCollectionsStore.getState().update(collectionId, values)}
           onClose={() => setEditing(false)}
+        />
+      )}
+      {sending && (
+        <SendSheet
+          title={t('deviceSend.collectionAction')}
+          comicIds={items.map((item) => item.getComic().getId())}
+          collectionId={collectionId}
+          onClose={() => setSending(false)}
         />
       )}
       {confirmingDelete && (
