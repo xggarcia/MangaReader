@@ -10,6 +10,7 @@ public class MainActivity extends BridgeActivity {
         // Local plugins must be registered before the bridge is created.
         registerPlugin(SystemUiPlugin.class);
         registerPlugin(DeviceFilesPlugin.class);
+        registerPlugin(LocalSyncPlugin.class);
         super.onCreate(savedInstanceState);
     }
 }

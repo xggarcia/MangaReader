@@ -45,6 +45,11 @@
         </provider>
     </application>
 
-    <!-- No INTERNET permission on purpose: the app is fully offline and cannot send data anywhere. -->
+    <!--
+        Network access is used only for sync between the owner's paired devices on the same local
+        network (LocalSyncPlugin: NSD discovery + encrypted TCP). The app never contacts the
+        Internet: no servers, no telemetry, and the WebView CSP still blocks remote connections.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

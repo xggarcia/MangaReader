@@ -99,8 +99,8 @@
     "installHintBody": "Tap Share, then “Add to Home Screen”. It opens full screen, works offline and keeps your library safe from Safari clearing site data.",
     "archived": "Cover only",
     "openArchived": "{{title}}, cover only",
-    "archivedTitle": "This comic is no longer on your device",
-    "archivedMessage": "You deleted it after reading it: its cover and your progress are kept. Import the file again to read it.",
+    "archivedTitle": "This comic is not on this device",
+    "archivedMessage": "Its cover and your progress are kept. Import the file to read it here.",
     "reimport": "Import Again",
     "understood": "OK",
     "forget": "Remove from History",
@@ -156,11 +156,11 @@
       "en": "English"
     },
     "privacy": "Privacy",
-    "privacyText": "MangaReader works fully offline. Your comics, progress and settings are stored only on this device and are never uploaded or shared.",
+    "privacyText": "MangaReader never connects to the Internet. Your comics, progress and settings stay on this device; if you pair another one, they only talk to each other on your Wi-Fi, encrypted.",
     "readingFooter": "Used when opening a comic. You can change them while reading with the Aa button.",
     "brightnessFooter": "Dims pages in the reader without changing the screen brightness.",
-    "offline": "Offline only",
-    "offlineValue": "No network access",
+    "offline": "No Internet",
+    "offlineValue": "Your Wi-Fi only",
     "about": "About"
   },
   "errors": {
@@ -343,5 +343,34 @@
     "importSkipped_other": "{{count}} were already in your library",
     "close": "Close",
     "failed": "Could not finish"
+  },
+  "sync": {
+    "title": "Sync",
+    "footer": "Paired devices sync on their own when MangaReader is open on the same Wi-Fi: what you read, the page you are on, and the covers. A comic that is not on this device shows its cover and page; import it to read it. Everything is encrypted and only between your devices, never over the Internet.",
+    "pairDevice": "Pair a Device",
+    "pairTitle": "Pair",
+    "pairingHint": "Also open Settings › Sync › Pair on the other device, on the same Wi-Fi. This one shows up there as “{{name}}”.",
+    "searching": "Looking for devices on your Wi-Fi…",
+    "connecting": "Connecting…",
+    "compareCode": "Check that “{{name}}” shows this same code and confirm it on both devices.",
+    "codesMatch": "They Match",
+    "codesDiffer": "They Don’t Match",
+    "waitingOther": "Waiting for you to confirm on the other device…",
+    "pairedWith": "Paired with {{name}}",
+    "pairedDetail": "From now on they sync on their own when you are on the same Wi-Fi.",
+    "tryAgain": "Try Again",
+    "failed": {
+      "unreachable": "Could not connect. Make sure both are on the same Wi-Fi.",
+      "rejected": "Pairing was cancelled.",
+      "cancelled": "Pairing was cancelled.",
+      "mismatch": "The codes did not match. Try again."
+    },
+    "lastSync": "Synced {{time}}",
+    "never": "not yet",
+    "forget": "Forget",
+    "forgetConfirm": "Stop syncing with “{{name}}”?",
+    "syncedWith": "Synced with {{name}}",
+    "changes_one": "{{count}} change",
+    "changes_other": "{{count}} changes"
   }
 }

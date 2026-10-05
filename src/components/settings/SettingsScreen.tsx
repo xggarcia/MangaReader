@@ -31,12 +31,13 @@ import { useLibraryStore } from '../../stores/libraryStore';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useTransferStore } from '../../stores/transferStore';
 import { ExportSheet } from '../library/ExportSheet';
+import { SyncSettingsSection } from '../sync/SyncSettingsSection';
 import { OptimizeSheet } from '../library/OptimizeSheet';
 import { GroupedSection, LinkRow, MenuRow, Row } from '../ui/GroupedList';
 import { LargeTitleScreen } from '../ui/LargeTitleScreen';
 import styles from './Settings.module.css';
 
-const APP_VERSION = '0.6.0';
+const APP_VERSION = '0.7.0';
 
 export function SettingsScreen() {
   const { t, i18n } = useTranslation();
@@ -176,6 +177,8 @@ export function SettingsScreen() {
           />
         </GroupedSection>
       )}
+
+      <SyncSettingsSection />
 
       <GroupedSection title={t('transfer.title')} footer={t('transfer.footer')}>
         {android && !items.isEmpty() && (

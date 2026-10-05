@@ -6,6 +6,11 @@ export interface ReadingProgressPrimitive {
   /** Epoch milliseconds. */
   lastReadAt: number;
   isRead: boolean;
+  /**
+   * Last change that was not reading (marked as read or unread), epoch ms. Absent when the
+   * last change was reading a page. Lets device sync tell which progress is the most recent.
+   */
+  updatedAt?: number;
 }
 
 /** Where the reader is in a comic. Reaching the last page marks the comic as read. */
@@ -16,6 +21,7 @@ export class ReadingProgress {
     private readonly pageCount: number,
     private readonly lastReadAt: number,
     private readonly read: boolean,
+    private readonly updatedAt: number | undefined,
   ) {}
 
   static create(props: ReadingProgressPrimitive): ReadingProgress {
@@ -26,6 +32,7 @@ export class ReadingProgress {
       props.pageCount,
       props.lastReadAt,
       props.isRead,
+      props.updatedAt,
     );
   }
 
@@ -64,6 +71,9 @@ export class ReadingProgress {
     if (!Number.isFinite(props.lastReadAt) || props.lastReadAt < 0) {
       throw new Error('[ReadingProgress] lastReadAt must be a valid timestamp');
     }
+    if (props.updatedAt !== undefined && !Number.isFinite(props.updatedAt)) {
+      throw new Error('[ReadingProgress] updatedAt must be a valid timestamp');
+    }
   }
 
   /** Moves to `page`. Reaching the last page marks the comic as read; going back keeps it read. */
@@ -76,13 +86,23 @@ export class ReadingProgress {
     });
   }
 
-  markAsRead(): ReadingProgress {
-    return ReadingProgress.create({ ...this.toPrimitive(), isRead: true });
+  /** `now` records the change for device sync (it does not count as reading). */
+  markAsRead(now?: number): ReadingProgress {
+    return ReadingProgress.create({
+      ...this.toPrimitive(),
+      isRead: true,
+      updatedAt: now ?? this.updatedAt,
+    });
   }
 
   /** Marks as unread and starts again from the first page. */
-  markAsUnread(): ReadingProgress {
-    return ReadingProgress.create({ ...this.toPrimitive(), isRead: false, currentPage: 0 });
+  markAsUnread(now?: number): ReadingProgress {
+    return ReadingProgress.create({
+      ...this.toPrimitive(),
+      isRead: false,
+      currentPage: 0,
+      updatedAt: now ?? this.updatedAt,
+    });
   }
 
   getComicId(): string {
@@ -105,6 +125,11 @@ export class ReadingProgress {
     return this.read;
   }
 
+  /** Most recent change of any kind (reading a page, or marking as read/unread). */
+  getUpdatedAt(): number {
+    return Math.max(this.lastReadAt, this.updatedAt ?? 0);
+  }
+
   /** Fraction read, from 0 to 1. A read comic is always complete. */
   getRatio(): number {
     if (this.read) return 1;
@@ -118,6 +143,7 @@ export class ReadingProgress {
       pageCount: this.pageCount,
       lastReadAt: this.lastReadAt,
       isRead: this.read,
+      ...(this.updatedAt !== undefined ? { updatedAt: this.updatedAt } : {}),
     };
   }
 

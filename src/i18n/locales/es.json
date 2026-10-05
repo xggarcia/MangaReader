@@ -99,8 +99,8 @@
     "installHintBody": "Pulsa Compartir y luego «Añadir a pantalla de inicio». Se abrirá a pantalla completa, funcionará sin conexión y Safari no borrará tu biblioteca.",
     "archived": "Solo portada",
     "openArchived": "{{title}}, solo portada",
-    "archivedTitle": "Ya no tienes este cómic en el dispositivo",
-    "archivedMessage": "Lo eliminaste después de leerlo: conservas su portada y tu progreso. Vuelve a importar el archivo para leerlo de nuevo.",
+    "archivedTitle": "Este cómic no está en este dispositivo",
+    "archivedMessage": "Conservas su portada y tu progreso. Importa el archivo para leerlo aquí.",
     "reimport": "Importar de nuevo",
     "understood": "Entendido",
     "forget": "Quitar del historial",
@@ -156,11 +156,11 @@
       "en": "English"
     },
     "privacy": "Privacidad",
-    "privacyText": "MangaReader funciona totalmente sin conexión. Tus cómics, tu progreso y tus ajustes se guardan solo en este dispositivo y nunca se suben ni se comparten.",
+    "privacyText": "MangaReader nunca se conecta a Internet. Tus cómics, tu progreso y tus ajustes se guardan en este dispositivo; si emparejas otro, solo se comunican entre ellos dentro de tu Wi-Fi y cifrado.",
     "readingFooter": "Se aplican al abrir un cómic. Puedes cambiarlos mientras lees con el botón Aa.",
     "brightnessFooter": "Oscurece las páginas en el lector sin cambiar el brillo de la pantalla.",
-    "offline": "Solo sin conexión",
-    "offlineValue": "Sin acceso a la red",
+    "offline": "Sin Internet",
+    "offlineValue": "Solo tu Wi-Fi",
     "about": "Acerca de"
   },
   "errors": {
@@ -343,5 +343,34 @@
     "importSkipped_other": "{{count}} ya estaban en tu biblioteca",
     "close": "Cerrar",
     "failed": "No se ha podido completar"
+  },
+  "sync": {
+    "title": "Sincronización",
+    "footer": "Los dispositivos emparejados se sincronizan solos cuando tienen MangaReader abierto en la misma Wi-Fi: qué has leído, por qué página vas y las portadas. Si un cómic no está en este dispositivo, aparece con su portada y su página; impórtalo para leerlo. Todo va cifrado y solo entre tus dispositivos, nunca por Internet.",
+    "pairDevice": "Emparejar un dispositivo",
+    "pairTitle": "Emparejar",
+    "pairingHint": "Abre también Ajustes › Sincronización › Emparejar en el otro dispositivo, conectado a la misma Wi-Fi. Este aparece allí como «{{name}}».",
+    "searching": "Buscando dispositivos en tu Wi-Fi…",
+    "connecting": "Conectando…",
+    "compareCode": "Comprueba que «{{name}}» muestra este mismo código y confírmalo en los dos dispositivos.",
+    "codesMatch": "Coinciden",
+    "codesDiffer": "No coinciden",
+    "waitingOther": "Esperando a que lo confirmes en el otro dispositivo…",
+    "pairedWith": "Emparejado con {{name}}",
+    "pairedDetail": "A partir de ahora se sincronizarán solos cuando estéis en la misma Wi-Fi.",
+    "tryAgain": "Volver a intentarlo",
+    "failed": {
+      "unreachable": "No se ha podido conectar. Comprueba que los dos estáis en la misma Wi-Fi.",
+      "rejected": "Se ha cancelado el emparejamiento.",
+      "cancelled": "Se ha cancelado el emparejamiento.",
+      "mismatch": "Los códigos no coincidían. Vuelve a intentarlo."
+    },
+    "lastSync": "Sincronizado {{time}}",
+    "never": "todavía no",
+    "forget": "Olvidar",
+    "forgetConfirm": "¿Dejar de sincronizar con «{{name}}»?",
+    "syncedWith": "Sincronizado con {{name}}",
+    "changes_one": "{{count}} cambio",
+    "changes_other": "{{count}} cambios"
   }
 }

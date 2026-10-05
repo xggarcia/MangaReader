@@ -20,7 +20,7 @@ export function setReadStatus({ progressRepository, now = Date.now }: SetReadSta
     const existing =
       (await progressRepository.findByComicId(comicId)) ??
       ReadingProgress.start({ comicId, page: 0, pageCount, now: now() });
-    const progress = isRead ? existing.markAsRead() : existing.markAsUnread();
+    const progress = isRead ? existing.markAsRead(now()) : existing.markAsUnread(now());
 
     await progressRepository.save(progress);
     return progress;

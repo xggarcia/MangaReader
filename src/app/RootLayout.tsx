@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { useAndroidBackButton } from '../hooks/useAndroidBackButton';
 import { useDeviceFileEvents } from '../hooks/useDeviceFileEvents';
+import { useLocalSync } from '../hooks/useLocalSync';
 import { useThemeSystemBars } from '../hooks/useSystemBars';
 import { useTheme } from '../hooks/useTheme';
 import i18n, { detectSystemLanguage } from '../i18n';
@@ -23,6 +24,7 @@ export function RootLayout() {
   useAndroidBackButton();
   // After settings load: imports depend on them (reduce on import, delete originals).
   useDeviceFileEvents(loaded);
+  useLocalSync(loaded);
   useTheme(theme);
   useThemeSystemBars(theme);
 

@@ -1,6 +1,6 @@
 # MangaReader
 
-Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** and an **iOS app** via Capacitor. It is a reader only: no scrapers, no downloads, no backend, no accounts, no telemetry. Files never leave the device.
+Offline reader for local CBZ/CBR files, shipped as an **Android app (APK)** and an **iOS app** via Capacitor. It is a reader only: no scrapers, no downloads, no backend, no accounts, no telemetry. Comic files never leave the device (paired devices on the same Wi-Fi sync only progress and covers).
 
 ## Stack
 
@@ -67,6 +67,7 @@ android/             Capacitor native project (committed); local plugins in app/
 - Reduce size (`optimizeComic`): the worker rewrites a comic as a CBZ with pages renamed by position (`0001.webp`…) so page indexes, and thus progress, stay valid. `PageQuality` limits the shorter side of each page; the stored file is replaced only after the new archive is complete and has the same page count. `Comic.fileSize` keeps the imported size (duplicate detection) while `storedSize` is what the copy takes now.
 - Accessibility: keyboard reachable controls, ARIA labels on icon-only buttons, 44px touch targets, WCAG AA contrast via the CSS tokens in `src/styles/global.css`.
 - Styling: CSS Modules + CSS custom properties; theme via `data-theme` on `<html>` (absent = follow system).
-- Privacy: no network calls (the web version only downloads its own app files). The Android manifest has **no INTERNET permission** (keep it that way), CSP in `index.html` restricts connections to `'self'`, `blob:` and the local dev server, and Android backup is disabled so copied comics are never uploaded.
-- Native plugins: `@capacitor/app` (back button), `@capacitor-community/keep-awake` (screen on while reading) and the local `SystemUi` plugin (immersive mode).
+- Privacy: the app never contacts the Internet (the web version only downloads its own app files). The Android INTERNET permission exists **only** for local sync between the owner's paired devices (`LocalSyncPlugin`); never add servers, telemetry or remote calls. The CSP in `index.html` still restricts the WebView to `'self'`, `blob:` and the local dev server (all sync networking is native), and Android backup is disabled so copied comics are never uploaded.
+- Local sync (Android only, `LocalSyncPlugin.java` + `src/modules/sync`): devices on the same network find each other with NSD (`_mangareader._tcp`), pair once with ECDH plus a 6-digit numeric comparison (keys stored natively in SharedPreferences), and open mutually authenticated (HMAC) AES-GCM sessions over TCP. The page runs the protocol (`SyncSession`): both send a manifest of comics with progress, merge it (newest `ReadingProgress.getUpdatedAt()` wins; comics read only on the other device become cover-only archived comics), request the missing covers and close. It runs while the app is in the foreground (`useLocalSync`: on launch, on resume, every 3 minutes). Emulators cannot discover each other: test with `connectTo` through `adb forward` to `10.0.2.2`.
+- Native plugins: `@capacitor/app` (back button), `@capacitor-community/keep-awake` (screen on while reading) and the local `SystemUi`, `DeviceFiles` and `LocalSync` plugins.
 - Manual testing without a phone: run the Android emulator, `adb install` the debug APK and inspect the WebView through `chrome://inspect` (debug builds enable WebView debugging).
